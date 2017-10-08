@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 //turn
 //infinite donuts
 @Autonomous(name = "FraudAutonomous", group = "Autonomous")
+@Disabled
 public class RRFraudonomous extends LinearOpMode
 {
     DcMotor left1;
