@@ -32,14 +32,13 @@ public class TeleOpTest extends LinearOpMode
         right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        left1.setDirection(DcMotorSimple.Direction.REVERSE);
-        left2.setDirection(DcMotorSimple.Direction.REVERSE);
+        right1.setDirection(DcMotorSimple.Direction.REVERSE);
+        right2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
         while(opModeIsActive())
         {
-
             left1.setPower(gamepad1.left_stick_y);
             left2.setPower(gamepad1.left_stick_y);
             right1.setPower(gamepad1.right_stick_y);

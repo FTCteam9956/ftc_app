@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Disabled
+//@Disabled
 @Autonomous(name = "AutonomousTest", group = "Autonomous")
 
 public class AutonomousTest extends LinearOpMode
@@ -25,7 +25,9 @@ public class AutonomousTest extends LinearOpMode
         right1 = hardwareMap.dcMotor.get("right1"); //port 2
         right2 = hardwareMap.dcMotor.get("right2"); //port 3
 
-        int DRIVE_STRAIGHT = 2000;
+        waitForStart();
+
+        int DRIVE_STRAIGHT = 10000;
         //int TURN = 720;
 
         left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
