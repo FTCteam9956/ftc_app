@@ -1,5 +1,4 @@
 //TeleOpTest.java
-//Goal of this program is just to spin 1 motor named left1.
 
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -21,7 +20,7 @@ public class TeleOpTest extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        //Remember to label the motors the same as how we name them in the configuration on the FTC app. - Sam C.
+        //Initializing Motors.
         left1 = hardwareMap.dcMotor.get("left1"); //port 0
         left2 = hardwareMap.dcMotor.get("left2"); //port 1 //Encoder
         right1 = hardwareMap.dcMotor.get("right1"); //port 2
@@ -49,13 +48,9 @@ public class TeleOpTest extends LinearOpMode
 
         while(opModeIsActive())
         {
-            float leftStickModifier = (gamepad1.left_stick_y);
-            float rightStickModifier = (gamepad1.right_stick_y);
-
-            left2.setPower(leftStickModifier);
-            right2.setPower(rightStickModifier);
-            //left1.setPower(leftStickModifier);
-            //right1.setPower(rightStickModifier);
+            //Sets power for leading motors.
+            left2.setPower(gamepad1.left_stick_y);
+            right2.setPower(gamepad1.right_stick_y);
 
             //Use this if we are only using 2 encoders in order to "clone" power level.
             left1.setPower(left2.getPower());
@@ -79,8 +74,13 @@ public class TeleOpTest extends LinearOpMode
         }
     }
 
-    public static void speedAdjust(float stickInput){
-
-
+    public static float speedAdjust(float stickInput){
+        if(stickInput > 0){
+            return(stickInput * stickInput);
+        }else if(stickInput < 0){
+            return(-1 * (stickInput * stickInput));
+        }else{
+            return(stickInput);
+        }
     }
 }

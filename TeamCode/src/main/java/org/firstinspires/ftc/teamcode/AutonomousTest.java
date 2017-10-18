@@ -1,17 +1,18 @@
+//AutonomousTest.java
 
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-//@Disabled
-@Autonomous(name = "AutonomousTest", group = "Autonomous")
 
+@Autonomous(name = "AutonomousTest", group = "Autonomous")
+//@Disabled
 public class AutonomousTest extends LinearOpMode
 {
+    //Declare motors
     DcMotor left1;
     DcMotor left2;
     DcMotor right1;
