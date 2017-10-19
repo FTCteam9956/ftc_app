@@ -49,8 +49,8 @@ public class TeleOpTest extends LinearOpMode
         while(opModeIsActive())
         {
             //Sets power for leading motors.
-            left2.setPower(gamepad1.left_stick_y);
-            right2.setPower(gamepad1.right_stick_y);
+            left2.setPower(speedAdjust(gamepad1.left_stick_y));
+            right2.setPower(speedAdjust(gamepad1.right_stick_y));
 
             //Use this if we are only using 2 encoders in order to "clone" power level.
             left1.setPower(left2.getPower());
