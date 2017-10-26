@@ -38,7 +38,7 @@ public class AutonomousTest extends LinearOpMode{
         robot.smacker.setPosition(robot.SMACKER_UP);
         sleep(500);
 
-        //Spin the turret back
+        //Spin the turret back.
 
         //Read Picture
 
