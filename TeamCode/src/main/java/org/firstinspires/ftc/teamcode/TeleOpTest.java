@@ -8,16 +8,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//@Disabled
 @TeleOp(name = "TeleOpTest", group = "Teleop")
-
+//@Disabled
 public class TeleOpTest extends LinearOpMode{
     RRHardwarePresets robot = new RRHardwarePresets(0);
+    //Because we are giving 0 as a parameter the drive mode will be set to RUN_USING_ENCODERS
 
     //Declare Constants
     final double ARM_OUT = 1;
     final double ARM_IN = 0;
-    final double SMACKER_UP = 0;
+    final double SMACKER_UP = 0.25;
     final double SMACKER_DOWN = 1;
 
     @Override
@@ -29,8 +29,8 @@ public class TeleOpTest extends LinearOpMode{
             //Sets power for leading motors.
             robot.left1.setPower(speedAdjust(gamepad1.left_stick_y));
             robot.left2.setPower(speedAdjust(gamepad1.left_stick_y));
-            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y));
-            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y));
+            robot.right1.setPower(speedAdjust(-gamepad1.right_stick_y));
+            robot.right2.setPower(speedAdjust(-gamepad1.right_stick_y));
 
             //Sets position of by using the triggers
             if(gamepad1.right_trigger > 0.5){
@@ -40,17 +40,30 @@ public class TeleOpTest extends LinearOpMode{
                 robot.claw.setPosition(ARM_IN);
             }
             if(gamepad1.dpad_up){
-                robot.claw.setPosition(SMACKER_UP);
+                robot.smacker.setPosition(SMACKER_UP);
             }
             if(gamepad1.dpad_down){
-                robot.claw.setPosition(SMACKER_DOWN);
+                robot.smacker.setPosition(SMACKER_DOWN);
             }
 
             if(robot.joule.blue() < robot.joule.red()){
-                telemetry.addData("Color", "Red");
+                telemetry.addData("Jewel Color", "Red");
+            }
+            else if(robot.joule.blue() > robot.joule.red()){
+                telemetry.addData("Jewel Color", "Blue");
             }
             else{
-                telemetry.addData("Color", "Blue");
+                telemetry.addData("Jewel Color", "Neither");
+            }
+
+            if(robot.floor.blue() < robot.floor.red()){
+                telemetry.addData("Floor Color", "Red");
+            }
+            else if(robot.joule.blue() > robot.joule.red()){
+                telemetry.addData("Jewel Color", "Blue");
+            }
+            else{
+                telemetry.addData(" Floor Color", "Neither");
             }
 
             //Telemetry
@@ -62,7 +75,7 @@ public class TeleOpTest extends LinearOpMode{
             telemetry.addData("Left2 Power", robot.left2.getPower());
             telemetry.addData("Right1 Power", robot.right1.getPower());
             telemetry.addData("Right2 Power", robot.right2.getPower());
-            telemetry.addData("Claw Position", robot.claw.getPosition());
+           // telemetry.addData("Claw Position", robot.claw.getPosition());
             telemetry.addData("Smacker Position", robot.smacker.getPosition());
             telemetry.addData("Left Stick", gamepad1.left_stick_y);
             telemetry.addData("Right Stick", gamepad1.right_stick_y);

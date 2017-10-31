@@ -28,6 +28,7 @@ public class RRHardwarePresets{
 
     //Sensors
     ColorSensor joule;
+    ColorSensor floor;
 
     //Constant values
     final int DRIVE_STRAIGHT = 5000;
@@ -57,13 +58,13 @@ public class RRHardwarePresets{
         claw = HwMap.servo.get("claw");
         smacker = HwMap.servo.get("smacker");
 
-        //Servo starting postions.
-        claw.setPosition(CLAW_CLOSED);
-        smacker.setPosition(SMACKER_UP);
+        //Servo starting positions.
+        //claw.setPosition(CLAW_CLOSED);
+        //smacker.setPosition(SMACKER_UP);
 
         //Sensor mappings
         joule = HwMap.colorSensor.get("joule");
-        //joule.setI2cAddress(I2cAddr.create8bit());
+        floor = HwMap.colorSensor.get("floor");
 
         if(this.driveMode == 0){
             //DC Motor encoder modes.
@@ -79,8 +80,8 @@ public class RRHardwarePresets{
         }
 
         //DC Motor directions.
-        right1.setDirection(DcMotorSimple.Direction.REVERSE);
-        right2.setDirection(DcMotorSimple.Direction.REVERSE);
+        left1.setDirection(DcMotorSimple.Direction.REVERSE);
+        left2.setDirection(DcMotorSimple.Direction.REVERSE);
         right1.setDirection(DcMotorSimple.Direction.FORWARD);
         right2.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -91,7 +92,7 @@ public class RRHardwarePresets{
         right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    void resetEncoders() {
+    void resetEncoders(){
         left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
