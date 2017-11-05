@@ -27,35 +27,43 @@ public class TeleOpTest extends LinearOpMode{
             robot.right1.setPower(speedAdjust(gamepad1.right_stick_y));
             robot.right2.setPower(speedAdjust(gamepad1.right_stick_y));
 
-            //claw controls.
+            //turret controls.
             if(gamepad1.right_trigger > 0.5){
-                robot.claw.setPosition(1);
+                robot.turretMotor.setPower(0.15);
             }
-            if(gamepad1.left_trigger > 0.5){
+            else if(gamepad1.left_trigger > 0.5){
                 robot.claw.setPosition(0);
+                robot.turretMotor.setPower(-0.15);
+            }else{
+                robot.turretMotor.setPower(0.0);
             }
 
             //jewelArm controls.
             if(gamepad1.dpad_up){
-                robot.jewelArm.setPosition(0.28); //Raised arm
+                robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
             }
             if(gamepad1.dpad_down){
-                robot.jewelArm.setPosition(1.0); //Lowered arm
+                robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
             }
 
             //Telemetry
-            telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
-            telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
-            telemetry.addData("right1 encoder", robot.right1.getCurrentPosition());
-            telemetry.addData("right2 encoder", robot.right2.getCurrentPosition());
-            telemetry.addData("Left1 Power", robot.left1.getPower());
-            telemetry.addData("Left2 Power", robot.left2.getPower());
-            telemetry.addData("Right1 Power", robot.right1.getPower());
-            telemetry.addData("Right2 Power", robot.right2.getPower());
-            telemetry.addData("Claw Position", robot.claw.getPosition());
-            telemetry.addData("Smacker Position", robot.jewelArm.getPosition());
-            telemetry.addData("Left Stick", gamepad1.left_stick_y);
-            telemetry.addData("Right Stick", gamepad1.right_stick_y);
+            //telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
+            //telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
+            //telemetry.addData("right1 encoder", robot.right1.getCurrentPosition());
+            //telemetry.addData("right2 encoder", robot.right2.getCurrentPosition());
+            //telemetry.addData("Left1 Power", robot.left1.getPower());
+            //telemetry.addData("Left2 Power", robot.left2.getPower());
+            //telemetry.addData("Right1 Power", robot.right1.getPower());
+            //telemetry.addData("Right2 Power", robot.right2.getPower());
+            //telemetry.addData("Claw Position", robot.claw.getPosition());
+            //telemetry.addData("JewelArm Position", robot.jewelArm.getPosition());
+            //telemetry.addData("Left Stick", gamepad1.left_stick_y);
+            //telemetry.addData("Right Stick", gamepad1.right_stick_y);
+            telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
+            telemetry.addData("Floor Sensor", robot.floorSensor.argb());
+            telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
+
+
             telemetry.update();
 
             idle();
@@ -69,24 +77,28 @@ public class TeleOpTest extends LinearOpMode{
             robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         if(input.equals("RUN_WITHOUT_ENCODER")) {
             robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         if(input.equals("RUN_USING_ENCODER")) {
             robot.left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         if(input.equals("RUN_TO_POSITION")) {
             robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 

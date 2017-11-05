@@ -1,5 +1,4 @@
 //RRHardwarePresets.java
-//Test
 
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -13,14 +12,20 @@ public class RRHardwarePresets{
     public DcMotor left2;
     public DcMotor right1;
     public DcMotor right2;
+    public DcMotor turretMotor;
     public Servo claw;
     public Servo jewelArm;
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
     HardwareMap HwMap;
 
+    public final double JEWEL_ARM_DOWN = 0.05;
+    public final double JEWEL_ARM_UP = 0.70;
+
     //Constructor
-    public RRHardwarePresets(){System.out.println("Created new RRHardwarePresets Object!");}
+    public RRHardwarePresets(){
+        System.out.println("Created new RRHardwarePresets Object!");
+    }
 
     public void init(HardwareMap hwm){
         HwMap = hwm;
@@ -30,6 +35,7 @@ public class RRHardwarePresets{
         left2 = HwMap.dcMotor.get("left2");
         right1 = HwMap.dcMotor.get("right1");
         right2 = HwMap.dcMotor.get("right2");
+        turretMotor = HwMap.dcMotor.get("turretMotor");
         claw = HwMap.servo.get("claw");
         jewelArm = HwMap.servo.get("jewelArm");
         jewelSensor = HwMap.colorSensor.get("jewelSensor");
@@ -48,12 +54,12 @@ public class RRHardwarePresets{
         right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Sensor LED control.
-        jewelSensor.enableLed(true);
-        floorSensor.enableLed(true);
+        jewelSensor.enableLed(false);
+        floorSensor.enableLed(false);
 
         //Initial Servo positions.
-        claw.setPosition(0.2); //Closed
-        jewelArm.setPosition(0.28); //Raised
+        //claw.setPosition(0.2); //Closed
+        //jewelArm.setPosition(0.30); //Raised
 
     }
 }
