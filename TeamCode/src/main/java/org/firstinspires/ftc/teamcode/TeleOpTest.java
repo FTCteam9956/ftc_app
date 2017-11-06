@@ -18,7 +18,6 @@ public class TeleOpTest extends LinearOpMode{
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_USING_ENCODER");
         waitForStart();
-
         while(opModeIsActive()){
 
             //Sets power for DC motors.

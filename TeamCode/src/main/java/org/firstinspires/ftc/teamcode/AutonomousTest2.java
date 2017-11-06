@@ -18,7 +18,8 @@ public class AutonomousTest2 extends LinearOpMode{
         waitForStart();
 
         //--AUTO SCRIPT START--
-        //Set jewelArm into up position.
+
+        //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
         robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
         sleep(500);
 
@@ -70,11 +71,23 @@ public class AutonomousTest2 extends LinearOpMode{
         //Continue...
     }
 
+    public int readJewel(){
+        if(robot.jewelSensor.red() > 52){
+            //Red Ball
+            return(0);
+        }else if(robot.jewelSensor.red() <= 52) {
+            //Blue Ball
+            return(1);
+        }else{
+            //Neither
+            return(-1);
+        }
+    }
+
     public void knockOffBall(int selection){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
-
         if(selection == 0){
             robot.turretMotor.setTargetPosition(200);
         }
@@ -83,7 +96,7 @@ public class AutonomousTest2 extends LinearOpMode{
         }
         robot.turretMotor.setPower(0.15);
         while(robot.turretMotor.isBusy()){
-            //Waiting.
+            //Waiting while turret turns.
         }
         sleep(500);
         robot.turretMotor.setPower(0.0);
