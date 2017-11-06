@@ -18,7 +18,6 @@ public class AutonomousTest2 extends LinearOpMode{
         waitForStart();
 
         //--AUTO SCRIPT START--
-
         //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
         robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
         sleep(500);
