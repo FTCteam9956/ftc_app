@@ -45,6 +45,7 @@ public class TeleOpTest extends LinearOpMode{
                 robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
             }
 
+
             //Telemetry
             //telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
             //telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
@@ -58,10 +59,13 @@ public class TeleOpTest extends LinearOpMode{
             //telemetry.addData("JewelArm Position", robot.jewelArm.getPosition());
             //telemetry.addData("Left Stick", gamepad1.left_stick_y);
             //telemetry.addData("Right Stick", gamepad1.right_stick_y);
-            telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
-            telemetry.addData("Floor Sensor", robot.floorSensor.argb());
-            telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
-
+            //telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
+            //telemetry.addData("Floor Sensor", robot.floorSensor.argb());
+            //telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
+            telemetry.addData("IMU position", robot.imu.getPosition());
+            telemetry.addData("IMU acceleration", robot.imu.getAcceleration());
+            telemetry.addData("IMU velocity", robot.imu.getVelocity());
+            telemetry.addData("IMU angular orientation", robot.imu.getAngularOrientation());
 
             telemetry.update();
 

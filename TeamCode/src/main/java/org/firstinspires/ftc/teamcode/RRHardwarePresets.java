@@ -1,6 +1,8 @@
 //RRHardwarePresets.java
 
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -17,6 +19,7 @@ public class RRHardwarePresets{
     public Servo jewelArm;
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
+    BNO055IMU imu;
     HardwareMap HwMap;
 
     public final double JEWEL_ARM_DOWN = 0.05;
@@ -56,6 +59,19 @@ public class RRHardwarePresets{
         //Sensor LED control.
         jewelSensor.enableLed(false);
         floorSensor.enableLed(false);
+
+        //IMU initialization parameters
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        //IMU initialization
+        imu = HwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         //Initial Servo positions.
         //claw.setPosition(0.2); //Closed
