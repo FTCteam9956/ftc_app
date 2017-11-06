@@ -27,35 +27,31 @@ public class AutonomousTest2 extends LinearOpMode{
         robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
         sleep(500);
 
+        //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
         int loopBreak = 0;
         while(loopBreak == 0){
-            //Read color of Jewel.
             sleep(1000);
             if(robot.jewelSensor.red() > 52){
-                telemetry.addData("Status", "Red Ball Seen!");
-                telemetry.addData("Red", robot.jewelSensor.red());
-                telemetry.update();
                 knockOffBall(1);
+                telemetry.addData("Status", "Confirmed Red Ball!");
                 loopBreak = 1;
             }else if(robot.jewelSensor.red() <= 52) {
-                telemetry.addData("Status", "Red Ball Not Seen!");
-                telemetry.addData("Red", robot.jewelSensor.red());
-                telemetry.update();
-
                 if(robot.jewelSensor.blue() > 20) {
-                    telemetry.addData("Status", "Blue Ball Seen!");
-                    telemetry.addData("Blue", robot.jewelSensor.blue());
-                    telemetry.update();
                     knockOffBall(0);
+                    telemetry.addData("Status", "Confirmed Blue Ball!");
                     loopBreak = 1;
                 }else{
+                    telemetry.addData("Status", "Cannot determine color!");
                     loopBreak = 1;
                 }
             }
+            telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
+            telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
+            telemetry.update();
         }
+        sleep(500);
 
         //Raise JewelArm.
-        sleep(500);
         robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
         sleep(500);
 
@@ -71,19 +67,7 @@ public class AutonomousTest2 extends LinearOpMode{
         //Continue...
     }
 
-    public int readJewel(){
-        if(robot.jewelSensor.red() > 52){
-            //Red Ball
-            return(0);
-        }else if(robot.jewelSensor.red() <= 52) {
-            //Blue Ball
-            return(1);
-        }else{
-            //Neither
-            return(-1);
-        }
-    }
-
+    //Moves the jewelArm depending on what the input is.
     public void knockOffBall(int selection){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
