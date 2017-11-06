@@ -22,8 +22,14 @@ public class RRHardwarePresets{
     BNO055IMU imu;
     HardwareMap HwMap;
 
+    //Constants
     public final double JEWEL_ARM_DOWN = 0.05;
     public final double JEWEL_ARM_UP = 0.70;
+
+    //Need to get these values correct for followLine() to work.
+    public final double FLOOR_COLOR = 0.0;
+    public final double RED_LINE_COLOR = 0.0;
+    public final double BLUE_LINE_COLOR = 0.0;
 
     //Constructor
     public RRHardwarePresets(){

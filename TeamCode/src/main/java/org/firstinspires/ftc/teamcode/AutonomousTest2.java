@@ -64,6 +64,8 @@ public class AutonomousTest2 extends LinearOpMode{
         driveForwardWithInterrupt(0.10, 750, "red");
         sleep(500);
 
+        //Turn towards triangle.
+
         //Continue...
     }
 
@@ -87,6 +89,72 @@ public class AutonomousTest2 extends LinearOpMode{
         setRunMode("RUN_USING_ENCODER");
     }
 
+    //followValue should be the average of the 2 sensor.argb() color values.
+    //lineColor can either be "red" or "blue"
+    public void followLine(String lineColor, double speed){
+        //Sets mode to RUN_USING_ENCODER
+        setRunMode("RUN_USING_ENCODER");
+        int loopFlag = 0;
+        double correction;
+        double leftPower;
+        double rightPower;
+        double followValue = 0;
+        //Decides follow value. Try with sensor.argb() values.
+        if(lineColor.equals("red")){
+            followValue = ((robot.RED_LINE_COLOR + robot.FLOOR_COLOR)/2);
+        }
+        if(lineColor.equals("blue")){
+            followValue = ((robot.RED_LINE_COLOR + robot.FLOOR_COLOR)/2);
+        }
+        //Drives forward until it hits a line.
+        driveForwardWithInterrupt(0.15, 300, lineColor);
+        //Corrects power on left and right dcMotors to follow a line.
+        while(loopFlag == 0){
+            //Get a correction
+            correction = (followValue - robot.floorSensor.argb());
+            if(correction <= 0.0){
+                leftPower = speed - correction;
+                rightPower = speed;
+            }else{ //correction > 0.0
+                leftPower = speed;
+                rightPower = speed + correction;
+            }
+            //Setting motor speed.
+            robot.left1.setPower(leftPower);
+            robot.left2.setPower(leftPower);
+            robot.right1.setPower(rightPower);
+            robot.right2.setPower(rightPower);
+        }
+    }
+
+    public void turnDirection(double power, int distance, String direction){
+        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
+        setRunMode("STOP_AND_RESET_ENCODER");
+        setRunMode("RUN_TO_POSITION");
+        if(direction.equals("CW")){
+            robot.left1.setTargetPosition(distance);
+            robot.left2.setTargetPosition(distance);
+            robot.right1.setTargetPosition( -distance);
+            robot.right2.setTargetPosition(-distance);
+        }
+        else if(direction.equals("CCW")){
+            robot.left1.setTargetPosition(-distance);
+            robot.left2.setTargetPosition(-distance);
+            robot.right1.setTargetPosition(distance);
+            robot.right2.setTargetPosition(distance);
+        }
+        setMotorPower(power);
+        //Waits while turning.
+        while(anyMotorsBusy()){
+            //Spinning
+            //Waiting while turning.
+        }
+        //Stop motors.
+        setMotorPower(0.0);
+        //Sets mode back to RUN_USING_ENCODER
+        setRunMode("RUN_USING_ENCODER");
+    }
+
     public void driveForwardWithInterrupt(double power, int distance, String color){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
@@ -101,12 +169,12 @@ public class AutonomousTest2 extends LinearOpMode{
             telemetry.addData("Floor Sensor (blue):", robot.floorSensor.blue());
             telemetry.addData("Floor Sensor (red):", robot.floorSensor.red());
             if(color.equals("red")){
-                if(robot.floorSensor.red() > 50){
+                if(robot.floorSensor.red() > 50){//Level of Red required to stop.
                     setMotorPower(0.0);
                 }
             }
             if(color.equals("blue")){
-                if(robot.floorSensor.blue() > 50){
+                if(robot.floorSensor.blue() > 50){//Level of Blue required to stop.
                     setMotorPower(0.0);
                 }
             }
