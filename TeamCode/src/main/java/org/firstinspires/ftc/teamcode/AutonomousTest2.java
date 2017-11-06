@@ -127,17 +127,18 @@ public class AutonomousTest2 extends LinearOpMode{
         }
     }
 
+    //Takes power and distance to rotate and "CW" clockwise or "CCW" as directional input.
     public void turnDirection(double power, int distance, String direction){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
-        if(direction.equals("CW")){
+        if(direction.equals("CCW")){
             robot.left1.setTargetPosition(distance);
             robot.left2.setTargetPosition(distance);
             robot.right1.setTargetPosition( -distance);
             robot.right2.setTargetPosition(-distance);
         }
-        else if(direction.equals("CCW")){
+        else if(direction.equals("CW")){
             robot.left1.setTargetPosition(-distance);
             robot.left2.setTargetPosition(-distance);
             robot.right1.setTargetPosition(distance);
@@ -155,6 +156,8 @@ public class AutonomousTest2 extends LinearOpMode{
         setRunMode("RUN_USING_ENCODER");
     }
 
+    //Drives at given power and a given distance unless floorSensors interupt it
+    // by seeing the given color. ("red" or "blue").
     public void driveForwardWithInterrupt(double power, int distance, String color){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
@@ -207,7 +210,7 @@ public class AutonomousTest2 extends LinearOpMode{
         setRunMode("RUN_USING_ENCODER");
     }
 
-    //Sets the run mode of all DC motors.
+    //Sets the run mode of all DC motors. Also sets the turret motor now.
     public void setRunMode(String input){
         if(input.equals("STOP_AND_RESET_ENCODER")) {
             robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
