@@ -82,6 +82,36 @@ public class RRHardwarePresets{
         //Initial Servo positions.
         //claw.setPosition(0.2); //Closed
         //jewelArm.setPosition(0.30); //Raised
-
+    }
+    //Sets the run mode of all DC motors.
+    public void setRunMode(String input){
+        if(input.equals("STOP_AND_RESET_ENCODER")) {
+            this.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        if(input.equals("RUN_WITHOUT_ENCODER")) {
+            this.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        if(input.equals("RUN_USING_ENCODER")) {
+            this.left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            this.left2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            this.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            this.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        if(input.equals("RUN_TO_POSITION")) {
+            this.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
     }
 }
