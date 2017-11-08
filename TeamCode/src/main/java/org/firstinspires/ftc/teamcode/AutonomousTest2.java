@@ -185,7 +185,7 @@ public class AutonomousTest2 extends LinearOpMode{
         setRunMode("RUN_USING_ENCODER");
     }
 
-    //Drives at given power and a given distance unless floorSensors interupt it
+    //Drives at given power and a given distance unless floorSensors interrupt it
     // by seeing the given color. ("red" or "blue").
     public void driveForwardWithInterrupt(double power, int distance, String color){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
@@ -241,28 +241,28 @@ public class AutonomousTest2 extends LinearOpMode{
 
     //Sets the run mode of all DC motors. Also sets the turret motor now.
     public void setRunMode(String input){
-        if(input.equals("STOP_AND_RESET_ENCODER")) {
+        if(input.equals("STOP_AND_RESET_ENCODER")){
             robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        if(input.equals("RUN_WITHOUT_ENCODER")) {
+        if(input.equals("RUN_WITHOUT_ENCODER")){
             robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-        if(input.equals("RUN_USING_ENCODER")) {
+        if(input.equals("RUN_USING_ENCODER")){
             robot.left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        if(input.equals("RUN_TO_POSITION")) {
+        if(input.equals("RUN_TO_POSITION")){
             robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
