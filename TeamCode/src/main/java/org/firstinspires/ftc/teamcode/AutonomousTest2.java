@@ -5,6 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 @Autonomous(name = "AutonomousTest2", group = "Autonomous")
 //@Disabled
 
@@ -13,59 +17,85 @@ public class AutonomousTest2 extends LinearOpMode{
     @Override
     public void runOpMode(){
         robot.init(hardwareMap);
+
+        //Vuforia Trackables.
+        VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_USING_ENCODER");
+
         waitForStart();
 
-        //--AUTO SCRIPT START--
-        //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
-        robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
-        sleep(500);
-
-        //Lower jewelArm into down position.
-        robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
-        sleep(500);
-
-        //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
-        int loopBreak = 0;
-        while(loopBreak == 0){
-            sleep(1000);
-            if(robot.jewelSensor.red() > 52){
-                knockOffBall(1);
-                telemetry.addData("Status", "Confirmed Red Ball!");
-                loopBreak = 1;
-            }else if(robot.jewelSensor.red() <= 52) {
-                if(robot.jewelSensor.blue() > 20) {
-                    knockOffBall(0);
-                    telemetry.addData("Status", "Confirmed Blue Ball!");
-                    loopBreak = 1;
-                }else{
-                    telemetry.addData("Status", "Cannot determine color!");
-                    loopBreak = 1;
+        boolean testArea = false;
+        if(testArea == true){
+            //--TEST SCRIPT START--
+            //Should tell us when we see an identified VuMark, not using 3d pose navigation yet.
+            while(opModeIsActive()){
+                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                if(vuMark != RelicRecoveryVuMark.UNKNOWN){ //If we identify a vuMark.
+                    telemetry.addData("VuMark", "%s visible", vuMark);
                 }
+                else{
+                    telemetry.addData("VuMark", "not visible");
+                }
+                telemetry.update();
             }
-            telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
-            telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
-            telemetry.update();
         }
-        sleep(500);
+        else{ //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 
-        //Raise JewelArm.
-        robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
-        sleep(500);
+            //--AUTO SCRIPT START--
+            //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
+            robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
+            sleep(500);
 
-        //Read glyph on wall.
+            //Lower jewelArm into down position.
+            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
+            sleep(500);
 
-        //Drive forward off of balance stone.
-        driveForwardSetDistance(0.15, 650);
-        sleep(500);
+            //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
+            int loopBreak = 0;
+            while (loopBreak == 0) {
+                sleep(1000);
+                if (robot.jewelSensor.red() > 52) {
+                    knockOffBall(1);
+                    telemetry.addData("Status", "Confirmed Red Ball!");
+                    loopBreak = 1;
+                } else if (robot.jewelSensor.red() <= 52) {
+                    if (robot.jewelSensor.blue() > 20) {
+                        knockOffBall(0);
+                        telemetry.addData("Status", "Confirmed Blue Ball!");
+                        loopBreak = 1;
+                    } else {
+                        telemetry.addData("Status", "Cannot determine color!");
+                        loopBreak = 1;
+                    }
+                }
+                telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
+                telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
+                telemetry.update();
+            }
+            sleep(500);
 
-        driveForwardWithInterrupt(0.10, 750, "red");
-        sleep(500);
+            //Raise JewelArm.
+            robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
+            sleep(500);
 
-        //Turn towards triangle.
+            //Read glyph on wall.
 
-        //Continue...
+            //See testArea.
+
+            //Drive forward off of balance stone.
+            driveForwardSetDistance(0.15, 650);
+            sleep(500);
+
+            driveForwardWithInterrupt(0.10, 750, "red");
+            sleep(500);
+
+            //Turn towards triangle.
+
+            //Continue...
+        }
     }
 
     //Moves the jewelArm depending on what the input is.
@@ -103,7 +133,7 @@ public class AutonomousTest2 extends LinearOpMode{
             followValue = ((robot.RED_LINE_COLOR + robot.FLOOR_COLOR)/2);
         }
         if(lineColor.equals("blue")){
-            followValue = ((robot.RED_LINE_COLOR + robot.FLOOR_COLOR)/2);
+            followValue = ((robot.BLUE_LINE_COLOR + robot.FLOOR_COLOR)/2);
         }
         //Drives forward until it hits a line.
         driveForwardWithInterrupt(0.15, 300, lineColor);

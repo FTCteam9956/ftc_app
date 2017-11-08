@@ -9,7 +9,16 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+
 public class RRHardwarePresets{
+
+    //Motors, Servos and Sensors
     public DcMotor left1;
     public DcMotor left2;
     public DcMotor right1;
@@ -21,6 +30,11 @@ public class RRHardwarePresets{
     public ColorSensor floorSensor;
     BNO055IMU imu;
     HardwareMap HwMap;
+
+    //Vuforia Information
+    public static final String TAG = "Vuforia VuMark Sample";
+    public OpenGLMatrix lastLocation = null;
+    public VuforiaLocalizer vuforia;
 
     //Constants
     public final double JEWEL_ARM_DOWN = 0.05;
@@ -66,24 +80,39 @@ public class RRHardwarePresets{
         jewelSensor.enableLed(false);
         floorSensor.enableLed(false);
 
-        //IMU initialization parameters
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        //IMU initialization
-        imu = HwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
         //Initial Servo positions.
         //claw.setPosition(0.2); //Closed
         //jewelArm.setPosition(0.30); //Raised
+
+        //IMU initialization parameters
+        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
+        IMUParameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        IMUParameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        IMUParameters.loggingEnabled      = true;
+        IMUParameters.loggingTag          = "IMU";
+        IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        //IMU initialization
+        imu = HwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(IMUParameters);
+
+        //Vuforia Initialization
+        //Sets camera feed to display on phone.
+        int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        // OR...  Do Not Activate the Camera Monitor View, to save power
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        //License obtained.
+        VuforiaParameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
+        //Sets phone to use back camera.
+        VuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        //Initializes VuforiaLocalizer object as vuforia.
+        this.vuforia = ClassFactory.createVuforiaLocalizer(VuforiaParameters);
+
     }
-    //Sets the run mode of all DC motors.
+
+    //Sets the run mode of all DC motors. Test is this works in both autonomous and teleOp modes.
     public void setRunMode(String input){
         if(input.equals("STOP_AND_RESET_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
