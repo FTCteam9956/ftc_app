@@ -62,10 +62,9 @@ public class TeleOpTest extends LinearOpMode{
             //telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
             //telemetry.addData("Floor Sensor", robot.floorSensor.argb());
             //telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
-            telemetry.addData("IMU position", robot.imu.getPosition());
-            telemetry.addData("IMU acceleration", robot.imu.getAcceleration());
-            telemetry.addData("IMU velocity", robot.imu.getVelocity());
             telemetry.addData("IMU angular orientation", robot.imu.getAngularOrientation());
+            
+
 
             telemetry.update();
 

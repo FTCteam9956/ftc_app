@@ -30,7 +30,9 @@ public class AutonomousTest2 extends LinearOpMode{
         //Relic Trackables
         relicTrackables.activate();
 
-        boolean testArea = true;
+        //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
+        boolean testArea = false;
+
         if(testArea == true){
             //--TEST SCRIPT START--
             turnDirection(0.15, 500, "CW");
@@ -43,11 +45,15 @@ public class AutonomousTest2 extends LinearOpMode{
             //--AUTO SCRIPT START--
             //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
             robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
-            sleep(500);
+            sleep(250);
+
+            //Mid Drop slowdown so we don't smack the color sensor on the ground.
+            robot.jewelArm.setPosition(robot.JEWEL_ARM_MID);
+            sleep(250);
 
             //Lower jewelArm into down position.
             robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
-            sleep(500);
+            sleep(250);
 
             //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
             int loopBreak = 0;
@@ -82,7 +88,7 @@ public class AutonomousTest2 extends LinearOpMode{
             sleep(500);
 
             //Search for and confirm VuMark.
-            String target = scanForVuMark(relicTemplate);
+            String targetPosition = scanForVuMark(0.15, 500, relicTemplate);
 
             //Drives forward and stops on line.
             driveForwardWithInterrupt(0.10, 750, "red");
@@ -152,25 +158,38 @@ public class AutonomousTest2 extends LinearOpMode{
         }
     }
 
-    public String scanForVuMark(VuforiaTrackable relicTemp){
-        boolean VuMarkSeen = false;
-        String decidingMark = "none";
+    //Scans for VuForia Target. returns a string.
+    //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
+    public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp){
+        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
+        setRunMode("STOP_AND_RESET_ENCODER");
+        setRunMode("RUN_TO_POSITION");
 
-        while(VuMarkSeen == false){
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
-            if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
+        String decidingMark = "none"; //Used to return String
+
+        robot.turretMotor.setTargetPosition(distance); //Turns to distance.
+        robot.turretMotor.setPower(power);
+        robot.turretMotor.setTargetPosition(-distance); //Turns to -distance.
+        robot.turretMotor.setPower(power);
+        robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
+        robot.turretMotor.setPower(power);
+
+        while(robot.turretMotor.isBusy()){
+            //Waiting for turret to stop moving.
+            if(vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
                 decidingMark = "left";
+                robot.turretMotor.setPower(0.0);
                 telemetry.addData("VuMark", "LEFT");
-                VuMarkSeen = true;
-            }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
                 decidingMark = "center";
                 telemetry.addData("VuMark", "CENTER");
-                VuMarkSeen = true;
-            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
+                robot.turretMotor.setPower(0.0);
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) { //Right seen.
                 decidingMark = "right";
                 telemetry.addData("VuMark", "CENTER");
-                VuMarkSeen = true;
-            }else{ //No VuMark seen.
+                robot.turretMotor.setPower(0.0);
+            } else { //No VuMark seen.
                 telemetry.addData("VuMark", "not visible");
             }
             telemetry.update();

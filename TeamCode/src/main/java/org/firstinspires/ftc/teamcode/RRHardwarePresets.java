@@ -37,8 +37,9 @@ public class RRHardwarePresets{
     public VuforiaLocalizer vuforia;
 
     //Constants
-    public final double JEWEL_ARM_DOWN = 0.05;
     public final double JEWEL_ARM_UP = 0.70;
+    public final double JEWEL_ARM_DOWN = 0.05;
+    public final double JEWEL_ARM_MID = 0.20;
 
     //Need to get these values correct for followLine() to work.
     public final double FLOOR_COLOR = 0.0;
@@ -75,6 +76,7 @@ public class RRHardwarePresets{
         left2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Sensor LED control.
         jewelSensor.enableLed(false);
