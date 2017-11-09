@@ -27,22 +27,18 @@ public class AutonomousTest2 extends LinearOpMode{
 
         waitForStart();
 
-        boolean testArea = false;
+        //Relic Trackables
+        relicTrackables.activate();
+
+        boolean testArea = true;
         if(testArea == true){
             //--TEST SCRIPT START--
-            //Should tell us when we see an identified VuMark, not using 3d pose navigation yet.
-            while(opModeIsActive()){
-                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                if(vuMark != RelicRecoveryVuMark.UNKNOWN){ //If we identify a vuMark.
-                    telemetry.addData("VuMark", "%s visible", vuMark);
-                }
-                else{
-                    telemetry.addData("VuMark", "not visible");
-                }
-                telemetry.update();
-            }
+            turnDirection(0.15, 500, "CW");
+            sleep(500);
+            turnDirection(0.30, 750, "CCW");
         }
-        else{ //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
+        else{
+            //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 
             //--AUTO SCRIPT START--
             //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
@@ -81,14 +77,14 @@ public class AutonomousTest2 extends LinearOpMode{
             robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
             sleep(500);
 
-            //Read glyph on wall.
-
-            //See testArea.
-
             //Drive forward off of balance stone.
             driveForwardSetDistance(0.15, 650);
             sleep(500);
 
+            //Search for and confirm VuMark.
+            String target = scanForVuMark(relicTemplate);
+
+            //Drives forward and stops on line.
             driveForwardWithInterrupt(0.10, 750, "red");
             sleep(500);
 
@@ -154,6 +150,32 @@ public class AutonomousTest2 extends LinearOpMode{
             robot.right1.setPower(rightPower);
             robot.right2.setPower(rightPower);
         }
+    }
+
+    public String scanForVuMark(VuforiaTrackable relicTemp){
+        boolean VuMarkSeen = false;
+        String decidingMark = "none";
+
+        while(VuMarkSeen == false){
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
+            if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
+                decidingMark = "left";
+                telemetry.addData("VuMark", "LEFT");
+                VuMarkSeen = true;
+            }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
+                decidingMark = "center";
+                telemetry.addData("VuMark", "CENTER");
+                VuMarkSeen = true;
+            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
+                decidingMark = "right";
+                telemetry.addData("VuMark", "CENTER");
+                VuMarkSeen = true;
+            }else{ //No VuMark seen.
+                telemetry.addData("VuMark", "not visible");
+            }
+            telemetry.update();
+        }
+        return(decidingMark);
     }
 
     //Takes power and distance to rotate and "CW" clockwise or "CCW" as directional input.
