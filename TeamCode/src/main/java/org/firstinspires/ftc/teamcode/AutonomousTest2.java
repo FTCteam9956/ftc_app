@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -18,6 +19,7 @@ public class AutonomousTest2 extends LinearOpMode{
     public void runOpMode(){
         robot.init(hardwareMap);
 
+        robot.jewelArm.setPosition(0.7);
         //Vuforia Trackables.
         VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
@@ -26,6 +28,7 @@ public class AutonomousTest2 extends LinearOpMode{
         setRunMode("RUN_USING_ENCODER");
 
         waitForStart();
+
 
         //Relic Trackables
         relicTrackables.activate();
@@ -52,7 +55,11 @@ public class AutonomousTest2 extends LinearOpMode{
             sleep(250);
 
             //Lower jewelArm into down position.
-            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
+            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN_PARTIAL_1);
+            sleep(300);
+            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN_PARTIAL_2);
+            sleep(300);
+            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN_COMPLETE);
             sleep(250);
 
             //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
@@ -84,19 +91,23 @@ public class AutonomousTest2 extends LinearOpMode{
             sleep(500);
 
             //Drive forward off of balance stone.
-            driveForwardSetDistance(0.15, 650);
+            driveForwardSetDistance(0.15, 1200);
             sleep(500);
 
             //Search for and confirm VuMark.
             String targetPosition = scanForVuMark(0.15, 500, relicTemplate);
 
             //Drives forward and stops on line.
-            driveForwardWithInterrupt(0.10, 750, "red");
+            //driveForwardWithInterrupt(0.10, 750, "red");
             sleep(500);
+
+            turn(0.3, 10000, relicTemplate);
 
             //Turn towards triangle.
 
             //Continue...
+
+
         }
     }
 
@@ -122,7 +133,7 @@ public class AutonomousTest2 extends LinearOpMode{
 
     //followValue should be the average of the 2 sensor.argb() color values.
     //lineColor can either be "red" or "blue"
-    public void followLine(String lineColor, double speed){
+    public void followLine(String lineColor, double speed) {
         //Sets mode to RUN_USING_ENCODER
         setRunMode("RUN_USING_ENCODER");
         int loopFlag = 0;
@@ -131,22 +142,22 @@ public class AutonomousTest2 extends LinearOpMode{
         double rightPower;
         double followValue = 0;
         //Decides follow value. Try with sensor.argb() values.
-        if(lineColor.equals("red")){
-            followValue = ((robot.RED_LINE_COLOR + robot.FLOOR_COLOR)/2);
+        if (lineColor.equals("red")) {
+            followValue = ((robot.RED_LINE_COLOR + robot.FLOOR_COLOR) / 2);
         }
-        if(lineColor.equals("blue")){
-            followValue = ((robot.BLUE_LINE_COLOR + robot.FLOOR_COLOR)/2);
+        if (lineColor.equals("blue")) {
+            followValue = ((robot.BLUE_LINE_COLOR + robot.FLOOR_COLOR) / 2);
         }
         //Drives forward until it hits a line.
         driveForwardWithInterrupt(0.15, 300, lineColor);
         //Corrects power on left and right dcMotors to follow a line.
-        while(loopFlag == 0){
+        while (loopFlag == 0) {
             //Get a correction
             correction = (followValue - robot.floorSensor.argb());
-            if(correction <= 0.0){
+            if (correction <= 0.0) {
                 leftPower = speed - correction;
                 rightPower = speed;
-            }else{ //correction > 0.0
+            } else { //correction > 0.0
                 leftPower = speed;
                 rightPower = speed + correction;
             }
@@ -158,7 +169,80 @@ public class AutonomousTest2 extends LinearOpMode{
         }
     }
 
-    //Scans for VuForia Target. returns a string.
+
+    public void turn(double power, int distance, VuforiaTrackable relicTemp){
+        setRunMode("STOP_AND_RESET_ENCODERS");
+        setRunMode("RUN_TO_POSITION");
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
+
+        if(vuMark == RelicRecoveryVuMark.CENTER){
+            robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.left1.setTargetPosition(distance);
+            robot.left2.setTargetPosition(distance);
+            robot.right1.setTargetPosition(distance);
+            robot.right2.setTargetPosition(distance);
+            robot.left1.setPower(power);
+            robot.left2.setPower(power);
+            robot.right1.setPower(power);
+            robot.right2.setPower(power);
+            telemetry.addData("Picture", "Center");
+            updateTelemetry(telemetry);
+        }
+        if(vuMark == RelicRecoveryVuMark.RIGHT){
+            robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.left1.setTargetPosition(-10000);
+            robot.left2.setTargetPosition(-10000);
+            robot.right1.setTargetPosition(10000);
+            robot.right2.setTargetPosition(10000);
+            robot.left1.setPower(power);
+            robot.left2.setPower(power);
+            robot.right1.setPower(power);
+            robot.right2.setPower(power);
+            telemetry.addData("Picture", "Right");
+            updateTelemetry(telemetry);
+        }
+        if(vuMark == RelicRecoveryVuMark.LEFT){
+            robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.left1.setTargetPosition(10000);
+            robot.left2.setTargetPosition(10000);
+            robot.right1.setTargetPosition(-10000);
+            robot.right2.setTargetPosition(-10000);
+            robot.left1.setPower(power);
+            robot.left2.setPower(power);
+            robot.right1.setPower(power);
+            robot.right2.setPower(power);
+            telemetry.addData("Picture", "Left");
+            updateTelemetry(telemetry);
+        }
+        else{
+            telemetry.addData("Picture", "Null");
+        }
+       // setMotorPower(0);
+        //setRunMode("RUN_USING_ENCODER");
+    }
+    //Scans for VuForia Target. reefts a string.
     //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
     public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
@@ -310,6 +394,7 @@ public class AutonomousTest2 extends LinearOpMode{
             robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+
     }
 
     //Sets all motors target position.
@@ -334,6 +419,20 @@ public class AutonomousTest2 extends LinearOpMode{
             return(true);
         }else{
             return(false);
+        }
+    }
+    public void servoSpeed(double startingPosition, double finalPosition, int timeLimit, double slope, double currentPosition) {
+        ElapsedTime timer = new ElapsedTime();
+
+        slope = (finalPosition - startingPosition) / timeLimit;
+        currentPosition = startingPosition;
+
+        timer.reset();
+
+        while (timer.milliseconds() < 2000) {
+            robot.jewelArm.setPosition(currentPosition);
+            currentPosition = ((Math.abs(slope)) * timer.milliseconds()) + startingPosition;
+            robot.jewelArm.setPosition(currentPosition);
         }
     }
 }

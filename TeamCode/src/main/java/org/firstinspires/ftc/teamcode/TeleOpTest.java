@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "TeleOpTest", group = "Teleop")
 //@Disabled
@@ -17,6 +18,7 @@ public class TeleOpTest extends LinearOpMode{
         robot.init(hardwareMap);
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_USING_ENCODER");
+        robot.jewelArm.setPosition(0.7);
         waitForStart();
         while(opModeIsActive()){
 
@@ -42,7 +44,7 @@ public class TeleOpTest extends LinearOpMode{
                 robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
             }
             if(gamepad1.dpad_down){
-                robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
+                servoSpeed(0.7, 0.0, 2, 100); //start position, ending position, time to move
             }
 
 
@@ -112,6 +114,86 @@ public class TeleOpTest extends LinearOpMode{
             return(-1 * (stickInput * stickInput));
         }else{
             return(stickInput);
+        }
+    }
+    public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps) {
+        ElapsedTime timer = new ElapsedTime();
+
+        double distance = 0;
+        int stepTime = 0;
+        int stepNumber = 0;
+        double changeNumber = startingPosition;
+        double currentPosition = 1;
+
+        distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
+        stepTime = (timeLimitMiliseconds / numberOfSteps);
+
+        timer.reset();
+
+        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
+            currentPosition = changeNumber - distance;
+            robot.jewelArm.setPosition(currentPosition);
+            sleep(20);
+            changeNumber = changeNumber - distance;
+            stepNumber++;
+        }
+
+//        double slope = 0;
+//        double currentPosition = 0;
+//
+//        slope = (finalPosition - startingPosition) / timeLimitSeconds;
+//        currentPosition = startingPosition;
+//
+//        timer.reset();
+//
+//        while (timer.milliseconds() < 2000) {
+//            currentPosition = ((Math.abs(slope)) * timer.seconds()) + startingPosition;
+//            robot.jewelArm.setPosition(currentPosition);
+//            sleep(3);
+//        }
+    }
+    public void servoSpeedWrist(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps) {
+        ElapsedTime timer = new ElapsedTime();
+
+        double distance = 0;
+        int stepTime = 0;
+        int stepNumber = 0;
+        double changeNumber = startingPosition;
+        double currentPosition = 1;
+
+        distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
+        stepTime = (timeLimitMiliseconds / numberOfSteps);
+
+        timer.reset();
+
+        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
+            currentPosition = changeNumber - distance;
+            robot.jewelArm.setPosition(currentPosition);
+            sleep(20);
+            changeNumber = changeNumber - distance;
+            stepNumber++;
+        }
+    }
+    public void servoSpeedElbow(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps) {
+        ElapsedTime timer = new ElapsedTime();
+
+        double distance = 0;
+        int stepTime = 0;
+        int stepNumber = 0;
+        double changeNumber = startingPosition;
+        double currentPosition = 1;
+
+        distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
+        stepTime = (timeLimitMiliseconds / numberOfSteps);
+
+        timer.reset();
+
+        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
+            currentPosition = changeNumber - distance;
+            robot.elbow.setPosition(currentPosition);
+            sleep(20);
+            changeNumber = changeNumber - distance;
+            stepNumber++;
         }
     }
 }

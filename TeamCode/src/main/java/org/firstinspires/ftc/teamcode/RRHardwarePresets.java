@@ -26,6 +26,8 @@ public class RRHardwarePresets{
     public DcMotor turretMotor;
     public Servo claw;
     public Servo jewelArm;
+    public Servo elbow;
+    public Servo wrist;
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
     BNO055IMU imu;
@@ -38,7 +40,9 @@ public class RRHardwarePresets{
 
     //Constants
     public final double JEWEL_ARM_UP = 0.70;
-    public final double JEWEL_ARM_DOWN = 0.05;
+    public final double JEWEL_ARM_DOWN_PARTIAL_1 = 0.5;
+    public final double JEWEL_ARM_DOWN_PARTIAL_2 = 0.3;
+    public final double JEWEL_ARM_DOWN_COMPLETE = 0.05;
     public final double JEWEL_ARM_MID = 0.20;
 
     //Need to get these values correct for followLine() to work.
@@ -64,6 +68,9 @@ public class RRHardwarePresets{
         jewelArm = HwMap.servo.get("jewelArm");
         jewelSensor = HwMap.colorSensor.get("jewelSensor");
         floorSensor = HwMap.colorSensor.get("floorSensor");
+        elbow = HwMap.servo.get("elbow");
+        wrist = HwMap.servo.get("wrist");
+
 
         //DC Motor directions.
         left1.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -84,7 +91,7 @@ public class RRHardwarePresets{
 
         //Initial Servo positions.
         //claw.setPosition(0.2); //Closed
-        //jewelArm.setPosition(0.30); //Raised
+        jewelArm.setPosition(0.70); //Raised
 
         //IMU initialization parameters
         BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
