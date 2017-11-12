@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -421,18 +422,23 @@ public class AutonomousTest2 extends LinearOpMode{
             return(false);
         }
     }
-    public void servoSpeed(double startingPosition, double finalPosition, int timeLimit, double slope, double currentPosition) {
+
+    public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo){
         ElapsedTime timer = new ElapsedTime();
-
-        slope = (finalPosition - startingPosition) / timeLimit;
-        currentPosition = startingPosition;
-
+        double distance = 0;
+        int stepTime = 0;
+        int stepNumber = 0;
+        double changeNumber = startingPosition;
+        double currentPosition = 1;
+        distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
+        stepTime = (timeLimitMiliseconds / numberOfSteps);
         timer.reset();
-
-        while (timer.milliseconds() < 2000) {
-            robot.jewelArm.setPosition(currentPosition);
-            currentPosition = ((Math.abs(slope)) * timer.milliseconds()) + startingPosition;
-            robot.jewelArm.setPosition(currentPosition);
+        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
+            currentPosition = changeNumber - distance;
+            targetServo.setPosition(currentPosition);
+            sleep(20);
+            changeNumber = changeNumber - distance;
+            stepNumber++;
         }
     }
 }

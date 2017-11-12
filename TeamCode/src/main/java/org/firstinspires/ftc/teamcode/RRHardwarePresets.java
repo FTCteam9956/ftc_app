@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -44,6 +45,13 @@ public class RRHardwarePresets{
     public final double JEWEL_ARM_DOWN_PARTIAL_2 = 0.3;
     public final double JEWEL_ARM_DOWN_COMPLETE = 0.05;
     public final double JEWEL_ARM_MID = 0.20;
+
+    //Servo positional constant.
+    public final double ELBOW_UNFOLDED = 0.30;
+    public final double ELBOW_FOLDED = 1.00;
+    public final double WRIST_UNFOLDED = 0.30;
+    public final double WRIST_FOLDED = 1.00;
+
 
     //Need to get these values correct for followLine() to work.
     public final double FLOOR_COLOR = 0.0;

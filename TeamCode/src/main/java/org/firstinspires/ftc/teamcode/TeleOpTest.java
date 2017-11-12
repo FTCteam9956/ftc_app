@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "TeleOpTest", group = "Teleop")
@@ -41,12 +42,25 @@ public class TeleOpTest extends LinearOpMode{
 
             //jewelArm controls.
             if(gamepad1.dpad_up){
-                robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
+                servoSpeed(0, 0.7, 2, 100, robot.jewelArm);
             }
             if(gamepad1.dpad_down){
-                servoSpeed(0.7, 0.0, 2, 100); //start position, ending position, time to move
+                servoSpeed(0.7, 0.0, 2, 100, robot.jewelArm); //start position, ending position, time to move
             }
 
+            //Arm Tests
+            if(gamepad1.dpad_left){
+                //robot.wrist.setPosition(1.00);
+                //robot.elbow.setPosition(1.00);
+                servoSpeed(0.3, 1.0, 3000, 1000, robot.wrist);
+                servoSpeed(0.3, 1.0, 3000, 1000, robot.elbow);
+            }
+            if(gamepad1.dpad_right){
+                //robot.wrist.setPosition(0.3);
+                //robot.elbow.setPosition(0.3);
+                servoSpeed(1.0, 0.3, 3000, 1000, robot.wrist);
+                servoSpeed(1.0, 0.3, 3000, 1000, robot.elbow);
+            }
 
             //Telemetry
             //telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
@@ -64,9 +78,9 @@ public class TeleOpTest extends LinearOpMode{
             //telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
             //telemetry.addData("Floor Sensor", robot.floorSensor.argb());
             //telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
+            telemetry.addData("Elbow", robot.elbow.getPosition());
+            telemetry.addData("Wrist", robot.wrist.getPosition());
             telemetry.addData("IMU angular orientation", robot.imu.getAngularOrientation());
-            
-
 
             telemetry.update();
 
@@ -116,81 +130,20 @@ public class TeleOpTest extends LinearOpMode{
             return(stickInput);
         }
     }
-    public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps) {
-        ElapsedTime timer = new ElapsedTime();
 
+    public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo){
+        ElapsedTime timer = new ElapsedTime();
         double distance = 0;
         int stepTime = 0;
         int stepNumber = 0;
         double changeNumber = startingPosition;
         double currentPosition = 1;
-
         distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
         stepTime = (timeLimitMiliseconds / numberOfSteps);
-
         timer.reset();
-
         while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
             currentPosition = changeNumber - distance;
-            robot.jewelArm.setPosition(currentPosition);
-            sleep(20);
-            changeNumber = changeNumber - distance;
-            stepNumber++;
-        }
-
-//        double slope = 0;
-//        double currentPosition = 0;
-//
-//        slope = (finalPosition - startingPosition) / timeLimitSeconds;
-//        currentPosition = startingPosition;
-//
-//        timer.reset();
-//
-//        while (timer.milliseconds() < 2000) {
-//            currentPosition = ((Math.abs(slope)) * timer.seconds()) + startingPosition;
-//            robot.jewelArm.setPosition(currentPosition);
-//            sleep(3);
-//        }
-    }
-    public void servoSpeedWrist(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps) {
-        ElapsedTime timer = new ElapsedTime();
-
-        double distance = 0;
-        int stepTime = 0;
-        int stepNumber = 0;
-        double changeNumber = startingPosition;
-        double currentPosition = 1;
-
-        distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
-        stepTime = (timeLimitMiliseconds / numberOfSteps);
-
-        timer.reset();
-
-        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
-            currentPosition = changeNumber - distance;
-            robot.jewelArm.setPosition(currentPosition);
-            sleep(20);
-            changeNumber = changeNumber - distance;
-            stepNumber++;
-        }
-    }
-    public void servoSpeedElbow(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps) {
-        ElapsedTime timer = new ElapsedTime();
-
-        double distance = 0;
-        int stepTime = 0;
-        int stepNumber = 0;
-        double changeNumber = startingPosition;
-        double currentPosition = 1;
-
-        distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
-        stepTime = (timeLimitMiliseconds / numberOfSteps);
-
-        timer.reset();
-
-        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
-            currentPosition = changeNumber - distance;
-            robot.elbow.setPosition(currentPosition);
+            targetServo.setPosition(currentPosition);
             sleep(20);
             changeNumber = changeNumber - distance;
             stepNumber++;
