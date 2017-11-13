@@ -44,7 +44,6 @@ public class RRHardwarePresets{
     public final double JEWEL_ARM_DOWN_PARTIAL_1 = 0.5;
     public final double JEWEL_ARM_DOWN_PARTIAL_2 = 0.3;
     public final double JEWEL_ARM_DOWN_COMPLETE = 0.05;
-    public final double JEWEL_ARM_MID = 0.20;
 
     //Servo positional constant.
     public final double ELBOW_UNFOLDED = 0.30;

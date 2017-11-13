@@ -14,10 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name = "AutonomousTest2", group = "Autonomous")
 //@Disabled
 
-public class AutonomousTest2 extends LinearOpMode{
+public class AutonomousTest2 extends LinearOpMode {
     RRHardwarePresets robot = new RRHardwarePresets();
+
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         robot.init(hardwareMap);
 
         robot.jewelArm.setPosition(0.7);
@@ -30,29 +31,22 @@ public class AutonomousTest2 extends LinearOpMode{
 
         waitForStart();
 
-
         //Relic Trackables
         relicTrackables.activate();
 
         //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
-        boolean testArea = false;
+        boolean testArea = true;
 
-        if(testArea == true){
+        if (testArea == true) {
             //--TEST SCRIPT START--
-            turnDirection(0.15, 500, "CW");
-            sleep(500);
-            turnDirection(0.30, 750, "CCW");
-        }
-        else{
+
+
+        } else {
             //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 
             //--AUTO SCRIPT START--
             //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
             robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
-            sleep(250);
-
-            //Mid Drop slowdown so we don't smack the color sensor on the ground.
-            robot.jewelArm.setPosition(robot.JEWEL_ARM_MID);
             sleep(250);
 
             //Lower jewelArm into down position.
@@ -97,12 +91,20 @@ public class AutonomousTest2 extends LinearOpMode{
 
             //Search for and confirm VuMark.
             String targetPosition = scanForVuMark(0.15, 500, relicTemplate);
+            if (targetPosition.equals("left")) {
+                turnDirection(0.15, 500, "CCW");
+                driveForwardSetDistance(0.15, 100);
+            }
+            if (targetPosition.equals("right")) {
+                turnDirection(0.15, 500, "CW");
+                driveForwardSetDistance(0.15, 100);
+            }
+            if (targetPosition.equals("center")) {
+                driveForwardSetDistance(0.15, 100);
+            }
 
             //Drives forward and stops on line.
-            //driveForwardWithInterrupt(0.10, 750, "red");
-            sleep(500);
 
-            turn(0.3, 10000, relicTemplate);
 
             //Turn towards triangle.
 
@@ -113,18 +115,18 @@ public class AutonomousTest2 extends LinearOpMode{
     }
 
     //Moves the jewelArm depending on what the input is.
-    public void knockOffBall(int selection){
+    public void knockOffBall(int selection) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
-        if(selection == 0){
+        if (selection == 0) {
             robot.turretMotor.setTargetPosition(200);
         }
-        if(selection == 1){
+        if (selection == 1) {
             robot.turretMotor.setTargetPosition(-200);
         }
         robot.turretMotor.setPower(0.15);
-        while(robot.turretMotor.isBusy()){
+        while (robot.turretMotor.isBusy()) {
             //Waiting while turret turns.
         }
         sleep(500);
@@ -170,82 +172,9 @@ public class AutonomousTest2 extends LinearOpMode{
         }
     }
 
-
-    public void turn(double power, int distance, VuforiaTrackable relicTemp){
-        setRunMode("STOP_AND_RESET_ENCODERS");
-        setRunMode("RUN_TO_POSITION");
-
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
-
-        if(vuMark == RelicRecoveryVuMark.CENTER){
-            robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.left1.setTargetPosition(distance);
-            robot.left2.setTargetPosition(distance);
-            robot.right1.setTargetPosition(distance);
-            robot.right2.setTargetPosition(distance);
-            robot.left1.setPower(power);
-            robot.left2.setPower(power);
-            robot.right1.setPower(power);
-            robot.right2.setPower(power);
-            telemetry.addData("Picture", "Center");
-            updateTelemetry(telemetry);
-        }
-        if(vuMark == RelicRecoveryVuMark.RIGHT){
-            robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.left1.setTargetPosition(-10000);
-            robot.left2.setTargetPosition(-10000);
-            robot.right1.setTargetPosition(10000);
-            robot.right2.setTargetPosition(10000);
-            robot.left1.setPower(power);
-            robot.left2.setPower(power);
-            robot.right1.setPower(power);
-            robot.right2.setPower(power);
-            telemetry.addData("Picture", "Right");
-            updateTelemetry(telemetry);
-        }
-        if(vuMark == RelicRecoveryVuMark.LEFT){
-            robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.left1.setTargetPosition(10000);
-            robot.left2.setTargetPosition(10000);
-            robot.right1.setTargetPosition(-10000);
-            robot.right2.setTargetPosition(-10000);
-            robot.left1.setPower(power);
-            robot.left2.setPower(power);
-            robot.right1.setPower(power);
-            robot.right2.setPower(power);
-            telemetry.addData("Picture", "Left");
-            updateTelemetry(telemetry);
-        }
-        else{
-            telemetry.addData("Picture", "Null");
-        }
-       // setMotorPower(0);
-        //setRunMode("RUN_USING_ENCODER");
-    }
     //Scans for VuForia Target. reefts a string.
     //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
-    public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp){
+    public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
@@ -260,9 +189,9 @@ public class AutonomousTest2 extends LinearOpMode{
         robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
         robot.turretMotor.setPower(power);
 
-        while(robot.turretMotor.isBusy()){
+        while (robot.turretMotor.isBusy()) {
             //Waiting for turret to stop moving.
-            if(vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
+            if (vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
                 decidingMark = "left";
                 robot.turretMotor.setPower(0.0);
                 telemetry.addData("VuMark", "LEFT");
@@ -279,21 +208,20 @@ public class AutonomousTest2 extends LinearOpMode{
             }
             telemetry.update();
         }
-        return(decidingMark);
+        return (decidingMark);
     }
 
     //Takes power and distance to rotate and "CW" clockwise or "CCW" as directional input.
-    public void turnDirection(double power, int distance, String direction){
+    public void turnDirection(double power, int distance, String direction) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
-        if(direction.equals("CCW")){
+        if (direction.equals("CCW")) {
             robot.left1.setTargetPosition(distance);
             robot.left2.setTargetPosition(distance);
-            robot.right1.setTargetPosition( -distance);
+            robot.right1.setTargetPosition(-distance);
             robot.right2.setTargetPosition(-distance);
-        }
-        else if(direction.equals("CW")){
+        } else if (direction.equals("CW")) {
             robot.left1.setTargetPosition(-distance);
             robot.left2.setTargetPosition(-distance);
             robot.right1.setTargetPosition(distance);
@@ -301,7 +229,7 @@ public class AutonomousTest2 extends LinearOpMode{
         }
         setMotorPower(power);
         //Waits while turning.
-        while(anyMotorsBusy()){
+        while (anyMotorsBusy()) {
             //Spinning
             //Waiting while turning.
         }
@@ -313,7 +241,7 @@ public class AutonomousTest2 extends LinearOpMode{
 
     //Drives at given power and a given distance unless floorSensors interrupt it
     // by seeing the given color. ("red" or "blue").
-    public void driveForwardWithInterrupt(double power, int distance, String color){
+    public void driveForwardWithInterrupt(double power, int distance, String color) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         //Sets target distance. Set to negative distance because motor was running backwards.
@@ -323,16 +251,16 @@ public class AutonomousTest2 extends LinearOpMode{
         //Sets power for DC Motors.
         setMotorPower(power);
         //Waits while driving to position.
-        while(anyMotorsBusy()){
+        while (anyMotorsBusy()) {
             telemetry.addData("Floor Sensor (blue):", robot.floorSensor.blue());
             telemetry.addData("Floor Sensor (red):", robot.floorSensor.red());
-            if(color.equals("red")){
-                if(robot.floorSensor.red() > 50){//Level of Red required to stop.
+            if (color.equals("red")) {
+                if (robot.floorSensor.red() > 50) {//Level of Red required to stop.
                     setMotorPower(0.0);
                 }
             }
-            if(color.equals("blue")){
-                if(robot.floorSensor.blue() > 50){//Level of Blue required to stop.
+            if (color.equals("blue")) {
+                if (robot.floorSensor.blue() > 50) {//Level of Blue required to stop.
                     setMotorPower(0.0);
                 }
             }
@@ -345,7 +273,7 @@ public class AutonomousTest2 extends LinearOpMode{
     }
 
     //Drives forward a certain distance at a certain speed. Only use if no intention to interrupt.
-    public void driveForwardSetDistance(double power, int distance){
+    public void driveForwardSetDistance(double power, int distance) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         //Sets target distance. Set to negative distance because motor was running backwards.
@@ -355,7 +283,7 @@ public class AutonomousTest2 extends LinearOpMode{
         //Sets power for DC Motors.
         setMotorPower(power);
         //Waits while driving to position.
-        while(anyMotorsBusy()){
+        while (anyMotorsBusy()) {
             //Spinning.
             //Waiting for robot to arrive at destination.
         }
@@ -366,29 +294,29 @@ public class AutonomousTest2 extends LinearOpMode{
     }
 
     //Sets the run mode of all DC motors. Also sets the turret motor now.
-    public void setRunMode(String input){
-        if(input.equals("STOP_AND_RESET_ENCODER")){
+    public void setRunMode(String input) {
+        if (input.equals("STOP_AND_RESET_ENCODER")) {
             robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        if(input.equals("RUN_WITHOUT_ENCODER")){
+        if (input.equals("RUN_WITHOUT_ENCODER")) {
             robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-        if(input.equals("RUN_USING_ENCODER")){
+        if (input.equals("RUN_USING_ENCODER")) {
             robot.left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.left2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        if(input.equals("RUN_TO_POSITION")){
+        if (input.equals("RUN_TO_POSITION")) {
             robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -399,7 +327,7 @@ public class AutonomousTest2 extends LinearOpMode{
     }
 
     //Sets all motors target position.
-    public void setAllTargetPositions(int distance){
+    public void setAllTargetPositions(int distance) {
         robot.left1.setTargetPosition(distance);
         robot.left2.setTargetPosition(distance);
         robot.right1.setTargetPosition(distance);
@@ -407,7 +335,7 @@ public class AutonomousTest2 extends LinearOpMode{
     }
 
     //Sets all motors power.
-    public void setMotorPower(double power){
+    public void setMotorPower(double power) {
         robot.left1.setPower(power);
         robot.left2.setPower(power);
         robot.right1.setPower(power);
@@ -415,15 +343,15 @@ public class AutonomousTest2 extends LinearOpMode{
     }
 
     //Returns TRUE if any drive motors are busy and FALSE if not.
-    public boolean anyMotorsBusy(){
-        if(robot.left1.isBusy() || robot.left2.isBusy() || robot.right1.isBusy() || robot.right2.isBusy()){
-            return(true);
-        }else{
-            return(false);
+    public boolean anyMotorsBusy() {
+        if (robot.left1.isBusy() || robot.left2.isBusy() || robot.right1.isBusy() || robot.right2.isBusy()) {
+            return (true);
+        } else {
+            return (false);
         }
     }
 
-    public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo){
+    public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo) {
         ElapsedTime timer = new ElapsedTime();
         double distance = 0;
         int stepTime = 0;
@@ -433,12 +361,39 @@ public class AutonomousTest2 extends LinearOpMode{
         distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
         stepTime = (timeLimitMiliseconds / numberOfSteps);
         timer.reset();
-        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
+        while (timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
             currentPosition = changeNumber - distance;
             targetServo.setPosition(currentPosition);
             sleep(20);
             changeNumber = changeNumber - distance;
             stepNumber++;
+        }
+    }
+
+    //My attempt at creating servoSpeed.
+    //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
+    public void servoSpeed2(Servo targetServo, double targetPosition, int steps, long timeInMilli) {
+        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
+
+        //Unit conversion to nanoseconds.
+        long time = timeInMilli * 1000000;
+
+        //Per Step.
+        double distanceToTravelPerStep = distanceToTravel / steps;
+        long timePerStep = time / steps;
+
+        int counter = 0;
+        while (counter < steps) {
+            double initialTime = System.nanoTime();
+
+            double currentPosition = targetServo.getPosition();
+            targetServo.setPosition(currentPosition + distanceToTravelPerStep); //Moves the arm.
+
+            //while Difference in CurrentTime and initialTime, for ths loop, are less than time per step, wait.
+            while((System.nanoTime() - initialTime) < timePerStep){
+                //Wait.
+            }
+            counter++;
         }
     }
 }
