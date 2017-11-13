@@ -30,8 +30,6 @@ public class TeleopForArms extends LinearOpMode {
         }
     }
 
-
-
     public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo){
         ElapsedTime timer = new ElapsedTime();
         double distance = 0;

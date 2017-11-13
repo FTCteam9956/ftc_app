@@ -91,25 +91,28 @@ public class AutonomousTest2 extends LinearOpMode {
 
             //Search for and confirm VuMark.
             String targetPosition = scanForVuMark(0.15, 500, relicTemplate);
-            if (targetPosition.equals("left")) {
+
+            //Turn dependent on what we read from vuMark.
+            if(targetPosition.equals("left")){ //Turn CCW, then drive forward.
                 turnDirection(0.15, 500, "CCW");
                 driveForwardSetDistance(0.15, 100);
             }
-            if (targetPosition.equals("right")) {
+            if(targetPosition.equals("right")){ //Turn CW, then drive forward.
                 turnDirection(0.15, 500, "CW");
                 driveForwardSetDistance(0.15, 100);
             }
-            if (targetPosition.equals("center")) {
+            if(targetPosition.equals("center")){ //Just drive forward.
                 driveForwardSetDistance(0.15, 100);
+            }
+            if(targetPosition.equals("none")){
+                //Didn't find vuMark :(
             }
 
             //Drives forward and stops on line.
 
-
             //Turn towards triangle.
 
             //Continue...
-
 
         }
     }
@@ -172,7 +175,7 @@ public class AutonomousTest2 extends LinearOpMode {
         }
     }
 
-    //Scans for VuForia Target. reefts a string.
+    //Scans for VuForia Target. returns a string of either "none", "right", "left", or "center"
     //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
     public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
@@ -191,19 +194,20 @@ public class AutonomousTest2 extends LinearOpMode {
 
         while (robot.turretMotor.isBusy()) {
             //Waiting for turret to stop moving.
-            if (vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
+
+            if(vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
                 decidingMark = "left";
                 robot.turretMotor.setPower(0.0);
                 telemetry.addData("VuMark", "LEFT");
-            } else if (vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
+            }else if (vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
                 decidingMark = "center";
                 telemetry.addData("VuMark", "CENTER");
                 robot.turretMotor.setPower(0.0);
-            } else if (vuMark == RelicRecoveryVuMark.RIGHT) { //Right seen.
+            }else if (vuMark == RelicRecoveryVuMark.RIGHT) { //Right seen.
                 decidingMark = "right";
-                telemetry.addData("VuMark", "CENTER");
+                telemetry.addData("VuMark", "RIGHT");
                 robot.turretMotor.setPower(0.0);
-            } else { //No VuMark seen.
+            }else{ //No VuMark seen.
                 telemetry.addData("VuMark", "not visible");
             }
             telemetry.update();
@@ -334,7 +338,7 @@ public class AutonomousTest2 extends LinearOpMode {
         robot.right2.setTargetPosition(distance);
     }
 
-    //Sets all motors power.
+    //Sets all drive motor power.
     public void setMotorPower(double power) {
         robot.left1.setPower(power);
         robot.left2.setPower(power);
