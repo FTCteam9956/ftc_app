@@ -25,7 +25,6 @@ public class TeleopForArms extends LinearOpMode {
                 servoSpeed(1.0, 0, 2, 100, robot.wrist);
             }
 
-
             idle();
         }
     }
