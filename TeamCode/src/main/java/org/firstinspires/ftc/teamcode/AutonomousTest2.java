@@ -14,7 +14,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name = "AutonomousTest2", group = "Autonomous")
 //@Disabled
 
-public class AutonomousTest2 extends LinearOpMode {
+//TO DO LIST:
+//Test if methods can be put into RRHardwarePresets.java
+//Test moveServo()
+//Test scanForVuMark()
+//Clean up constants in RRHardwarePresets
+//Test followLine()
+//Move relevant code from TeleopForArms into TeleOpTest
+//See if we can collect IMU data in TeleOpTest
+//See if we can turn on LEDs for sensors and set initial arm positions in RRHardwarePresets
+//Work with new Position class
+//Update FIRST SDK
+
+public class AutonomousTest2 extends LinearOpMode{
     RRHardwarePresets robot = new RRHardwarePresets();
 
     @Override
@@ -39,14 +51,17 @@ public class AutonomousTest2 extends LinearOpMode {
 
         if (testArea == true) {
             //--TEST SCRIPT START--
+            moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 10000, 5000); //Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
 
 
-        } else {
+        }else{
             //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 
             //--AUTO SCRIPT START--
+
             //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
             robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
+
             sleep(250);
 
             //Lower jewelArm into down position.
@@ -376,28 +391,24 @@ public class AutonomousTest2 extends LinearOpMode {
 
     //My attempt at creating servoSpeed.
     //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
-    public void servoSpeed2(Servo targetServo, double targetPosition, int steps, long timeInMilli) {
+    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
+        //Total distance to travel.
         double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
-
         //Unit conversion to nanoseconds.
         long time = timeInMilli * 1000000;
-
-        //Per Step.
+        //Per Step values.
         double distanceToTravelPerStep = distanceToTravel / steps;
         long timePerStep = time / steps;
-
-        int counter = 0;
-        while (counter < steps) {
+        //Loops number of steps.
+        for(int counter = 0; counter < steps; counter++){
             double initialTime = System.nanoTime();
-
-            double currentPosition = targetServo.getPosition();
+            double currentPosition = targetServo.getPosition(); //Gets current arm position.
             targetServo.setPosition(currentPosition + distanceToTravelPerStep); //Moves the arm.
-
             //while Difference in CurrentTime and initialTime, for ths loop, are less than time per step, wait.
             while((System.nanoTime() - initialTime) < timePerStep){
                 //Wait.
             }
-            counter++;
         }
     }
 }
+
