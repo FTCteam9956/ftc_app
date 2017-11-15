@@ -51,7 +51,7 @@ public class AutonomousTest2 extends LinearOpMode{
 
         if (testArea == true) {
             //--TEST SCRIPT START--
-            moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 10000, 5000); //Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
+            robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 10000, 5000); //Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
 
 
         }else{
@@ -390,24 +390,24 @@ public class AutonomousTest2 extends LinearOpMode{
 
     //My attempt at creating servoSpeed.
     //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
-    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
-        //Total distance to travel.
-        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
-        //Unit conversion to nanoseconds.
-        long time = timeInMilli * 1000000;
-        //Per Step values.
-        double distanceToTravelPerStep = distanceToTravel / steps;
-        long timePerStep = time / steps;
-        //Loops number of steps.
-        for(int counter = 0; counter < steps; counter++){
-            double initialTime = System.nanoTime();
-            double currentPosition = targetServo.getPosition(); //Gets current arm position.
-            targetServo.setPosition(currentPosition + distanceToTravelPerStep); //Moves the arm.
-            //while Difference in CurrentTime and initialTime, for ths loop, are less than time per step, wait.
-            while((System.nanoTime() - initialTime) < timePerStep){
-                //Wait.
-            }
-        }
-    }
+//    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
+//        //Total distance to travel.
+//        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
+//        //Unit conversion to nanoseconds.
+//        long time = timeInMilli * 1000000;
+//        //Per Step values.
+//        double distanceToTravelPerStep = distanceToTravel / steps;
+//        long timePerStep = time / steps;
+//        //Loops number of steps.
+//        for(int counter = 0; counter < steps; counter++){
+//            double initialTime = System.nanoTime();
+//            double currentPosition = targetServo.getPosition(); //Gets current arm position.
+//            targetServo.setPosition(currentPosition + distanceToTravelPerStep); //Moves the arm.
+//            //while Difference in CurrentTime and initialTime, for ths loop, are less than time per step, wait.
+//            while((System.nanoTime() - initialTime) < timePerStep){
+//                //Wait.
+//            }
+//        }
+//    }
 }
 
