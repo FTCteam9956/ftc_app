@@ -31,7 +31,8 @@ public class RRHardwarePresets{
     public Servo wrist;
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
-    BNO055IMU imu;
+    public BNO055IMU imu1;
+    public BNO055IMU imu2;
     HardwareMap HwMap;
 
     //Vuforia Information
@@ -102,16 +103,21 @@ public class RRHardwarePresets{
 
         //IMU initialization parameters
         BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
-        IMUParameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        IMUParameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        IMUParameters.loggingEnabled      = true;
-        IMUParameters.loggingTag          = "IMU";
+        IMUParameters.loggingEnabled = true;
+        IMUParameters.loggingTag = "IMU";
         IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        //IMU initialization
-        imu = HwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(IMUParameters);
+        //imu1 initialization
+        imu1 = HwMap.get(BNO055IMU.class, "imu1");
+        imu1.initialize(IMUParameters);
+
+        //imu2 initialization
+        imu2 = HwMap.get(BNO055IMU.class, "imu2");
+        imu2.initialize(IMUParameters);
+
 
         //Vuforia Initialization
         //Sets camera feed to display on phone.

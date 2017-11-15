@@ -25,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //See if we can turn on LEDs for sensors and set initial arm positions in RRHardwarePresets
 //Work with new Position class
 //Update FIRST SDK
+//Use difference in IMU readings to tell where our turret is pointed.
 
 public class AutonomousTest2 extends LinearOpMode{
     RRHardwarePresets robot = new RRHardwarePresets();
