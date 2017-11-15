@@ -30,7 +30,7 @@ public class AutonomousTest2 extends LinearOpMode{
     RRHardwarePresets robot = new RRHardwarePresets();
 
     @Override
-    public void runOpMode() {
+    public void runOpMode(){
         robot.init(hardwareMap);
 
         robot.jewelArm.setPosition(0.7);
@@ -144,7 +144,7 @@ public class AutonomousTest2 extends LinearOpMode{
             robot.turretMotor.setTargetPosition(-200);
         }
         robot.turretMotor.setPower(0.15);
-        while (robot.turretMotor.isBusy()) {
+        while(robot.turretMotor.isBusy()){
             //Waiting while turret turns.
         }
         sleep(500);
@@ -192,7 +192,7 @@ public class AutonomousTest2 extends LinearOpMode{
 
     //Scans for VuForia Target. returns a string of either "none", "right", "left", or "center"
     //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
-    public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp) {
+    public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
@@ -207,18 +207,17 @@ public class AutonomousTest2 extends LinearOpMode{
         robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
         robot.turretMotor.setPower(power);
 
-        while (robot.turretMotor.isBusy()) {
+        while (robot.turretMotor.isBusy()){
             //Waiting for turret to stop moving.
-
-            if(vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
+            if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
                 decidingMark = "left";
                 robot.turretMotor.setPower(0.0);
                 telemetry.addData("VuMark", "LEFT");
-            }else if (vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
+            }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
                 decidingMark = "center";
                 telemetry.addData("VuMark", "CENTER");
                 robot.turretMotor.setPower(0.0);
-            }else if (vuMark == RelicRecoveryVuMark.RIGHT) { //Right seen.
+            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
                 decidingMark = "right";
                 telemetry.addData("VuMark", "RIGHT");
                 robot.turretMotor.setPower(0.0);

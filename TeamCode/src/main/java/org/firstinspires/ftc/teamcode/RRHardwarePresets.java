@@ -159,4 +159,26 @@ public class RRHardwarePresets{
             this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
+
+    //My attempt at creating servoSpeed.
+    //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
+    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
+        //Total distance to travel.
+        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
+        //Unit conversion to nanoseconds.
+        long time = timeInMilli * 1000000;
+        //Per Step values.
+        double distanceToTravelPerStep = distanceToTravel / steps;
+        long timePerStep = time / steps;
+        //Loops number of steps.
+        for(int counter = 0; counter < steps; counter++){
+            double initialTime = System.nanoTime();
+            double currentPosition = targetServo.getPosition(); //Gets current arm position.
+            targetServo.setPosition(currentPosition + distanceToTravelPerStep); //Moves the arm.
+            //while Difference in CurrentTime and initialTime, for ths loop, are less than time per step, wait.
+            while((System.nanoTime() - initialTime) < timePerStep){
+                //Wait.
+            }
+        }
+    }
 }
