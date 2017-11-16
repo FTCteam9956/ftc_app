@@ -168,7 +168,7 @@ public class RRHardwarePresets{
 
     //My attempt at creating servoSpeed.
     //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
-    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
+    public static void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
         //Total distance to travel.
         double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
         //Unit conversion to nanoseconds.
