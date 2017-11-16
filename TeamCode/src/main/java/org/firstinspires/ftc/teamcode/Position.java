@@ -25,9 +25,8 @@ public class Position{
 
     //Will move robot to specified Position.
     public void execute(RRHardwarePresets robot){
-        RRHardwarePresets.moveServo(robot.wrist, this.wristPosition, 10000, 3000);
-        RRHardwarePresets.moveServo(robot.elbow, this.elbowPosition, 10000, 3000);
-
+        robot.moveServo(robot.wrist, this.wristPosition, 10000, 3000);
+        robot.moveServo(robot.elbow, this.elbowPosition, 10000, 3000);
     }
 
     //Takes in 2 IMUs and returns 2 Strings in an ArrayList with info about their headings.

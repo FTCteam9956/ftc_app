@@ -24,13 +24,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //Use difference in IMU readings to tell where our turret is pointed.
 
 public class AutonomousTest2 extends LinearOpMode{
-    RRHardwarePresets robot = new RRHardwarePresets();
+    public RRHardwarePresets robot = new RRHardwarePresets();
 
     @Override
     public void runOpMode(){
         robot.init(hardwareMap);
 
-        robot.jewelArm.setPosition(0.7);
         //Vuforia Trackables.
         VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
@@ -48,9 +47,6 @@ public class AutonomousTest2 extends LinearOpMode{
 
         if (testArea == true) {
             //--TEST SCRIPT START--
-            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 1000, 5000);
-            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 5000);//Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
-            //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 5000, 5000);
             String testString = scanForVuMark(0.05, 300, relicTemplate);
             if(testString.equals("left")){
                 robot.turnDirection(0.15, 1000, "CCW");
