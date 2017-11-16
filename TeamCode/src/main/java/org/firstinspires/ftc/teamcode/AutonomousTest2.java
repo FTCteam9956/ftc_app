@@ -26,8 +26,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //Update FIRST SDK
 //Use difference in IMU readings to tell where our turret is pointed.
 
-public class AutonomousTest2 extends LinearOpMode{
+public class AutonomousTest2 extends LinearOpMode implements Runnable{
     RRHardwarePresets robot = new RRHardwarePresets();
+
+    @Override
+    public void run(){
+
+    }
 
     @Override
     public void runOpMode(){
