@@ -1,5 +1,4 @@
 //RRHardwarePresets.java
-
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -31,8 +30,8 @@ public class RRHardwarePresets{
     public Servo wrist;
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
-    public BNO055IMU imu1;
-    public BNO055IMU imu2;
+    public BNO055IMU imu;
+    //public BNO055IMU imu2;
     HardwareMap HwMap;
 
     //Vuforia Information
@@ -43,13 +42,10 @@ public class RRHardwarePresets{
     //Constants
     public final double JEWEL_ARM_UP = 0.70;
     public final double JEWEL_ARM_DOWN = 0.05;
-
-    //Servo positional constant.
     public final double ELBOW_UNFOLDED = 0.30;
     public final double ELBOW_FOLDED = 1.00;
     public final double WRIST_UNFOLDED = 0.30;
     public final double WRIST_FOLDED = 1.00;
-
 
     //Need to get these values correct for followLine() to work.
     public final double FLOOR_COLOR = 0.0;
@@ -77,7 +73,6 @@ public class RRHardwarePresets{
         elbow = HwMap.servo.get("elbow");
         wrist = HwMap.servo.get("wrist");
 
-
         //DC Motor directions.
         left1.setDirection(DcMotorSimple.Direction.FORWARD);
         left2.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -98,25 +93,24 @@ public class RRHardwarePresets{
         //Initial Servo positions.
         jewelArm.setPosition(JEWEL_ARM_UP); //Raised
 
-//        //IMU initialization parameters
-//        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
-//        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-//        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-//        IMUParameters.loggingEnabled = true;
-//        IMUParameters.loggingTag = "IMU";
-//        IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-//
-//        //imu1 initialization
-//        imu1 = HwMap.get(BNO055IMU.class, "imu1");
-//        imu1.initialize(IMUParameters);
+        //IMU initialization parameters
+        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
+        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        IMUParameters.loggingEnabled = true;
+        IMUParameters.loggingTag = "IMU";
+        IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        //imu1 initialization, change name to imu1 when we add the second IMU. Will need to be updated on phone config.
+        imu = HwMap.get(BNO055IMU.class, "imu1");
+        imu.initialize(IMUParameters);
 //
 //        //imu2 initialization
 //        imu2 = HwMap.get(BNO055IMU.class, "imu2");
 //        imu2.initialize(IMUParameters);
 
-
-        //Vuforia Initialization
+        //Vuforia Initialization parameters.
         //Sets camera feed to display on phone.
         int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -128,7 +122,113 @@ public class RRHardwarePresets{
         VuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         //Initializes VuforiaLocalizer object as vuforia.
         this.vuforia = ClassFactory.createVuforiaLocalizer(VuforiaParameters);
+    }
 
+    //---UNIVERSAL METHODS BELOW---
+
+    //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
+    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
+        //Total distance to travel.
+        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
+        //Unit conversion to nanoseconds.
+        long time = timeInMilli * 1000000;
+        //Per Step values.
+        //double distanceToTravelPerStep = (distanceToTravel / steps);
+        long timePerStep = time / steps;
+        //Loops number of steps.
+        double distanceToTravelPerStep;
+        if(targetPosition - targetServo.getPosition() >= 0){
+            distanceToTravelPerStep = (distanceToTravel / steps);
+        }else{
+            distanceToTravelPerStep = (distanceToTravel / steps) * -1;
+        }
+        for(int counter = 0; counter < steps; counter++){
+            double initialTime = System.nanoTime();
+            double currentPosition = targetServo.getPosition(); //Gets current arm position.
+            //if(movementFlag == 0) {
+            targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
+            while((System.nanoTime() - initialTime) < timePerStep){
+                //Wait.
+            }
+        }
+    }
+
+    //Drives at given power and a given distance unless floorSensors interrupt it by seeing the given color. ("red" or "blue").
+    public void driveForwardWithInterrupt(double power, int distance, String color) {
+        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
+        setRunMode("STOP_AND_RESET_ENCODER");
+        //Sets target distance. Set to negative distance because motor was running backwards.
+        setAllTargetPositions(-distance);
+        //Sets to RUN_TO_POSITION mode
+        setRunMode("RUN_TO_POSITION");
+        //Sets power for DC Motors.
+        setMotorPower(power);
+        //Waits while driving to position.
+        while(anyMotorsBusy()){
+            if (color.equals("red")) {
+                if(floorSensor.red() > 50) {//Level of Red required to stop.
+                    setMotorPower(0.0);
+                }
+            }
+            if(color.equals("blue")){
+                if (floorSensor.blue() > 50) {//Level of Blue required to stop.
+                    setMotorPower(0.0);
+                }
+            }
+        }
+        //Stops driving by setting power to 0.0.
+        setMotorPower(0.0);
+        //Sets back to RUN_USING_ENCODER mode.
+        setRunMode("RUN_USING_ENCODER");
+    }
+
+    //Takes power and distance to rotate and "CW" clockwise or "CCW" as directional input.
+    public void turnDirection(double power, int distance, String direction) {
+        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
+        setRunMode("STOP_AND_RESET_ENCODER");
+        setRunMode("RUN_TO_POSITION");
+        if (direction.equals("CCW")) {
+            this.left1.setTargetPosition(distance);
+            this.left2.setTargetPosition(distance);
+            this.right1.setTargetPosition(-distance);
+            this.right2.setTargetPosition(-distance);
+        } else if (direction.equals("CW")) {
+            this.left1.setTargetPosition(-distance);
+            this.left2.setTargetPosition(-distance);
+            this.right1.setTargetPosition(distance);
+            this.right2.setTargetPosition(distance);
+        }
+        setMotorPower(power);
+        //Waits while turning.
+        while(anyMotorsBusy()){
+            //Spinning
+            //Waiting while turning.
+        }
+        //Stop motors.
+        setMotorPower(0.0);
+        //Sets mode back to RUN_USING_ENCODER
+        setRunMode("RUN_USING_ENCODER");
+    }
+
+    //Drives forward a certain distance at a certain speed. Only use if no intention to interrupt.
+    public void driveForwardSetDistance(double power, int distance) {
+        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
+        setRunMode("STOP_AND_RESET_ENCODER");
+        //Sets target distance. Set to negative distance because motor was running backwards.
+        setAllTargetPositions(-distance);
+        //Sets to RUN_TO_POSITION mode
+        setRunMode("RUN_TO_POSITION");
+        //Sets power for DC Motors.
+        setMotorPower(power);
+        //Waits while driving to position.
+        while(anyMotorsBusy()){
+            //Spinning.
+            //Waiting for robot to arrive at destination.
+        }
+        //Stops driving by setting power to 0.0.
+        setMotorPower(0.0);
+        //Sets back to RUN_USING_ENCODER mode.
+        setRunMode("RUN_USING_ENCODER");
     }
 
     //Sets the run mode of all DC motors. Test is this works in both autonomous and teleOp modes.
@@ -163,87 +263,28 @@ public class RRHardwarePresets{
         }
     }
 
-    //My attempt at creating servoSpeed.
-    //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
-    public static void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
-        //Total distance to travel.
-        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
-        //Unit conversion to nanoseconds.
-        long time = timeInMilli * 1000000;
-        //Per Step values.
-        //double distanceToTravelPerStep = (distanceToTravel / steps);
-        long timePerStep = time / steps;
-        //Loops number of steps.
-        double distanceToTravelPerStep;
-        if(targetPosition - targetServo.getPosition() >= 0){
-            distanceToTravelPerStep = (distanceToTravel / steps);
-        }else{
-            distanceToTravelPerStep = (distanceToTravel / steps) * -1;
-        }
-        for(int counter = 0; counter < steps; counter++){
-            double initialTime = System.nanoTime();
-            double currentPosition = targetServo.getPosition(); //Gets current arm position.
-            //if(movementFlag == 0) {
-            targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
-            while((System.nanoTime() - initialTime) < timePerStep){
-                //Wait.
-            }
+    //Returns TRUE if any drive motors are busy and FALSE if not.
+    public boolean anyMotorsBusy() {
+        if (this.left1.isBusy() || this.left2.isBusy() || this.right1.isBusy() || this.right2.isBusy()) {
+            return (true);
+        } else {
+            return (false);
         }
     }
 
+    //Sets all drive motor power.
+    public void setMotorPower(double power) {
+        this.left1.setPower(power);
+        this.left2.setPower(power);
+        this.right1.setPower(power);
+        this.right2.setPower(power);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static void moveMultipleServo(Servo targetServo1, Servo targetServo2, double targetPosition1, double targetPosition2, int steps, long timeInMilli){
-        //Total distance to travel.
-        double distanceToTravel1 = Math.abs(targetServo1.getPosition() - targetPosition1);
-        double distanceToTravel2 = Math.abs(targetServo2.getPosition() - targetPosition2);
-        //Unit conversion to nanoseconds.
-        long time = timeInMilli * 1000000;
-        //Per Step values.
-        //double distanceToTravelPerStep = (distanceToTravel / steps);
-        long timePerStep = time / steps;
-        //Loops number of steps.
-        double distanceToTravelPerStep1;
-        double distanceToTravelPerStep2;
-
-        if(targetPosition1 - targetServo1.getPosition() >= 0){
-            distanceToTravelPerStep1 = (distanceToTravel1 / steps);
-        }else{
-            distanceToTravelPerStep1 = (distanceToTravel1 / steps) * -1;
-        }
-
-        if(targetPosition2 - targetServo2.getPosition() >= 0){
-            distanceToTravelPerStep2 = (distanceToTravel2 / steps);
-        }else{
-            distanceToTravelPerStep2 = (distanceToTravel2 / steps) * -1;
-        }
-
-        for(int counter = 0; counter < steps; counter++){
-            double initialTime = System.nanoTime();
-
-            double currentPosition1 = targetServo1.getPosition(); //Gets current arm position.
-            double currentPosition2 = targetServo2.getPosition(); //Gets current arm position.
-
-            targetServo1.setPosition(currentPosition1 + distanceToTravelPerStep1);//Moves the arm.
-            targetServo2.setPosition(currentPosition2 + distanceToTravelPerStep2);//Moves the arm.
-            while((System.nanoTime() - initialTime) < timePerStep){
-                //Wait.
-            }
-        }
+    //Sets all motors target position.
+    public void setAllTargetPositions(int distance) {
+        left1.setTargetPosition(distance);
+        left2.setTargetPosition(distance);
+        right1.setTargetPosition(distance);
+        right2.setTargetPosition(distance);
     }
 }
