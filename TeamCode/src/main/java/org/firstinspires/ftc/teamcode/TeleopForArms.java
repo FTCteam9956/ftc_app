@@ -14,37 +14,22 @@ public class TeleopForArms extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
 
+
         while (opModeIsActive()) {
 
             if(gamepad2.a){
-                servoSpeed(0, 1.0, 2, 100, robot.elbow);
-                servoSpeed(0, 1.0, 2, 100, robot.wrist);
+                robot.moveServo(robot.elbow, robot.ELBOW_UNFOLDED, 1000, 2000);
+            }
+            if(gamepad2.b){
+                robot.moveServo(robot.wrist, robot.WRIST_UNFOLDED, 1000, 2000);
             }
             if(gamepad2.y) {
-                servoSpeed(1.0, 0, 2, 100, robot.elbow);
-                servoSpeed(1.0, 0, 2, 100, robot.wrist);
+                robot.moveServo(robot.elbow, robot.ELBOW_FOLDED, 1000, 2000);
+                robot.moveServo(robot.wrist,  robot.WRIST_FOLDED, 1000, 2000);
             }
 
             idle();
         }
     }
-
-    public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo){
-        ElapsedTime timer = new ElapsedTime();
-        double distance = 0;
-        int stepTime = 0;
-        int stepNumber = 0;
-        double changeNumber = startingPosition;
-        double currentPosition = 1;
-        distance = Math.abs(startingPosition - finalPosition) / numberOfSteps;
-        stepTime = (timeLimitMiliseconds / numberOfSteps);
-        timer.reset();
-        while(timer.milliseconds() < (timeLimitMiliseconds * 1000) && stepNumber < numberOfSteps) {
-            currentPosition = changeNumber - distance;
-            targetServo.setPosition(currentPosition);
-            sleep(20);
-            changeNumber = changeNumber - distance;
-            stepNumber++;
-        }
-    }
 }
+

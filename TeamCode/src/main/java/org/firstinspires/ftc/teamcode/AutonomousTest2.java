@@ -16,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 //TO DO LIST:
 //Test if methods can be put into RRHardwarePresets.java
-//Test moveServo()
 //Test scanForVuMark()
 //Clean up constants in RRHardwarePresets
 //Test followLine()
@@ -52,26 +51,18 @@ public class AutonomousTest2 extends LinearOpMode{
 
         if (testArea == true) {
             //--TEST SCRIPT START--
-            robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 10000, 5000); //Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
-
+            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 1000, 5000);
+            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 5000);//Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
+            //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 5000, 5000);
+            scanForVuMark(0.15, 500, relicTemplate);
 
         }else{
             //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 
             //--AUTO SCRIPT START--
 
-            //Set jewelArm into up position. Should put this into RRHardwarePresets.init().
-            robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
-
-            sleep(250);
-
-            //Lower jewelArm into down position.
-            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN_PARTIAL_1);
-            sleep(300);
-            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN_PARTIAL_2);
-            sleep(300);
-            robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN_COMPLETE);
-            sleep(250);
+            //Lowers jewel arm.
+            robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 2000);
 
             //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
             int loopBreak = 0;
@@ -98,7 +89,7 @@ public class AutonomousTest2 extends LinearOpMode{
             sleep(500);
 
             //Raise JewelArm.
-            robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
+            robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 2000);
             sleep(500);
 
             //Drive forward off of balance stone.
@@ -360,7 +351,6 @@ public class AutonomousTest2 extends LinearOpMode{
         robot.right1.setPower(power);
         robot.right2.setPower(power);
     }
-
     //Returns TRUE if any drive motors are busy and FALSE if not.
     public boolean anyMotorsBusy() {
         if (robot.left1.isBusy() || robot.left2.isBusy() || robot.right1.isBusy() || robot.right2.isBusy()) {
@@ -369,7 +359,6 @@ public class AutonomousTest2 extends LinearOpMode{
             return (false);
         }
     }
-
     public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo) {
         ElapsedTime timer = new ElapsedTime();
         double distance = 0;
@@ -388,27 +377,5 @@ public class AutonomousTest2 extends LinearOpMode{
             stepNumber++;
         }
     }
-
-    //My attempt at creating servoSpeed.
-    //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
-//    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
-//        //Total distance to travel.
-//        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
-//        //Unit conversion to nanoseconds.
-//        long time = timeInMilli * 1000000;
-//        //Per Step values.
-//        double distanceToTravelPerStep = distanceToTravel / steps;
-//        long timePerStep = time / steps;
-//        //Loops number of steps.
-//        for(int counter = 0; counter < steps; counter++){
-//            double initialTime = System.nanoTime();
-//            double currentPosition = targetServo.getPosition(); //Gets current arm position.
-//            targetServo.setPosition(currentPosition + distanceToTravelPerStep); //Moves the arm.
-//            //while Difference in CurrentTime and initialTime, for ths loop, are less than time per step, wait.
-//            while((System.nanoTime() - initialTime) < timePerStep){
-//                //Wait.
-//            }
-//        }
-//    }
 }
 

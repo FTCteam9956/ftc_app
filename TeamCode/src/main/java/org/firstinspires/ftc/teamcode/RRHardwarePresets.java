@@ -42,9 +42,7 @@ public class RRHardwarePresets{
 
     //Constants
     public final double JEWEL_ARM_UP = 0.70;
-    public final double JEWEL_ARM_DOWN_PARTIAL_1 = 0.5;
-    public final double JEWEL_ARM_DOWN_PARTIAL_2 = 0.3;
-    public final double JEWEL_ARM_DOWN_COMPLETE = 0.05;
+    public final double JEWEL_ARM_DOWN = 0.05;
 
     //Servo positional constant.
     public final double ELBOW_UNFOLDED = 0.30;
@@ -98,25 +96,24 @@ public class RRHardwarePresets{
         floorSensor.enableLed(false);
 
         //Initial Servo positions.
-        //claw.setPosition(0.2); //Closed
-        jewelArm.setPosition(0.70); //Raised
+        jewelArm.setPosition(JEWEL_ARM_UP); //Raised
 
-        //IMU initialization parameters
-        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
-        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        IMUParameters.loggingEnabled = true;
-        IMUParameters.loggingTag = "IMU";
-        IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        //imu1 initialization
-        imu1 = HwMap.get(BNO055IMU.class, "imu1");
-        imu1.initialize(IMUParameters);
-
-        //imu2 initialization
-        imu2 = HwMap.get(BNO055IMU.class, "imu2");
-        imu2.initialize(IMUParameters);
+//        //IMU initialization parameters
+//        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
+//        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+//        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+//        IMUParameters.loggingEnabled = true;
+//        IMUParameters.loggingTag = "IMU";
+//        IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+//
+//        //imu1 initialization
+//        imu1 = HwMap.get(BNO055IMU.class, "imu1");
+//        imu1.initialize(IMUParameters);
+//
+//        //imu2 initialization
+//        imu2 = HwMap.get(BNO055IMU.class, "imu2");
+//        imu2.initialize(IMUParameters);
 
 
         //Vuforia Initialization
@@ -174,14 +171,59 @@ public class RRHardwarePresets{
         //Unit conversion to nanoseconds.
         long time = timeInMilli * 1000000;
         //Per Step values.
-        double distanceToTravelPerStep = distanceToTravel / steps;
+        //double distanceToTravelPerStep = (distanceToTravel / steps);
         long timePerStep = time / steps;
         //Loops number of steps.
+        double distanceToTravelPerStep;
+        if(targetPosition - targetServo.getPosition() >= 0){
+            distanceToTravelPerStep = (distanceToTravel / steps);
+        }else{
+            distanceToTravelPerStep = (distanceToTravel / steps) * -1;
+        }
         for(int counter = 0; counter < steps; counter++){
             double initialTime = System.nanoTime();
             double currentPosition = targetServo.getPosition(); //Gets current arm position.
-            targetServo.setPosition(currentPosition + distanceToTravelPerStep); //Moves the arm.
-            //while Difference in CurrentTime and initialTime, for ths loop, are less than time per step, wait.
+            //if(movementFlag == 0) {
+            targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
+            while((System.nanoTime() - initialTime) < timePerStep){
+                //Wait.
+            }
+        }
+    }
+
+    public static void moveMultipleServo(Servo targetServo1, Servo targetServo2, double targetPosition1, double targetPosition2, int steps, long timeInMilli){
+        //Total distance to travel.
+        double distanceToTravel1 = Math.abs(targetServo1.getPosition() - targetPosition1);
+        double distanceToTravel2 = Math.abs(targetServo2.getPosition() - targetPosition2);
+        //Unit conversion to nanoseconds.
+        long time = timeInMilli * 1000000;
+        //Per Step values.
+        //double distanceToTravelPerStep = (distanceToTravel / steps);
+        long timePerStep = time / steps;
+        //Loops number of steps.
+        double distanceToTravelPerStep1;
+        double distanceToTravelPerStep2;
+
+        if(targetPosition1 - targetServo1.getPosition() >= 0){
+            distanceToTravelPerStep1 = (distanceToTravel1 / steps);
+        }else{
+            distanceToTravelPerStep1 = (distanceToTravel1 / steps) * -1;
+        }
+
+        if(targetPosition2 - targetServo2.getPosition() >= 0){
+            distanceToTravelPerStep2 = (distanceToTravel2 / steps);
+        }else{
+            distanceToTravelPerStep2 = (distanceToTravel2 / steps) * -1;
+        }
+
+        for(int counter = 0; counter < steps; counter++){
+            double initialTime = System.nanoTime();
+
+            double currentPosition1 = targetServo1.getPosition(); //Gets current arm position.
+            double currentPosition2 = targetServo2.getPosition(); //Gets current arm position.
+
+            targetServo1.setPosition(currentPosition1 + distanceToTravelPerStep1);//Moves the arm.
+            targetServo2.setPosition(currentPosition2 + distanceToTravelPerStep2);//Moves the arm.
             while((System.nanoTime() - initialTime) < timePerStep){
                 //Wait.
             }
