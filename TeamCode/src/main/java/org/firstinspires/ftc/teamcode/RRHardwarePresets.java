@@ -105,7 +105,7 @@ public class RRHardwarePresets{
         //imu1 initialization, change name to imu1 when we add the second IMU. Will need to be updated on phone config.
         imu = HwMap.get(BNO055IMU.class, "imu1");
         imu.initialize(IMUParameters);
-//
+
 //        //imu2 initialization
 //        imu2 = HwMap.get(BNO055IMU.class, "imu2");
 //        imu2.initialize(IMUParameters);
