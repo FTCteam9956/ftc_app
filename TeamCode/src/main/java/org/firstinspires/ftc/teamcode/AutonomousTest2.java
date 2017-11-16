@@ -54,8 +54,19 @@ public class AutonomousTest2 extends LinearOpMode{
             //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 1000, 5000);
             //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 5000);//Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
             //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 5000, 5000);
-            scanForVuMark(0.15, 500, relicTemplate);
-
+            String testString = scanForVuMark(0.05, 300, relicTemplate);
+            if(testString.equals("left")){
+                turnDirection(0.15, 1000, "CCW");
+            }
+            if(testString.equals("right")){
+                turnDirection(0.15, 1000, "CW");
+            }
+            if(testString.equals("center")){
+                driveForwardSetDistance(0.15, 1000);
+            }
+            if(testString.equals("none")){
+                //:(
+            }
         }else{
             //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 
@@ -188,36 +199,46 @@ public class AutonomousTest2 extends LinearOpMode{
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
-
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
         String decidingMark = "none"; //Used to return String
-
+        //First movement.
         robot.turretMotor.setTargetPosition(distance); //Turns to distance.
         robot.turretMotor.setPower(power);
-        robot.turretMotor.setTargetPosition(-distance); //Turns to -distance.
-        robot.turretMotor.setPower(power);
-        robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
-        robot.turretMotor.setPower(power);
-
         while (robot.turretMotor.isBusy()){
             //Waiting for turret to stop moving.
             if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
                 decidingMark = "left";
                 robot.turretMotor.setPower(0.0);
-                telemetry.addData("VuMark", "LEFT");
             }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
                 decidingMark = "center";
-                telemetry.addData("VuMark", "CENTER");
                 robot.turretMotor.setPower(0.0);
             }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
                 decidingMark = "right";
-                telemetry.addData("VuMark", "RIGHT");
                 robot.turretMotor.setPower(0.0);
             }else{ //No VuMark seen.
-                telemetry.addData("VuMark", "not visible");
             }
-            telemetry.update();
         }
+        //Second movement.
+        robot.turretMotor.setTargetPosition(-distance); //Turns to distance.
+        robot.turretMotor.setPower(power);
+        while (robot.turretMotor.isBusy()){
+            //Waiting for turret to stop moving.
+            if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
+                decidingMark = "left";
+                robot.turretMotor.setPower(0.0);
+            }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
+                decidingMark = "center";
+                robot.turretMotor.setPower(0.0);
+            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
+                decidingMark = "right";
+                robot.turretMotor.setPower(0.0);
+            }else{ //No VuMark seen.
+            }
+        }
+        //Third movement.
+        robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
+        robot.turretMotor.setPower(power);
+
         return (decidingMark);
     }
 
@@ -359,6 +380,7 @@ public class AutonomousTest2 extends LinearOpMode{
             return (false);
         }
     }
+
     public void servoSpeed(double startingPosition, double finalPosition, int timeLimitMiliseconds, int numberOfSteps, Servo targetServo) {
         ElapsedTime timer = new ElapsedTime();
         double distance = 0;
