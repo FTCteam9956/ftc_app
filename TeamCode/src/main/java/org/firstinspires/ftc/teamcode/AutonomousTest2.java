@@ -3,13 +3,14 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import java.lang.InterruptedException;
 
 @Autonomous(name = "AutonomousTest2", group = "Autonomous")
 //@Disabled
@@ -42,27 +43,40 @@ public class AutonomousTest2 extends LinearOpMode{
         //Relic Trackables
         relicTrackables.activate();
 
-        //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
-        boolean testArea = true;
+        boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
 
         if (testArea == true) {
             //--TEST SCRIPT START--
-            String testString = scanForVuMark(0.05, 300, relicTemplate);
-            if(testString.equals("left")){
-                robot.turnDirection(0.15, 1000, "CCW");
+            ArrayList<Type> inputList = new ArrayList<>(); //Used to carry parameters into MultithreadEnvironment.
+            inputList.add((Type)robot.wrist);
+            inputList.add((Type)robot.elbow);
+            Thread t1 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread1");
+            Thread t2 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread1");
+            t1.start(); //Calls run() inside multithreadedEnvironment.
+            t2.start(); //Calls run() inside multithreadedEnvironment.
+            try {
+                t1.join(); //Ends thread when its not busy anymore.
+                t2.join(); //Ends thread when its not busy anymore.
+            }catch(InterruptedException e){
+                e.printStackTrace();
             }
-            if(testString.equals("right")){
-                robot.turnDirection(0.15, 1000, "CW");
-            }
-            if(testString.equals("center")){
-                robot.driveForwardSetDistance(0.15, 1000);
-            }
-            if(testString.equals("none")){
-                //:(
-            }
-        }else{
-            //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 
+            //Testing with scanForVumark().
+//            String testString = scanForVuMark(0.05, 300, relicTemplate);
+//            if(testString.equals("left")){
+//                robot.turnDirection(0.15, 1000, "CCW");
+//            }
+//            if(testString.equals("right")){
+//                robot.turnDirection(0.15, 1000, "CW");
+//            }
+//            if(testString.equals("center")){
+//                robot.driveForwardSetDistance(0.15, 1000);
+//            }
+//            if(testString.equals("none")){
+//                //:(
+//            }
+
+        }else{
             //--AUTO SCRIPT START--
 
             //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
