@@ -54,7 +54,7 @@ public class TeleOpTest extends LinearOpMode{
             }
             if(gamepad1.dpad_right){
                 robot.moveServo(robot.wrist, robot.WRIST_FOLDED, 1000, 3000);
-                robot.moveServo(robot.elbow, robot.WRIST_FOLDED, 1000, 3000);
+                robot.moveServo(robot.elbow, robot.ELBOW_FOLDED, 1000, 3000);
             }
 
             //Telemetry
