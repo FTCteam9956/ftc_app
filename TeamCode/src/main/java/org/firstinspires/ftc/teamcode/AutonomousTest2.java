@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -26,14 +27,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //Update FIRST SDK
 //Use difference in IMU readings to tell where our turret is pointed.
 
+
+
 public class AutonomousTest2 extends LinearOpMode{
     RRHardwarePresets robot = new RRHardwarePresets();
+
+    private ElapsedTime runtime = new ElapsedTime();
+    private double servoPosition;
+
+
+    private double servoDelayTime = 1000;
+
 
     @Override
     public void runOpMode(){
         robot.init(hardwareMap);
-
         robot.jewelArm.setPosition(0.7);
+        double elbow = gamepad2.left_stick_y;
+        double elbowG = 0.01;
         //Vuforia Trackables.
         VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
@@ -50,23 +61,46 @@ public class AutonomousTest2 extends LinearOpMode{
         boolean testArea = true;
 
         if (testArea == true) {
-            //--TEST SCRIPT START--
-            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 1000, 5000);
-            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 5000);//Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
-            //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 5000, 5000);
-            String testString = scanForVuMark(0.05, 300, relicTemplate);
-            if(testString.equals("left")){
-                turnDirection(0.15, 1000, "CCW");
-            }
-            if(testString.equals("right")){
-                turnDirection(0.15, 1000, "CW");
-            }
-            if(testString.equals("center")){
-                driveForwardSetDistance(0.15, 1000);
-            }
-            if(testString.equals("none")){
-                //:(
-            }
+//            //--TEST SCRIPT START--
+//            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN_COMPLETE, 1000, 5000);
+//            //robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 5000);//Moves jewelArm to JEWEL_ARM_DOWN_COMPLETE over a time period of 5 seconds with 10000 individual movements.
+//            //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 5000, 5000);
+//            String testString = scanForVuMark(0.05, 300, relicTemplate);
+//            if(testString.equals("left")){
+//                turnDirection(0.15, 1000, "CCW");
+//            }
+//            if(testString.equals("right")){
+//                turnDirection(0.15, 1000, "CW");
+//            }
+//            if(testString.equals("center")){
+//                driveForwardSetDistance(0.15, 1000);
+//            }
+//            if(testString.equals("none")){
+//                //:(
+//            }
+//         while (opModeIsActive()){
+//             if(runtime.time() > servoDelayTime){
+//             servoPosition =+ elbow;
+//             servoPosition = Range.clip(servoPosition, 0 , 1);
+//                 robot.elbow.setPosition(servoPosition);
+//                 runtime.reset();
+//             }
+//            currentPosition = changeNumber - distance;
+//            targetServo.setPosition(currentPosition);
+//            sleep(20);
+//            changeNumber = changeNumber - distance;
+//            stepNumber++;
+            double currentPosition = 0;
+            while(gamepad2.left_stick_y > 0){
+//                servoPosition = Range.clip(servoPosition, 0 , 1);
+//                robot.elbow.setPosition(currentPosition);
+//                currentPosition = servoPosition += elbowG;
+//                servoPosition = servoPosition + elbowG;
+//                telemetry.addData("Position", currentPosition);
+         }
+
+
+
         }else{
             //set testArea to true to only run code in the test area. Allows us to test individual components without running entire autonomous script.
 

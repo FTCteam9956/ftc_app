@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,23 +14,31 @@ public class TeleopForArms extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
-
+        robot.elbow.setPosition(1);
+        robot.wrist.setPosition(1);
 
         while (opModeIsActive()) {
 
-            if(gamepad2.a){
-                robot.moveServo(robot.elbow, robot.ELBOW_UNFOLDED, 1000, 2000);
+            if(gamepad2.y){
+                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 1000, 500);
             }
-            if(gamepad2.b){
-                robot.moveServo(robot.wrist, robot.WRIST_UNFOLDED, 1000, 2000);
-            }
-            if(gamepad2.y) {
-                robot.moveServo(robot.elbow, robot.ELBOW_FOLDED, 1000, 2000);
-                robot.moveServo(robot.wrist,  robot.WRIST_FOLDED, 1000, 2000);
-            }
+            if(gamepad2.a) {
+                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 1000, 500);
 
+            }
+            if(gamepad2.left_stick_y != 0){
+                double currentPosition1 = robot.elbow.getPosition(); //Gets current arm position.
+                double currentPosition2 = robot.wrist.getPosition();
+                robot.elbow.setPosition(currentPosition1 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+               //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
+                telemetry.addData("Position", currentPosition1);
+                telemetry.addData("posiition",currentPosition2);
+            }
             idle();
         }
     }
-}
+    }
+
+
 
