@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -92,6 +91,8 @@ public class RRHardwarePresets{
 
         //Initial Servo positions.
         jewelArm.setPosition(JEWEL_ARM_UP); //Raised
+        wrist.setPosition(WRIST_FOLDED); //Folded in
+        elbow.setPosition(ELBOW_FOLDED); //Folded in
 
         //IMU initialization parameters
         BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
