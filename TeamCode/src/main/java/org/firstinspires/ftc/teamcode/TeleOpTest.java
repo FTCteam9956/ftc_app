@@ -19,7 +19,7 @@ public class TeleOpTest extends LinearOpMode{
         robot.init(hardwareMap);
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
-        robot.jewelArm.setPosition(0.7);
+
         waitForStart();
         while(opModeIsActive()){
 
@@ -28,6 +28,8 @@ public class TeleOpTest extends LinearOpMode{
             robot.left2.setPower(speedAdjust(gamepad1.left_stick_y));
             robot.right1.setPower(speedAdjust(gamepad1.right_stick_y));
             robot.right2.setPower(speedAdjust(gamepad1.right_stick_y));
+
+            //---GAMEPAD 1---
 
             //DC motor turret controls.
             if(gamepad1.right_trigger > 0.5){
@@ -56,6 +58,31 @@ public class TeleOpTest extends LinearOpMode{
                 robot.moveServo(robot.wrist, robot.WRIST_FOLDED, 1000, 3000);
                 robot.moveServo(robot.elbow, robot.ELBOW_FOLDED, 1000, 3000);
             }
+
+            //---GAMEPAD 2---
+
+            //TeleOp control over arm.
+            if(gamepad2.left_stick_y != 0){
+                double currentPosition1 = robot.elbow.getPosition(); //Gets current arm position.
+                double currentPosition2 = robot.wrist.getPosition();
+                robot.elbow.setPosition(currentPosition1 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
+                telemetry.addData("CurrentPosition1", currentPosition1);
+                telemetry.addData("CurrentPosition2",currentPosition2);
+            }
+            else if(gamepad2.right_stick_y != 0){
+                double currentPosition2 = robot.wrist.getPosition();
+                robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
+                telemetry.addData("posiition",currentPosition2);
+            }
+            else if(gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0){
+                double currentPosition2 = robot.wrist.getPosition();
+                robot.wrist.setPosition(currentPosition2);
+            }
+
+            //---TELEMETRY---
 
             //Telemetry
             //telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
