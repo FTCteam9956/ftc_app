@@ -16,7 +16,7 @@ public class TeleopForArms extends LinearOpMode {
         waitForStart();
         robot.elbow.setPosition(1);
         robot.wrist.setPosition(1);
-
+        boolean mode1 = true;
         while (opModeIsActive()) {
 
             if(gamepad2.y){
@@ -34,6 +34,16 @@ public class TeleopForArms extends LinearOpMode {
                //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
                 telemetry.addData("Position", currentPosition1);
                 telemetry.addData("posiition",currentPosition2);
+            }
+            else if(gamepad2.right_stick_y != 0){
+                double currentPosition2 = robot.wrist.getPosition();
+                robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
+                telemetry.addData("posiition",currentPosition2);
+            }
+            else if(gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0){
+                double currentPosition2 = robot.wrist.getPosition();
+                robot.wrist.setPosition(currentPosition2);
             }
             idle();
         }
