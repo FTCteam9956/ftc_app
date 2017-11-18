@@ -1,9 +1,9 @@
 //AutonomousTest2.java
 
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.lang.InterruptedException;
 
 @Autonomous(name = "AutonomousTest2", group = "Autonomous")
-//@Disabled
+@Disabled
 
 //TO DO LIST:
 //Test scanForVuMark()
