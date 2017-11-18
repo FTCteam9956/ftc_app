@@ -1,5 +1,6 @@
 //RRHardwarePresets.java
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -7,15 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
 
 public class RRHardwarePresets{
+
+    //Hardware Map.
+    HardwareMap HwMap;
 
     //Motors, Servos and Sensors
     public DcMotor left1;
@@ -31,11 +30,8 @@ public class RRHardwarePresets{
     public ColorSensor floorSensor;
     //public BNO055IMU imu1;
     //public BNO055IMU imu2;
-    HardwareMap HwMap;
 
     //Vuforia Information
-    public final String TAG = "Vuforia VuMark Sample";
-    public OpenGLMatrix lastLocation = null;
     public VuforiaLocalizer vuforia;
 
     //Constants
@@ -94,35 +90,29 @@ public class RRHardwarePresets{
         wrist.setPosition(WRIST_FOLDED); //Folded in
         elbow.setPosition(ELBOW_FOLDED); //Folded in
 
-        //IMU initialization parameters
-        //BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
-        //IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        //IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        //IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        //IMUParameters.loggingEnabled = true;
-        //IMUParameters.loggingTag = "IMU";
-        //IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        //IMU Initialization parameters.
+        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
+        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; //See the calibration sample opmode.
+        IMUParameters.loggingEnabled = true;
+        IMUParameters.loggingTag = "IMU";
+        IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        //imu1 initialization, change name to imu1 when we add the second IMU. Will need to be updated on phone config.
+        //Giving parameters to create imu1.
         //imu = HwMap.get(BNO055IMU.class, "imu");
         //imu.initialize(IMUParameters);
 
-        //imu2 initialization
+        //Giving parameters to create imu2.
         //imu2 = HwMap.get(BNO055IMU.class, "imu2");
         //imu2.initialize(IMUParameters);
 
         //Vuforia Initialization parameters.
-        //Sets camera feed to display on phone.
-        int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        // OR...  Do Not Activate the Camera Monitor View, to save power
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        //License obtained.
+        int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName()); //Sets camera feed to display on phone.
+        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId); // If you want to deactivate the Camera Monitor View, to save power. You can just not pass in cameraMonitorViewID.
         VuforiaParameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
-        //Sets phone to use back camera.
-        VuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        //Initializes VuforiaLocalizer object as vuforia.
-        this.vuforia = ClassFactory.createVuforiaLocalizer(VuforiaParameters);
+        VuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //Sets phone to use back camera.
+        this.vuforia = ClassFactory.createVuforiaLocalizer(VuforiaParameters); //Initializes VuforiaLocalizer object as vuforia.
     }
 
     //---UNIVERSAL METHODS BELOW---
