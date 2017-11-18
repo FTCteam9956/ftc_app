@@ -25,6 +25,7 @@ public class TeleopForArms extends LinearOpMode {
             if(gamepad2.a) {
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 1000, 500);
             }
+
             if(gamepad2.left_stick_y != 0){
                 double currentPosition1 = robot.elbow.getPosition(); //Gets current arm position.
                 double currentPosition2 = robot.wrist.getPosition();

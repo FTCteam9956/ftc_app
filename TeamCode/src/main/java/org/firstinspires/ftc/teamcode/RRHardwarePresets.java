@@ -191,23 +191,6 @@ public class RRHardwarePresets{
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public static void moveMultipleServo(Servo targetServo1, Servo targetServo2, double targetPosition1, double targetPosition2, int steps, long timeInMilli){
         //Total distance to travel.
         double distanceToTravel1 = Math.abs(targetServo1.getPosition() - targetPosition1);
