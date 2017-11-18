@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -71,6 +72,7 @@ public class RRHardwarePresets{
         floorSensor = HwMap.colorSensor.get("floorSensor");
         elbow = HwMap.servo.get("elbow");
         wrist = HwMap.servo.get("wrist");
+        AnalogInput potentiometer = HwMap.analogInput.get("pMeter");
 
         //DC Motor directions.
         left1.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -93,6 +95,9 @@ public class RRHardwarePresets{
         jewelArm.setPosition(JEWEL_ARM_UP); //Raised
         wrist.setPosition(WRIST_FOLDED); //Folded in
         elbow.setPosition(ELBOW_FOLDED); //Folded in
+
+        //PotentioMeter
+        double value = potentiometer.getVoltage();
 
         //IMU initialization parameters
         //BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
