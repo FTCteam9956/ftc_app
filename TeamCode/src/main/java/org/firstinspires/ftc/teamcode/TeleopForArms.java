@@ -16,7 +16,6 @@ public class TeleopForArms extends LinearOpMode {
         waitForStart();
         robot.elbow.setPosition(1);
         robot.wrist.setPosition(1);
-        boolean mode1 = true;
         while (opModeIsActive()) {
 
             if(gamepad2.y){
