@@ -16,7 +16,6 @@ public class TeleOpTest extends LinearOpMode{
 
     public static int armMode = 0; // 0 = Sweeping Mode, 1 = Agile Mode
 
-
     @Override
     public void runOpMode(){
         robot.init(hardwareMap);
@@ -70,7 +69,7 @@ public class TeleOpTest extends LinearOpMode{
             if(gamepad2.y){
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 1000, 500);
             }
-            if(gamepad2.a) {
+            if(gamepad2.a){
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 1000, 500);
             }
 
@@ -83,7 +82,6 @@ public class TeleOpTest extends LinearOpMode{
                     this.armMode = 0;
                 }
             }
-
             //armMode behaviors.
             if(armMode == 0){
                   if(gamepad2.left_stick_y != 0) {
@@ -104,18 +102,16 @@ public class TeleOpTest extends LinearOpMode{
                       robot.wrist.setPosition(currentPosition2);
                   }
             }else if(armMode == 1) {
-                while (opModeIsActive()){
-                    double elbowCurrentPosition = robot.elbow.getPosition();
-                    if(Math.abs(gamepad2.right_stick_y) >= 0.05){
-                        robot.elbow.setPosition(robot.elbow.getPosition() + (gamepad2.right_stick_y * 0.002));
-                    }else{
-                        robot.elbow.setPosition(robot.elbow.getPosition());
-                    }
-                    if(Math.abs(gamepad2.right_stick_x) >= 0.05){
-                        robot.wrist.setPosition(robot.wrist.getPosition() + (gamepad2.right_stick_x * 0.002));
-                    }else{
-
-                    }
+                double elbowCurrentPosition = robot.elbow.getPosition();
+                if(Math.abs(gamepad2.right_stick_y) >= 0.05){
+                    robot.elbow.setPosition(robot.elbow.getPosition() + (gamepad2.right_stick_y * 0.002));
+                }else{
+                    robot.elbow.setPosition(robot.elbow.getPosition());
+                }
+                if(Math.abs(gamepad2.right_stick_x) >= 0.05){
+                    robot.wrist.setPosition(robot.wrist.getPosition() + (gamepad2.right_stick_x * 0.002));
+                }else{
+                    robot.wrist.setPosition(robot.wrist.getPosition());
                 }
             }
             //---TELEMETRY---
