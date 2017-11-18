@@ -154,6 +154,45 @@ public class RRHardwarePresets{
         }
     }
 
+    public static void moveMultipleServo(Servo targetServo1, Servo targetServo2, double targetPosition1, double targetPosition2, int steps, long timeInMilli){
+        //Total distance to travel.
+        double distanceToTravel1 = Math.abs(targetServo1.getPosition() - targetPosition1);
+        double distanceToTravel2 = Math.abs(targetServo2.getPosition() - targetPosition2);
+        //Unit conversion to nanoseconds.
+        long time = timeInMilli * 1000000;
+        //Per Step values.
+        //double distanceToTravelPerStep = (distanceToTravel / steps);
+        long timePerStep = time / steps;
+        //Loops number of steps.
+        double distanceToTravelPerStep1;
+        double distanceToTravelPerStep2;
+
+        if(targetPosition1 - targetServo1.getPosition() >= 0){
+            distanceToTravelPerStep1 = (distanceToTravel1 / steps);
+        }else{
+            distanceToTravelPerStep1 = (distanceToTravel1 / steps) * -1;
+        }
+
+        if(targetPosition2 - targetServo2.getPosition() >= 0){
+            distanceToTravelPerStep2 = (distanceToTravel2 / steps);
+        }else{
+            distanceToTravelPerStep2 = (distanceToTravel2 / steps) * -1;
+        }
+
+        for(int counter = 0; counter < steps; counter++){
+            double initialTime = System.nanoTime();
+
+            double currentPosition1 = targetServo1.getPosition(); //Gets current arm position.
+            double currentPosition2 = targetServo2.getPosition(); //Gets current arm position.
+
+            targetServo1.setPosition(currentPosition1 + distanceToTravelPerStep1);//Moves the arm.
+            targetServo2.setPosition(currentPosition2 + distanceToTravelPerStep2);//Moves the arm.
+            while((System.nanoTime() - initialTime) < timePerStep){
+                //Wait.
+            }
+        }
+    }
+
     //Drives at given power and a given distance unless floorSensors interrupt it by seeing the given color. ("red" or "blue").
     public void driveForwardWithInterrupt(double power, int distance, String color) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.

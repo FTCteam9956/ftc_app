@@ -23,8 +23,6 @@ public class TeleOpTest extends LinearOpMode{
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
 
-
-
         waitForStart();
         while(opModeIsActive()){
 
@@ -68,6 +66,7 @@ public class TeleOpTest extends LinearOpMode{
 
             //TeleOp control over arm.
 
+            //Extends and retracts arm.
             if(gamepad2.y){
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 1000, 500);
             }
