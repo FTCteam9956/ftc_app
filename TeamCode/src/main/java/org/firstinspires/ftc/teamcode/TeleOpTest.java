@@ -68,6 +68,13 @@ public class TeleOpTest extends LinearOpMode{
 
             //TeleOp control over arm.
 
+            if(gamepad2.y){
+                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 1000, 500);
+            }
+            if(gamepad2.a) {
+                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 1000, 500);
+            }
+
             //Swaps armMode.
             if (gamepad2.back) {
                 if (armMode == 0){
@@ -77,6 +84,7 @@ public class TeleOpTest extends LinearOpMode{
                     this.armMode = 0;
                 }
             }
+
             //armMode behaviors.
             if(armMode == 0){
                   if(gamepad2.left_stick_y != 0) {
