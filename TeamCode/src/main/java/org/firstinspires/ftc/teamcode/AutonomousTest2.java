@@ -15,15 +15,6 @@ import java.lang.InterruptedException;
 @Autonomous(name = "AutonomousTest2", group = "Autonomous")
 @Disabled
 
-//TO DO LIST:
-//Test scanForVuMark()
-//Test followLine()
-//See if we can collect IMU data in TeleOpTest
-//See if we can turn on LEDs for sensors and set initial arm positions in RRHardwarePresets
-//Work with new Position class
-//Update FIRST SDK
-//Use difference in IMU readings to tell where our turret is pointed.
-
 public class AutonomousTest2 extends LinearOpMode{
     public RRHardwarePresets robot = new RRHardwarePresets();
 
@@ -45,7 +36,7 @@ public class AutonomousTest2 extends LinearOpMode{
 
         boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
 
-        if (testArea == true){
+        if(testArea == true){
             //--TEST SCRIPT START--
             //ArrayList<Type> inputList = new ArrayList<>(); //Used to carry parameters into MultithreadEnvironment.
             //inputList.add((Type)robot.wrist);
@@ -63,9 +54,6 @@ public class AutonomousTest2 extends LinearOpMode{
 
             //Testing with scanForVumark().
             String testString = scanForVuMark(0.05, 300, relicTemplate);
-
-
-
         }else{
             //--AUTO SCRIPT START--
 

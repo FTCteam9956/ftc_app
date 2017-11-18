@@ -30,7 +30,7 @@ public class RRHardwarePresets{
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
     //public BNO055IMU imu1;
-    //public static BNO055IMU imu2;
+    //public BNO055IMU imu2;
     HardwareMap HwMap;
 
     //Vuforia Information
