@@ -104,7 +104,7 @@ public class RRHardwarePresets{
         IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         //imu1 initialization, change name to imu1 when we add the second IMU. Will need to be updated on phone config.
-        imu = HwMap.get(BNO055IMU.class, "imu1");
+        imu = HwMap.get(BNO055IMU.class, "imu");
         imu.initialize(IMUParameters);
 
 //        //imu2 initialization
@@ -272,7 +272,6 @@ public class RRHardwarePresets{
             return (false);
         }
     }
-
     //Sets all drive motor power.
     public void setMotorPower(double power) {
         this.left1.setPower(power);

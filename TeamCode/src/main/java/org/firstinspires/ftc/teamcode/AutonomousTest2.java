@@ -45,36 +45,26 @@ public class AutonomousTest2 extends LinearOpMode{
 
         boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
 
-        if (testArea == true) {
+        if (testArea == true){
             //--TEST SCRIPT START--
-            ArrayList<Type> inputList = new ArrayList<>(); //Used to carry parameters into MultithreadEnvironment.
-            inputList.add((Type)robot.wrist);
-            inputList.add((Type)robot.elbow);
-            Thread t1 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread1");
-            Thread t2 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread1");
-            t1.start(); //Calls run() inside multithreadedEnvironment.
-            t2.start(); //Calls run() inside multithreadedEnvironment.
-            try {
-                t1.join(); //Ends thread when its not busy anymore.
-                t2.join(); //Ends thread when its not busy anymore.
-            }catch(InterruptedException e){
-                e.printStackTrace();
-            }
+            //ArrayList<Type> inputList = new ArrayList<>(); //Used to carry parameters into MultithreadEnvironment.
+            //inputList.add((Type)robot.wrist);
+            //inputList.add((Type)robot.elbow);
+            //Thread t1 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread1");
+            //Thread t2 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread2");
+            //t1.start(); //Calls run() inside multithreadedEnvironment.
+            //t2.start(); //Calls run() inside multithreadedEnvironment.
+            //try {
+            //    t1.join(); //Ends thread when its not busy anymore.
+            //    t2.join(); //Ends thread when its not busy anymore.
+            //}catch(InterruptedException e){
+            //    e.printStackTrace();
+            //}
 
             //Testing with scanForVumark().
-//            String testString = scanForVuMark(0.05, 300, relicTemplate);
-//            if(testString.equals("left")){
-//                robot.turnDirection(0.15, 1000, "CCW");
-//            }
-//            if(testString.equals("right")){
-//                robot.turnDirection(0.15, 1000, "CW");
-//            }
-//            if(testString.equals("center")){
-//                robot.driveForwardSetDistance(0.15, 1000);
-//            }
-//            if(testString.equals("none")){
-//                //:(
-//            }
+            String testString = scanForVuMark(0.05, 300, relicTemplate);
+
+
 
         }else{
             //--AUTO SCRIPT START--
@@ -128,9 +118,6 @@ public class AutonomousTest2 extends LinearOpMode{
             }
             if(targetPosition.equals("center")){ //Just drive forward.
                 robot.driveForwardSetDistance(0.15, 100);
-            }
-            if(targetPosition.equals("none")){
-                //Didn't find vuMark :(
             }
 
             //Drives forward and stops on line.
@@ -211,10 +198,12 @@ public class AutonomousTest2 extends LinearOpMode{
         robot.setRunMode("RUN_TO_POSITION");
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
         String decidingMark = "none"; //Used to return String
+
         //First movement.
         robot.turretMotor.setTargetPosition(distance); //Turns to distance.
         robot.turretMotor.setPower(power);
-        while (robot.turretMotor.isBusy()){
+
+        while(opModeIsActive()){
             //Waiting for turret to stop moving.
             if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
                 decidingMark = "left";
@@ -225,27 +214,11 @@ public class AutonomousTest2 extends LinearOpMode{
             }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
                 decidingMark = "right";
                 robot.turretMotor.setPower(0.0);
-            }else{ //No VuMark seen.
             }
+            telemetry.addData("Status", decidingMark);
+            telemetry.update();
         }
         //Second movement.
-        robot.turretMotor.setTargetPosition(-distance); //Turns to distance.
-        robot.turretMotor.setPower(power);
-        while (robot.turretMotor.isBusy()){
-            //Waiting for turret to stop moving.
-            if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
-                decidingMark = "left";
-                robot.turretMotor.setPower(0.0);
-            }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
-                decidingMark = "center";
-                robot.turretMotor.setPower(0.0);
-            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
-                decidingMark = "right";
-                robot.turretMotor.setPower(0.0);
-            }else{ //No VuMark seen.
-            }
-        }
-        //Third movement.
         robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
         robot.turretMotor.setPower(power);
         return (decidingMark);

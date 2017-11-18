@@ -14,11 +14,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TeleOpTest extends LinearOpMode{
     RRHardwarePresets robot = new RRHardwarePresets();
 
+    public static int armMode = 0; // 0 = Sweeping Mode, 1 = Agile Mode
+
+
     @Override
     public void runOpMode(){
         robot.init(hardwareMap);
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
+
+
 
         waitForStart();
         while(opModeIsActive()){
@@ -62,26 +67,50 @@ public class TeleOpTest extends LinearOpMode{
             //---GAMEPAD 2---
 
             //TeleOp control over arm.
-            if(gamepad2.left_stick_y != 0){
-                double currentPosition1 = robot.elbow.getPosition(); //Gets current arm position.
-                double currentPosition2 = robot.wrist.getPosition();
-                robot.elbow.setPosition(currentPosition1 + (-gamepad2.left_stick_y * .002));//Moves the arm.
-                robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
-                //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
-                telemetry.addData("CurrentPosition1", currentPosition1);
-                telemetry.addData("CurrentPosition2",currentPosition2);
-            }
-            else if(gamepad2.right_stick_y != 0){
-                double currentPosition2 = robot.wrist.getPosition();
-                robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
-                //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
-                telemetry.addData("posiition",currentPosition2);
-            }
-            else if(gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0){
-                double currentPosition2 = robot.wrist.getPosition();
-                robot.wrist.setPosition(currentPosition2);
-            }
 
+            //Swaps armMode.
+            if (gamepad2.back) {
+                if (armMode == 0){
+                    this.armMode = 1;
+                }
+                else if(armMode == 1){
+                    this.armMode = 0;
+                }
+            }
+            //armMode behaviors.
+            if(armMode == 0){
+                  if(gamepad2.left_stick_y != 0) {
+                      double currentPosition1 = robot.elbow.getPosition(); //Gets current arm position.
+                      double currentPosition2 = robot.wrist.getPosition();
+                      robot.elbow.setPosition(currentPosition1 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                      robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                      //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
+                      telemetry.addData("CurrentPosition1", currentPosition1);
+                      telemetry.addData("CurrentPosition2", currentPosition2);
+                  }else if(gamepad2.right_stick_y != 0) {
+                      double currentPosition2 = robot.wrist.getPosition();
+                      robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
+                      //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
+                      telemetry.addData("position", currentPosition2);
+                  } else if (gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0) {
+                      double currentPosition2 = robot.wrist.getPosition();
+                      robot.wrist.setPosition(currentPosition2);
+                  }
+            }else if(armMode == 1) {
+                while (opModeIsActive()){
+                    double elbowCurrentPosition = robot.elbow.getPosition();
+                    if(Math.abs(gamepad2.right_stick_y) >= 0.05){
+                        robot.elbow.setPosition(robot.elbow.getPosition() + (gamepad2.right_stick_y * 0.002));
+                    }else{
+                        robot.elbow.setPosition(robot.elbow.getPosition());
+                    }
+                    if(Math.abs(gamepad2.right_stick_x) >= 0.05){
+                        robot.wrist.setPosition(robot.wrist.getPosition() + (gamepad2.right_stick_x * 0.002));
+                    }else{
+
+                    }
+                }
+            }
             //---TELEMETRY---
 
             //Telemetry
@@ -102,6 +131,7 @@ public class TeleOpTest extends LinearOpMode{
             //telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
             //telemetry.addData("Elbow Position", robot.elbow.getPosition());
             //telemetry.addData("Wrist Position", robot.wrist.getPosition());
+            telemetry.addData("Arm Mode", armMode);
 
             telemetry.update();
             idle();
