@@ -18,38 +18,38 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class RRHardwarePresets{
 
     //Motors, Servos and Sensors
-    public static DcMotor left1;
-    public static DcMotor left2;
-    public static DcMotor right1;
-    public static DcMotor right2;
-    public static DcMotor turretMotor;
-    public static Servo claw;
-    public static Servo jewelArm;
-    public static Servo elbow;
-    public static Servo wrist;
-    public static ColorSensor jewelSensor;
-    public static ColorSensor floorSensor;
-    public static BNO055IMU imu;
+    public DcMotor left1;
+    public DcMotor left2;
+    public DcMotor right1;
+    public DcMotor right2;
+    public DcMotor turretMotor;
+    public Servo claw;
+    public Servo jewelArm;
+    public Servo elbow;
+    public Servo wrist;
+    public ColorSensor jewelSensor;
+    public ColorSensor floorSensor;
+    public BNO055IMU imu;
     //public static BNO055IMU imu2;
-    public static HardwareMap HwMap;
+    public HardwareMap HwMap;
 
     //Vuforia Information
-    public static final String TAG = "Vuforia VuMark Sample";
-    public static OpenGLMatrix lastLocation = null;
-    public static VuforiaLocalizer vuforia;
+    public final String TAG = "Vuforia VuMark Sample";
+    public OpenGLMatrix lastLocation = null;
+    public VuforiaLocalizer vuforia;
 
     //Constants
-    public static final double JEWEL_ARM_UP = 0.70;
-    public static final double JEWEL_ARM_DOWN = 0.05;
-    public static final double ELBOW_UNFOLDED = 0.30;
-    public static final double ELBOW_FOLDED = 1.00;
-    public static final double WRIST_UNFOLDED = 0.30;
-    public static final double WRIST_FOLDED = 1.00;
+    public final double JEWEL_ARM_UP = 0.70;
+    public final double JEWEL_ARM_DOWN = 0.05;
+    public final double ELBOW_UNFOLDED = 0.30;
+    public final double ELBOW_FOLDED = 1.00;
+    public final double WRIST_UNFOLDED = 0.30;
+    public final double WRIST_FOLDED = 1.00;
 
     //Need to get these values correct for followLine() to work.
-    public static final double FLOOR_COLOR = 0.0;
-    public static final double RED_LINE_COLOR = 0.0;
-    public static final double BLUE_LINE_COLOR = 0.0;
+    public final double FLOOR_COLOR = 0.0;
+    public final double RED_LINE_COLOR = 0.0;
+    public final double BLUE_LINE_COLOR = 0.0;
 
     //Constructor
     public RRHardwarePresets(){
