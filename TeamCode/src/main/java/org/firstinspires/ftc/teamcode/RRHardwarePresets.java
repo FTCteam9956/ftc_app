@@ -29,9 +29,9 @@ public class RRHardwarePresets{
     public Servo wrist;
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
-    public BNO055IMU imu;
+    //public BNO055IMU imu1;
     //public static BNO055IMU imu2;
-    public HardwareMap HwMap;
+    HardwareMap HwMap;
 
     //Vuforia Information
     public final String TAG = "Vuforia VuMark Sample";
@@ -95,21 +95,21 @@ public class RRHardwarePresets{
         elbow.setPosition(ELBOW_FOLDED); //Folded in
 
         //IMU initialization parameters
-        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
-        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        IMUParameters.loggingEnabled = true;
-        IMUParameters.loggingTag = "IMU";
-        IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        //BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
+        //IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        //IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        //IMUParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        //IMUParameters.loggingEnabled = true;
+        //IMUParameters.loggingTag = "IMU";
+        //IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         //imu1 initialization, change name to imu1 when we add the second IMU. Will need to be updated on phone config.
-        imu = HwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(IMUParameters);
+        //imu = HwMap.get(BNO055IMU.class, "imu");
+        //imu.initialize(IMUParameters);
 
-//        //imu2 initialization
-//        imu2 = HwMap.get(BNO055IMU.class, "imu2");
-//        imu2.initialize(IMUParameters);
+        //imu2 initialization
+        //imu2 = HwMap.get(BNO055IMU.class, "imu2");
+        //imu2.initialize(IMUParameters);
 
         //Vuforia Initialization parameters.
         //Sets camera feed to display on phone.
@@ -311,6 +311,7 @@ public class RRHardwarePresets{
             return (false);
         }
     }
+
     //Sets all drive motor power.
     public void setMotorPower(double power) {
         this.left1.setPower(power);
