@@ -20,14 +20,14 @@ public class AutonomousTest2 extends LinearOpMode{
 
     @Override
     public void runOpMode(){
-        robot.init(hardwareMap);
+        robot.init(hardwareMap); //Robot moves during init().
+
+        robot.setRunMode("STOP_AND_RESET_ENCODER");
+        robot.setRunMode("RUN_USING_ENCODER");
 
         //Vuforia Trackables.
         VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
-
-        robot.setRunMode("STOP_AND_RESET_ENCODER");
-        robot.setRunMode("RUN_USING_ENCODER");
 
         waitForStart();
 
