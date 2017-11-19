@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -53,9 +54,9 @@ public class RRHardwarePresets{
     }
 
     public void init(HardwareMap hwm){
-        HwMap = hwm;
 
         //Mappings.
+        HwMap = hwm;
         left1 = HwMap.dcMotor.get("left1");
         left2 = HwMap.dcMotor.get("left2");
         right1 = HwMap.dcMotor.get("right1");
