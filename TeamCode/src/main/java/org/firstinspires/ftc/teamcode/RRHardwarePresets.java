@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
+import com.qualcomm.hardware.motors.RevRoboticsHdHexMotor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,22 +19,28 @@ public class RRHardwarePresets{
     //Hardware Map.
     HardwareMap HwMap;
 
-    //Motors, Servos and Sensors
+    //DcMotors
     public DcMotor left1;
     public DcMotor left2;
     public DcMotor right1;
     public DcMotor right2;
     public DcMotor turretMotor;
-    //public DcMotor shoulder;
-    public DcMotor winch;
+    public DcMotor winchMotor;
+
+    //Arm Servos
+    public Servo elbow;
+    public Servo wrist;
+    public DcMotor shoulder;
+
+    //Servos
     public Servo claw;
     public Servo jewelArm;
-    //public Servo elbow;
-    //public Servo wrist;
+
+    //Sensors
     public ColorSensor jewelSensor;
     public ColorSensor floorSensor;
-    //public BNO055IMU imu1;
-    //public BNO055IMU imu2;
+    public BNO055IMU imu1;
+    public BNO055IMU imu2;
 
     //Vuforia Information
     public VuforiaLocalizer vuforia;
@@ -64,24 +72,22 @@ public class RRHardwarePresets{
         right1 = HwMap.dcMotor.get("right1");
         right2 = HwMap.dcMotor.get("right2");
         turretMotor = HwMap.dcMotor.get("turretMotor");
-        //shoulder = HwMap.dcMotor.get("shoulder");
-        winch = HwMap.dcMotor.get("winch");
+        winchMotor = HwMap.dcMotor.get("winchMotor");
         claw = HwMap.servo.get("claw");
         jewelArm = HwMap.servo.get("jewelArm");
         jewelSensor = HwMap.colorSensor.get("jewelSensor");
         floorSensor = HwMap.colorSensor.get("floorSensor");
-        //elbow = HwMap.servo.get("elbow");
-        //wrist = HwMap.servo.get("wrist");
-        AnalogInput potentiometer = HwMap.analogInput.get("pMeter");
+        elbow = HwMap.servo.get("elbow");
+        wrist = HwMap.servo.get("wrist");
+        shoulder = HwMap.dcMotor.get("shoulder");
+        //AnalogInput potentiometer = HwMap.analogInput.get("pMeter");
 
         //DC Motor directions.
         left1.setDirection(DcMotorSimple.Direction.FORWARD);
         left2.setDirection(DcMotorSimple.Direction.FORWARD);
         right1.setDirection(DcMotorSimple.Direction.REVERSE);
         right2.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //Set winch to run without encoders
-        winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        winchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //DC Motor stop behavior.
         left1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -89,8 +95,9 @@ public class RRHardwarePresets{
         right1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        winchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Sensor LED control.
         jewelSensor.enableLed(false);
@@ -98,8 +105,8 @@ public class RRHardwarePresets{
 
         //Initial Servo positions.
         jewelArm.setPosition(JEWEL_ARM_UP); //Raised
-        //wrist.setPosition(WRIST_FOLDED); //Folded in
-        //elbow.setPosition(ELBOW_FOLDED); //Folded in
+        wrist.setPosition(WRIST_FOLDED); //Folded in
+        elbow.setPosition(ELBOW_FOLDED); //Folded in
 
         //IMU Initialization parameters.
         BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
@@ -111,12 +118,12 @@ public class RRHardwarePresets{
         IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         //Giving parameters to create imu1.
-        //imu = HwMap.get(BNO055IMU.class, "imu");
-        //imu.initialize(IMUParameters);
+        imu1 = HwMap.get(BNO055IMU.class, "imu1");
+        imu1.initialize(IMUParameters);
 
         //Giving parameters to create imu2.
-        //imu2 = HwMap.get(BNO055IMU.class, "imu2");
-        //imu2.initialize(IMUParameters);
+        imu2 = HwMap.get(BNO055IMU.class, "imu2");
+        imu2.initialize(IMUParameters);
 
         //Vuforia Initialization parameters.
         int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName()); //Sets camera feed to display on phone.
@@ -280,7 +287,8 @@ public class RRHardwarePresets{
             this.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         if(input.equals("RUN_WITHOUT_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -288,7 +296,8 @@ public class RRHardwarePresets{
             this.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            this.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.winchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         if(input.equals("RUN_USING_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -296,6 +305,8 @@ public class RRHardwarePresets{
             this.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            this.winchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            this.shoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         if(input.equals("RUN_TO_POSITION")) {
             this.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -303,6 +314,8 @@ public class RRHardwarePresets{
             this.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 

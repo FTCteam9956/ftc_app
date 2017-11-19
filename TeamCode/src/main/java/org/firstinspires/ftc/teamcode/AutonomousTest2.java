@@ -124,7 +124,7 @@ public class AutonomousTest2 extends LinearOpMode{
     //---AUTONOMOUS ONLY METHODS BELOW---
 
     //Moves the jewelArm depending on what the input is.
-    public void knockOffBall(int selection) {
+    public void knockOffBall(int selection){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_TO_POSITION");
