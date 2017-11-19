@@ -74,9 +74,8 @@ public class TeleOpTest extends LinearOpMode{
             }
 
             //---GAMEPAD 2---
-            //TeleOp control over arm.
 
-            //Swaps armMode.
+            //Swaps armMode between (Linear Mode) and (Free Control Mode)
             if(gamepad2.left_stick_button || gamepad2.dpad_down){
                 if (armMode == 0){
                     this.armMode = 1;
@@ -88,7 +87,7 @@ public class TeleOpTest extends LinearOpMode{
                 }
             }
 
-            //Extends and retracts arm.
+            //Extends and retracts arm to set positions.
             if(gamepad2.y){
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 700, 150);
             }
@@ -103,13 +102,11 @@ public class TeleOpTest extends LinearOpMode{
                     double wristCurrentPosition = robot.wrist.getPosition();
                     robot.elbow.setPosition(elbowCurrentPosition + (-gamepad2.left_stick_y * .002));//Moves the arm.
                     robot.wrist.setPosition(wristCurrentPosition + (-gamepad2.left_stick_y * .002));//Moves the arm.
-                    //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
                     telemetry.addData("CurrentPosition1", elbowCurrentPosition);
                     telemetry.addData("CurrentPosition2", wristCurrentPosition);
                 }else if(gamepad2.right_stick_y != 0) {
                     double currentPosition2 = robot.wrist.getPosition();
                     robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
-                    //moveWithJoystick(robot.wrist, robot.elbow, gamepad2.left_stick_y, gamepad2.left_stick_y);
                     telemetry.addData("position", currentPosition2);
                 }else if(gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0) {
                     double currentPosition2 = robot.wrist.getPosition();
