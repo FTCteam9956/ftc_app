@@ -8,8 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 
 public class RRHardwarePresets{
 
@@ -67,6 +72,7 @@ public class RRHardwarePresets{
         floorSensor = HwMap.colorSensor.get("floorSensor");
         elbow = HwMap.servo.get("elbow");
         wrist = HwMap.servo.get("wrist");
+        AnalogInput potentiometer = HwMap.analogInput.get("pMeter");
 
         //DC Motor directions.
         left1.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -90,6 +96,9 @@ public class RRHardwarePresets{
         wrist.setPosition(WRIST_FOLDED); //Folded in
         elbow.setPosition(ELBOW_FOLDED); //Folded in
 
+        //PotentioMeter
+        double value = potentiometer.getVoltage();
+
         //IMU Initialization parameters.
         BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
         IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -98,6 +107,9 @@ public class RRHardwarePresets{
         IMUParameters.loggingEnabled = true;
         IMUParameters.loggingTag = "IMU";
         IMUParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+
+
 
         //Giving parameters to create imu1.
         //imu = HwMap.get(BNO055IMU.class, "imu");

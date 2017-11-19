@@ -54,6 +54,10 @@ public class AutonomousTest2 extends LinearOpMode{
 
             //Testing with scanForVumark().
             String testString = scanForVuMark(0.05, 300, relicTemplate);
+
+            //String testString = scanForVuMark(0.05, 300, relicTemplate);
+            robot.jewelSensor.enableLed(true);
+
         }else{
             //--AUTO SCRIPT START--
 
