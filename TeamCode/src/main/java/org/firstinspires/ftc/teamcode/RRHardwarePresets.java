@@ -34,6 +34,7 @@ public class RRHardwarePresets{
 
     //Servos
     public Servo claw;
+    public Servo clawTwist;
     public Servo jewelArm;
 
     //Sensors
@@ -71,12 +72,18 @@ public class RRHardwarePresets{
         left2 = HwMap.dcMotor.get("left2");
         right1 = HwMap.dcMotor.get("right1");
         right2 = HwMap.dcMotor.get("right2");
+
         turretMotor = HwMap.dcMotor.get("turretMotor");
         winchMotor = HwMap.dcMotor.get("winchMotor");
+
         claw = HwMap.servo.get("claw");
+        clawTwist = HwMap.servo.get("clawTwist");
+
         jewelArm = HwMap.servo.get("jewelArm");
+
         jewelSensor = HwMap.colorSensor.get("jewelSensor");
         floorSensor = HwMap.colorSensor.get("floorSensor");
+
         elbow = HwMap.servo.get("elbow");
         wrist = HwMap.servo.get("wrist");
         shoulder = HwMap.dcMotor.get("shoulder");
@@ -235,12 +242,12 @@ public class RRHardwarePresets{
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         setRunMode("RUN_TO_POSITION");
-        if (direction.equals("CCW")) {
+        if (direction.equals("CCW")) {//Left
             this.left1.setTargetPosition(distance);
             this.left2.setTargetPosition(distance);
             this.right1.setTargetPosition(-distance);
             this.right2.setTargetPosition(-distance);
-        } else if (direction.equals("CW")) {
+        } else if (direction.equals("CW")) {//Right
             this.left1.setTargetPosition(-distance);
             this.left2.setTargetPosition(-distance);
             this.right1.setTargetPosition(distance);
