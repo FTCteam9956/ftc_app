@@ -1,25 +1,16 @@
-//AutonomousTest2.java
-
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import java.lang.InterruptedException;
 
-@Autonomous(name = "AutonomousTest2", group = "Autonomous")
-@Disabled
-
-public class AutonomousTest2 extends LinearOpMode{
+public class BlueTurn extends LinearOpMode{
     public RRHardwarePresets robot = new RRHardwarePresets();
 
-    @Override
     public void runOpMode(){
+
         robot.init(hardwareMap); //Robot moves during init().
 
         robot.setRunMode("STOP_AND_RESET_ENCODER");
@@ -37,28 +28,9 @@ public class AutonomousTest2 extends LinearOpMode{
         boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
 
         if(testArea == true){
-            //--TEST SCRIPT START--
-            //ArrayList<Type> inputList = new ArrayList<>(); //Used to carry parameters into MultithreadEnvironment.
-            //inputList.add((Type)robot.wrist);
-            //inputList.add((Type)robot.elbow);
-            //Thread t1 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread1");
-            //Thread t2 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread2");
-            //t1.start(); //Calls run() inside multithreadedEnvironment.
-            //t2.start(); //Calls run() inside multithreadedEnvironment.
-            //try {
-            //    t1.join(); //Ends thread when its not busy anymore.
-            //    t2.join(); //Ends thread when its not busy anymore.
-            //}catch(InterruptedException e){
-            //    e.printStackTrace();
-            //}
-
-            //Testing with scanForVumark().
-            String testString = scanForVuMark(0.05, 300, relicTemplate);
-
-            //String testString = scanForVuMark(0.05, 300, relicTemplate);
-            robot.jewelSensor.enableLed(true);
 
         }else{
+
             //--AUTO SCRIPT START--
 
             //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
@@ -69,12 +41,12 @@ public class AutonomousTest2 extends LinearOpMode{
             while (loopBreak == 0) {
                 sleep(1000);
                 if (robot.jewelSensor.red() > 52) {
-                    knockOffBall(1);
+                    knockOffBall(0);
                     telemetry.addData("Status", "Confirmed Red Ball!");
                     loopBreak = 1;
                 } else if (robot.jewelSensor.red() <= 52) {
                     if (robot.jewelSensor.blue() > 20) {
-                        knockOffBall(0);
+                        knockOffBall(1);
                         telemetry.addData("Status", "Confirmed Blue Ball!");
                         loopBreak = 1;
                     } else {
@@ -92,25 +64,34 @@ public class AutonomousTest2 extends LinearOpMode{
             robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 2000);
             sleep(500);
 
-            //Drive forward 1200 units at a speed of 0.15 off of the balance stone.
-            robot.driveForwardSetDistance(0.15, 1200);
-            sleep(500);
-
             //Search for and confirm VuMark.
             String targetPosition = scanForVuMark(0.15, 500, relicTemplate);
 
+            //Turn and drive forward off of the balancing stone to place the block.
+            robot.turnDirection(0.15, -780, "CCW");
+            robot.driveForwardSetDistance(0.15, 800);
+            robot.turnDirection(0.15, 780, "CW");
+            sleep(500);
+
             //Turn dependent on what we read from vuMark.
             if(targetPosition.equals("left")){ //Turn CCW, then drive forward.
-                robot.turnDirection(0.15, 500, "CCW");
-                robot.driveForwardSetDistance(0.15, 100);
+                telemetry.addData("Vuforia Status", "LEFT");
+                telemetry.update();
+                //robot.turnDirection(0.15, 500, "CCW");
+                //robot.driveForwardSetDistance(0.15, 100);
             }
             if(targetPosition.equals("right")){ //Turn CW, then drive forward.
-                robot.turnDirection(0.15, 500, "CW");
-                robot.driveForwardSetDistance(0.15, 100);
+                telemetry.addData("Vuforia Status", "RIGHT");
+                telemetry.update();
+                // robot.turnDirection(0.15, 500, "CW");
+                //robot.driveForwardSetDistance(0.15, 100);
             }
             if(targetPosition.equals("center")){ //Just drive forward.
-                robot.driveForwardSetDistance(0.15, 100);
+                //robot.driveForwardSetDistance(0.15, 100);
+                telemetry.addData("Vuforia Status", "CENTER");
+                telemetry.update();
             }
+
 
             //Drives forward and stops on line.
 
@@ -216,4 +197,3 @@ public class AutonomousTest2 extends LinearOpMode{
         return (decidingMark);
     }
 }
-
