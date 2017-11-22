@@ -47,7 +47,7 @@ public class RRHardwarePresets{
     public VuforiaLocalizer vuforia;
 
     //Constants
-    public final double JEWEL_ARM_UP = 0.70;
+    public final double JEWEL_ARM_UP = 0.45;
     public final double JEWEL_ARM_DOWN = 0.05;
     public final double ELBOW_UNFOLDED = 0.30;
     public final double ELBOW_FOLDED = 1.00;
