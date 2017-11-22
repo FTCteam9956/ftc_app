@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -27,7 +29,7 @@ public class RedStraight extends LinearOpMode{
 
         //Vuforia Trackables.
         VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        VuforiaTrackable relicTemplate = relicTrackables.get(1);
 
         waitForStart();
 
@@ -38,29 +40,14 @@ public class RedStraight extends LinearOpMode{
 
         if(testArea == true){
             //--TEST SCRIPT START--
-            //ArrayList<Type> inputList = new ArrayList<>(); //Used to carry parameters into MultithreadEnvironment.
-            //inputList.add((Type)robot.wrist);
-            //inputList.add((Type)robot.elbow);
-            //Thread t1 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread1");
-            //Thread t2 = new Thread(new MultithreadEnvironment("threadedExtendArm", inputList), "thread2");
-            //t1.start(); //Calls run() inside multithreadedEnvironment.
-            //t2.start(); //Calls run() inside multithreadedEnvironment.
-            //try {
-            //    t1.join(); //Ends thread when its not busy anymore.
-            //    t2.join(); //Ends thread when its not busy anymore.
-            //}catch(InterruptedException e){
-            //    e.printStackTrace();
-            //}
 
             //Testing with scanForVumark().
-            String testString = scanForVuMark(0.05, 300, relicTemplate);
+            //String testString = scanForVuMark(relicTemplate, 10000);
 
-            //String testString = scanForVuMark(0.05, 300, relicTemplate);
-            robot.jewelSensor.enableLed(true);
+            scanForVuMark(relicTemplate, 20000);
 
         }else{
             //--AUTO SCRIPT START--
-
             //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
             robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 2000);
 
@@ -97,7 +84,7 @@ public class RedStraight extends LinearOpMode{
             sleep(500);
 
             //Search for and confirm VuMark.
-            String targetPosition = scanForVuMark(0.15, 500, relicTemplate);
+            String targetPosition = scanForVuMark(relicTemplate, 5000);
 
             //Turn dependent on what we read from vuMark.
             if(targetPosition.equals("left")){ //Turn CCW, then drive forward.
@@ -183,37 +170,23 @@ public class RedStraight extends LinearOpMode{
 
     //NEEDS TO BE TESTED.
     //Scans for VuForia Target. returns a string of either "none", "right", "left", or "center"
-    //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
-    public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp){
-        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
-        robot.setRunMode("STOP_AND_RESET_ENCODER");
-        robot.setRunMode("RUN_TO_POSITION");
+    public String scanForVuMark(VuforiaTrackable relicTemp, long timeOutInMilli){
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
         String decidingMark = "none"; //Used to return String
-
-        //First movement.
-        robot.turretMotor.setTargetPosition(distance); //Turns to distance.
-        robot.turretMotor.setPower(power);
-
-        while(opModeIsActive()){
-            //Waiting for turret to stop moving.
-            if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
+        long time = timeOutInMilli * 1000000;
+        double initTime = System.nanoTime();
+        while(((System.nanoTime() - initTime) <= time) || !decidingMark.equals("none")){
+            if(vuMark.equals(RelicRecoveryVuMark.LEFT)){//Left seen.
                 decidingMark = "left";
-                robot.turretMotor.setPower(0.0);
-            }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
+            }else if(vuMark.equals(RelicRecoveryVuMark.CENTER)){ //Center seen.
                 decidingMark = "center";
-                robot.turretMotor.setPower(0.0);
-            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
+            }else if(vuMark.equals(RelicRecoveryVuMark.RIGHT)){ //Right seen.
                 decidingMark = "right";
-                robot.turretMotor.setPower(0.0);
             }
-            telemetry.addData("Status", decidingMark);
+            telemetry.addData("status", decidingMark);
             telemetry.update();
         }
-        //Second movement.
-        robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
-        robot.turretMotor.setPower(power);
-        return (decidingMark);
+        return(decidingMark);
     }
 }
 

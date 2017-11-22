@@ -53,6 +53,9 @@ public class TeleOpTest extends LinearOpMode{
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
 
+        //Setting this to RUN_TO_POSITION to try and keep it in one place.
+      //robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         while(opModeIsActive()){
 
             //---GAMEPAD 1---
@@ -133,12 +136,15 @@ public class TeleOpTest extends LinearOpMode{
             }else if(armMode == 1){
                 //Controls at shoulder
                 if(gamepad2.dpad_left){
-                    robot.shoulder.setPower(0.25);
+                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 10);
+                    robot.shoulder.setPower(0.5);
                 }
                 else if(gamepad2.dpad_right){
-                    robot.shoulder.setPower(-0.25);
+                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 10);
+                    robot.shoulder.setPower(0.5);
                 }else{
-                    robot.shoulder.setPower(0.0);
+                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition());
+                    robot.shoulder.setPower(1.00);
                 }
                 //Controls at elbow
                 if(Math.abs(gamepad2.right_stick_x) >= 0.05){
