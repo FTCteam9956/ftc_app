@@ -53,6 +53,12 @@ public class RRHardwarePresets{
     public final double ELBOW_FOLDED = 1.00;
     public final double WRIST_UNFOLDED = 0.30;
     public final double WRIST_FOLDED = 1.00;
+    public final double CLAW_CLOSED = 0;
+    public final double CLAW_OPENED = 1;
+    public final double CLAW_KINDAOPEN = 0.3;
+    public final double TWIST_UP = 0.76;
+    public final double TWIST_DOWN = 0.38;
+
 
     //Need to get these values correct for followLine() to work.
     public final double FLOOR_COLOR = 0.0;
@@ -110,10 +116,6 @@ public class RRHardwarePresets{
         jewelSensor.enableLed(false);
         floorSensor.enableLed(false);
 
-        //Initial Servo positions.
-        jewelArm.setPosition(JEWEL_ARM_UP); //Raised
-        wrist.setPosition(WRIST_FOLDED); //Folded in
-        elbow.setPosition(ELBOW_FOLDED); //Folded in
 
         //IMU Initialization parameters.
         BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
@@ -132,9 +134,10 @@ public class RRHardwarePresets{
         imu2 = HwMap.get(BNO055IMU.class, "imu2");
         imu2.initialize(IMUParameters);
 
+
         //Vuforia Initialization parameters.
         int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName()); //Sets camera feed to display on phone.
-        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId); // If you want to deactivate the Camera Monitor View, to save power. You can just not pass in cameraMonitorViewID.
+        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(); // If you want to deactivate the Camera Monitor View, to save power. You can just not pass in cameraMonitorViewID.
         VuforiaParameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
         VuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //Sets phone to use back camera.
         this.vuforia = ClassFactory.createVuforiaLocalizer(VuforiaParameters); //Initializes VuforiaLocalizer object as vuforia.

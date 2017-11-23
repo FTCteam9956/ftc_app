@@ -44,7 +44,8 @@ public class RedStraight extends LinearOpMode{
             //Testing with scanForVumark().
             //String testString = scanForVuMark(relicTemplate, 10000);
 
-            scanForVuMark(relicTemplate, 20000);
+            //scanForVuMark(relicTemplate, 20000);
+            robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_UNFOLDED, robot.WRIST_UNFOLDED, 1000, 2000);
 
         }else{
             //--AUTO SCRIPT START--
@@ -85,6 +86,9 @@ public class RedStraight extends LinearOpMode{
 
             //Search for and confirm VuMark.
             String targetPosition = scanForVuMark(relicTemplate, 5000);
+
+            robot.moveServo(robot.elbow, 0.75, 1000, 2000);
+            robot.moveServo(robot.wrist, 0.5, 1000, 2000);
 
             //Turn dependent on what we read from vuMark.
             if(targetPosition.equals("left")){ //Turn CCW, then drive forward.
