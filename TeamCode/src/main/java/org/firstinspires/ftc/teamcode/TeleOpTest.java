@@ -44,6 +44,7 @@ public class TeleOpTest extends LinearOpMode{
     RRHardwarePresets robot = new RRHardwarePresets();
 
     public static int armMode = 0; // 0 = Sweeping Mode, 1 = Agile Mode
+    int clawMode = 0;
 
     @Override
     public void runOpMode(){
@@ -53,111 +54,166 @@ public class TeleOpTest extends LinearOpMode{
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
 
-        //Setting this to RUN_TO_POSITION to try and keep it in one place.
-      //robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jewelArm.setPosition(robot.JEWEL_ARM_UP); //Raised
+        robot.wrist.setPosition(robot.WRIST_FOLDED); //Folded in
+        robot.elbow.setPosition(robot.ELBOW_FOLDED);
+        robot.shoulder.setTargetPosition(0);
+        sleep(500);
 
-        while(opModeIsActive()){
+
+        //Setting this to RUN_TO_POSITION to try and keep it in one place.
+        robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        int currentPos =robot.shoulder.getCurrentPosition();
+        while(opModeIsActive()) {
 
             //---GAMEPAD 1---
 
             //Sets power for DC motors. (TANK DRIVE)
-            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y));
-            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y));
-            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y));
-            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y));
+            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y / 2));
+            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y / 2));
+            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y / 2));
+            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y / 2));
 
             //DC motor turret controls.
-            if(gamepad1.right_trigger > 0.5){
+            if (gamepad1.right_trigger > 0.5) {
                 robot.turretMotor.setPower(0.15);
-            }
-            else if(gamepad1.left_trigger > 0.5){
+            } else if (gamepad1.left_trigger > 0.5) {
                 robot.turretMotor.setPower(-0.15);
-            }
-            else{
+            } else {
                 robot.turretMotor.setPower(0.0);
             }
 
             //Servo jewelArm controls.
-            if(gamepad1.dpad_up){
-                robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 3000);
-            }
-            if(gamepad1.dpad_down){
-                robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 3000);
-            }
+//            if(gamepad1.dpad_up){
+//                robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 3000);
+//            }
+//            if(gamepad1.dpad_down){
+//                robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 3000);
+//            }
+
 
             //---GAMEPAD 2---
 
             //Controls winchMotor
-            if(gamepad2.dpad_up){
+            if (gamepad2.dpad_up) {
                 robot.winchMotor.setPower(-0.15);
-            } else if(gamepad2.dpad_down){
+            } else if (gamepad2.dpad_down) {
                 robot.winchMotor.setPower(0.15);
-            }else{
+            } else {
                 robot.winchMotor.setPower(0.0);
             }
 
             //Extends and retracts arm.
-            if(gamepad2.y){
+            if (gamepad2.y) {
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 700, 150);
             }
-            if(gamepad2.a){
+            if (gamepad2.a) {
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 700, 150);
             }
 
             //Swaps armMode between (Linear Mode) and (Free Control Mode)
-            if(gamepad2.left_stick_button){
-                if (armMode == 0){
+            if (gamepad2.left_stick_button) {
+                if (armMode == 0) {
                     this.armMode = 1;
-                    sleep (500);
-                }
-                else if(armMode == 1){
+                    sleep(500);
+                } else if (armMode == 1) {
                     this.armMode = 0;
-                    sleep (500);
+                    sleep(500);
                 }
             }
 
-            //armMode behaviors.
-            if(armMode == 0){
-                if(gamepad2.left_stick_y != 0){
+            //armMode behaviors. aka switches between the modes that control the arm
+            if (armMode == 0) {
+                if (gamepad2.left_stick_y != 0) {
                     double elbowCurrentPosition = robot.elbow.getPosition(); //Gets current arm position.
                     double wristCurrentPosition = robot.wrist.getPosition();
                     robot.elbow.setPosition(elbowCurrentPosition + (-gamepad2.left_stick_y * .002));//Moves the arm.
                     robot.wrist.setPosition(wristCurrentPosition + (-gamepad2.left_stick_y * .002));//Moves the arm.
                     telemetry.addData("CurrentPosition1", elbowCurrentPosition);
                     telemetry.addData("CurrentPosition2", wristCurrentPosition);
-                }else if(gamepad2.right_stick_y != 0) {
+                } else if (gamepad2.right_stick_y != 0) {
                     double currentPosition2 = robot.wrist.getPosition();
                     robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
                     telemetry.addData("position", currentPosition2);
-                }else if(gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0) {
+                } else if (gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0) {
                     double currentPosition2 = robot.wrist.getPosition();
                     robot.wrist.setPosition(currentPosition2);
+
                 }
-            }else if(armMode == 1){
+                //Open and close claw
+                if (gamepad2.right_bumper) {
+                    clawMode = clawMode+1;
+                    sleep(500);
+                }
+                // Different Claw Positions
+                if (clawMode >= 3) {
+                    clawMode = 0;
+                }
+                if (clawMode == 0) {
+                    robot.claw.setPosition(robot.CLAW_OPENED);
+                    telemetry.addData("Status", clawMode);
+                }
+                if (clawMode == 1) {
+                    robot.claw.setPosition(robot.CLAW_KINDAOPEN);
+                }
+                if (clawMode == 2) {
+                    robot.claw.setPosition(robot.CLAW_CLOSED);
+                }
+
+                //Twists the claw
+                if (gamepad2.right_trigger > 0.5) {
+                    robot.clawTwist.setPosition(robot.TWIST_UP);
+                }
+                if (gamepad2.left_trigger > 0.5) {
+                    robot.clawTwist.setPosition(robot.TWIST_DOWN);
+                }
+            }
+
+            if (armMode == 1) {
                 //Controls at shoulder
-                if(gamepad2.dpad_left){
-                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 10);
-                    robot.shoulder.setPower(0.5);
-                }
-                else if(gamepad2.dpad_right){
-                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 10);
-                    robot.shoulder.setPower(0.5);
-                }else{
-                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition());
+                //From above this line declares it int currentPos =robot.shoulder.getCurrentPosition();
+                if (gamepad2.dpad_left) {
+                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 5);
+                    robot.shoulder.setPower(0.2);
+                    currentPos = robot.shoulder.getCurrentPosition();//Set the position to lock at;
+                } else if (gamepad2.dpad_right) {
+                    robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 5);
+                    robot.shoulder.setPower(0.2);
+                    currentPos = robot.shoulder.getCurrentPosition();
+                } else {
+
+                    robot.shoulder.setTargetPosition(currentPos);
                     robot.shoulder.setPower(1.00);
+                    sleep(10);
                 }
                 //Controls at elbow
-                if(Math.abs(gamepad2.right_stick_x) >= 0.05){
-                    robot.elbow.setPosition(robot.elbow.getPosition() + (-gamepad2.right_stick_x * 0.00125));
-                }else{
+                if (Math.abs(gamepad2.right_stick_x) >= 0.05) {
+                    robot.elbow.setPosition(robot.elbow.getPosition() + (-gamepad2.right_stick_x * 0.01));
+                } else {
                     robot.elbow.setPosition(robot.elbow.getPosition());
                 }
                 //Controls at wrist
-                if(Math.abs(gamepad2.left_stick_x) >= 0.05){
-                    robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_x * 0.00125));
-                }else{
+                if (Math.abs(gamepad2.left_stick_x) >= 0.05) {
+                    robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_x * 0.01));
+                } else {
                     robot.wrist.setPosition(robot.wrist.getPosition());
                 }
+            }
+            //Open and close claw
+
+//            if(gamepad2.right_bumper){
+//                robot.claw.setPosition(robot.CLAW_OPENED);
+//         }
+//            if(gamepad2.left_bumper){
+//                robot.claw.setPosition(robot.CLAW_CLOSED);
+//            }
+
+            //Twists the claw
+            if (gamepad2.right_trigger > 0.5) {
+                robot.clawTwist.setPosition(robot.TWIST_UP);
+            }
+            if (gamepad2.left_trigger > 0.5) {
+                robot.clawTwist.setPosition(robot.TWIST_DOWN);
             }
 
             //---TELEMETRY---
@@ -184,7 +240,7 @@ public class TeleOpTest extends LinearOpMode{
             telemetry.update();
             idle();
 
-        } //WhileOpModeIsActive() End.
+        }//WhileOpModeIsActive() End.
     }
 
     //---TELEOP ONLY METHODS BELOW---
