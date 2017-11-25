@@ -3,42 +3,99 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "RedTurn", group = "Autonomous")
 //@Disabled
 
 public class RedTurn extends LinearOpMode {
+    public RRHardwarePresets robot = new RRHardwarePresets();
 
-    public void runOpMode(){
+    @Override
+    public void runOpMode() {
+        robot.init(hardwareMap); //Robot moves during init().
 
-        class AutonomousTest2 extends LinearOpMode{
-            public RRHardwarePresets robot = new RRHardwarePresets();
+        robot.setRunMode("STOP_AND_RESET_ENCODER");
+        robot.setRunMode("RUN_USING_ENCODER");
 
-            @Override
-            public void runOpMode(){
-                robot.init(hardwareMap); //Robot moves during init().
+        //Vuforia Trackables.
+        VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
-                robot.setRunMode("STOP_AND_RESET_ENCODER");
-                robot.setRunMode("RUN_USING_ENCODER");
+        waitForStart();
 
-                //Vuforia Trackables.
-                VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
-                VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        //Relic Trackables
+        relicTrackables.activate();
 
-                waitForStart();
+        boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
 
-                //Relic Trackables
-                relicTrackables.activate();
+        if (testArea == true) {
 
-                boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-                if(testArea == true){
+            while (opModeIsActive()) {
+                if (vuMark == RelicRecoveryVuMark.UNKNOWN) { //Test to see if image is visible
+                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                    telemetry.addData("Pose", format(pose));
 
+                    telemetry.addData("VuMark", "%s visible", vuMark);
+
+
+                    //Break apart the pose into transitive and rotational componenets
+                    if (pose != null) {
+                        VectorF trans = pose.getTranslation();
+                        Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                        //Extract XYZ values of the offset of the target in relation to our robot
+                        robot.tX = trans.get(0);
+                        robot.tY = trans.get(0);
+                        robot.tZ = trans.get(0);
+                        //Extract rotational components of the target in relation to our robot
+                        robot.rX = rot.firstAngle;
+                        robot.rY = rot.secondAngle;
+                        robot.rZ = rot.thirdAngle;
+                    }
+
+                    //Waiting for turret to stop moving.
+                    if (vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
+                        telemetry.addData("vuMark", "% visible", vuMark);
+                        telemetry.addData("X =", robot.tX);
+                        telemetry.addData("Y =", robot.tY);
+                        telemetry.addData("Z =", robot.tZ);
+                    }
+                    if (vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
+                        telemetry.addData("vuMark", "% visible", vuMark);
+                        telemetry.addData("X =", robot.tX);
+                        telemetry.addData("Y =", robot.tY);
+                        telemetry.addData("Z =", robot.tZ);
+                    }
+                    if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
+                        telemetry.addData("vuMark", "% visible", vuMark);
+                        telemetry.addData("X =", robot.tX);
+                        telemetry.addData("Y =", robot.tY);
+                        telemetry.addData("Z =", robot.tZ);
+                    }
                 }else{
+                        telemetry.addData("vuMark is", "not visible");
+                    }
+                    telemetry.update();
+
+            }
+        }
+                else {
                     //--AUTO SCRIPT START--
 
                     //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
@@ -72,38 +129,44 @@ public class RedTurn extends LinearOpMode {
                     robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 2000);
                     sleep(500);
 
-                    //Search for and confirm VuMark.
-                    String targetPosition = scanForVuMark(0.15, 500, relicTemplate);
+                    //Search for and confirm VuMark.relicTemplate);
+                    String targetPosition = scanForVuMark(relicTemplate);
 
-                    //Turn and drive forward off of the balancing stone to place the block.
-                    robot.turnDirection(0.15, 780, "CW");
-                    robot.driveForwardSetDistance(0.15, 800);
+                    //Drive backwards off of the balancing stone to place the block.
+                    robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
                     sleep(500);
 
-                    //Turn dependent on what we read from vuMark.
-                    if(targetPosition.equals("left")){ //Turn CCW, then drive forward.
-                        telemetry.addData("Vuforia Status", "LEFT");
-                        telemetry.update();
-                        //robot.turnDirection(0.15, 500, "CCW");
-                        //robot.driveForwardSetDistance(0.15, 100);
-                    }
-                    if(targetPosition.equals("right")){ //Turn CW, then drive forward.
-                        telemetry.addData("Vuforia Status", "RIGHT");
-                        telemetry.update();
-                       // robot.turnDirection(0.15, 500, "CW");
-                        //robot.driveForwardSetDistance(0.15, 100);
-                    }
-                    if(targetPosition.equals("center")){ //Just drive forward.
-                        //robot.driveForwardSetDistance(0.15, 100);
-                        telemetry.addData("Vuforia Status", "CENTER");
-                        telemetry.update();
-                    }
+                    //Drive into the balancing stone to give us a known position
+                    robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
+                    sleep(500);
 
-                    //Drives forward and stops on line.
+                    //Set position of the turret
+                    robot.turretMotor.setTargetPosition(robot.TURRET_FOR_WALL);
 
-                    //Turn towards triangle.
+                    //Place the block according to the vuMark results.
+                    if (targetPosition.equals("left")) {
+                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
+                        robot.shoulder.setTargetPosition(0);
+                    }
+                    if (targetPosition.equals("right")) {
+                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
+                        robot.shoulder.setTargetPosition(0);
+                    }
+                    if (targetPosition.equals("center")) {
+                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+                        robot.shoulder.setTargetPosition(0);
+                    }
+                    if (targetPosition.equals("gone forever")) {
+                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+                        robot.shoulder.setTargetPosition(0);
+                    }
+                    robot.claw.setPosition(robot.CLAW_OPENED);
 
-                    //Continue...
+                    //Move the arm and turret to
+                    robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
+                    robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
+
+                    robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
                 }
             }
 
@@ -130,79 +193,64 @@ public class RedTurn extends LinearOpMode {
             }
 
             //NEEDS TO BE TESTED.
-            //followValue should be the average of the 2 sensor.argb() color values. lineColor can either be "red" or "blue".
-            public void followLine(String lineColor, double speed) {
-                //Sets mode to RUN_USING_ENCODER
-                robot.setRunMode("RUN_USING_ENCODER");
-                int loopFlag = 0;
-                double correction;
-                double leftPower;
-                double rightPower;
-                double followValue = 0;
-                //Decides follow value. Try with sensor.argb() values.
-                if (lineColor.equals("red")) {
-                    followValue = ((robot.RED_LINE_COLOR + robot.FLOOR_COLOR) / 2);
-                }
-                if (lineColor.equals("blue")) {
-                    followValue = ((robot.BLUE_LINE_COLOR + robot.FLOOR_COLOR) / 2);
-                }
-                //Drives forward until it hits a line.
-                robot.driveForwardWithInterrupt(0.15, 300, lineColor);
-                //Corrects power on left and right dcMotors to follow a line.
-                while (loopFlag == 0) {
-                    //Get a correction
-                    correction = (followValue - robot.floorSensor.argb());
-                    if (correction <= 0.0) {
-                        leftPower = speed - correction;
-                        rightPower = speed;
-                    } else { //correction > 0.0
-                        leftPower = speed;
-                        rightPower = speed + correction;
-                    }
-                    //Setting motor speed.
-                    robot.left1.setPower(leftPower);
-                    robot.left2.setPower(leftPower);
-                    robot.right1.setPower(rightPower);
-                    robot.right2.setPower(rightPower);
-                }
-            }
-
-            //NEEDS TO BE TESTED.
             //Scans for VuForia Target. returns a string of either "none", "right", "left", or "center"
             //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
-            public String scanForVuMark(double power, int distance, VuforiaTrackable relicTemp){
+            public String scanForVuMark(VuforiaTrackable relicTemp) {
                 //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
                 robot.setRunMode("STOP_AND_RESET_ENCODER");
                 robot.setRunMode("RUN_TO_POSITION");
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
                 String decidingMark = "none"; //Used to return String
 
-                //First movement.
-                robot.turretMotor.setTargetPosition(distance); //Turns to distance.
-                robot.turretMotor.setPower(power);
+                while (opModeIsActive()) {
+                    if (vuMark == RelicRecoveryVuMark.UNKNOWN) { //Test to see if image is visible
+                        OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemp.getListener()).getPose();
+                        //telemetry.addData("Pose", format(pose));
 
-                while(opModeIsActive()){
-                    //Waiting for turret to stop moving.
-                    if(vuMark == RelicRecoveryVuMark.LEFT){//Left seen.
-                        decidingMark = "left";
-                        robot.turretMotor.setPower(0.0);
-                    }else if(vuMark == RelicRecoveryVuMark.CENTER){ //Center seen.
-                        decidingMark = "center";
-                        robot.turretMotor.setPower(0.0);
-                    }else if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
-                        decidingMark = "right";
-                        robot.turretMotor.setPower(0.0);
+                        //Break apart the pose into transitive and rotational componenets
+                        if (pose != null) {
+                            VectorF trans = pose.getTranslation();
+                            Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                            //Extract XYZ values of the offset of the target in relation to our robot
+                            robot.tX = trans.get(0);
+                            robot.tY = trans.get(0);
+                            robot.tZ = trans.get(0);
+                            //Extract rotational components of the target in relation to our robot
+                            robot.rX = rot.firstAngle;
+                            robot.rY = rot.secondAngle;
+                            robot.rZ = rot.thirdAngle;
+                        }
                     }
-                    telemetry.addData("Status", decidingMark);
-                    telemetry.update();
-                }
-                //Second movement.
-                robot.turretMotor.setTargetPosition(0); //Re-centers the turret.
-                robot.turretMotor.setPower(power);
-                return (decidingMark);
+                    //Waiting for turret to stop moving.
+                        if(vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
+                            telemetry.addData("vuMark if", "Left");
+                            telemetry.addData("X =", robot.tX);
+                            telemetry.addData("Y =", robot.tY);
+                            telemetry.addData("Z =", robot.tZ);
+                            decidingMark = "left";
+                        }if(vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
+                            telemetry.addData("vuMark is", "Center");
+                            telemetry.addData("X =", robot.tX);
+                            telemetry.addData("Y =", robot.tY);
+                            telemetry.addData("Z =", robot.tZ);
+                            decidingMark = "center";
+                        }if(vuMark == RelicRecoveryVuMark.RIGHT) { //Right seen.
+                            telemetry.addData("vuMark is", "Right");
+                            telemetry.addData("X =", robot.tX);
+                            telemetry.addData("Y =", robot.tY);
+                            telemetry.addData("Z =", robot.tZ);
+                            decidingMark = "right";
+                        }else{
+                            telemetry.addData("vuMark is", "not visible");
+                            decidingMark = "gone forever";
+                        }
+                        telemetry.addData("Status", decidingMark);
+                        telemetry.update();
+                    }
+                return(decidingMark);
             }
-        }
-
-
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }
