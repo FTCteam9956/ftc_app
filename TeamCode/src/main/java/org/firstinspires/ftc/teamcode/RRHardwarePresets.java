@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 public class RRHardwarePresets{
@@ -46,19 +47,48 @@ public class RRHardwarePresets{
     //Vuforia Information
     public VuforiaLocalizer vuforia;
 
-    //Constants
+    //Vuforia
+    double tX; //X value extracted from the offset of the target relative to the robot
+    double tY; //Y value extracted from the offset of the target relative to the robot
+    double tZ; //Z value extracted from the offset of the target relative to the robot
+    //--------------------------------------------------------------------------------------------------------
+    double rX; //X value extractecd from the rotational componenets of the target relative to the robot
+    double rY; //Y value extractecd from the rotational componenets of the target relative to the robot
+    double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
+
+    // Jewel Arm Constants
     public final double JEWEL_ARM_UP = 0.45;
     public final double JEWEL_ARM_DOWN = 0.05;
+
+    //Set Position Constants
     public final double ELBOW_UNFOLDED = 0.30;
     public final double ELBOW_FOLDED = 1.00;
     public final double WRIST_UNFOLDED = 0.30;
     public final double WRIST_FOLDED = 1.00;
+
+    //Claw Constants
     public final double CLAW_CLOSED = 0;
     public final double CLAW_OPENED = 1;
     public final double CLAW_MID = 0.3;
-    public final double TWIST_UP = 0.76;
+    public final double TWIST_UP = 0.0;
     public final double TWIST_DOWN = 0.38;
 
+     //Constants for placing block and autonomous
+    public final double ELBOW_CENTER = 0.0;
+    public final double WRIST_CENTER = 0.0;
+    public final double ELBOW_LEFT = 0.0;
+    public final double WRIST_LEFT = 0.0;
+    public final double ELBOW_RIGHT = 0.0;
+    public final double WRIST_RIGHT = 0.0;
+
+    public final int DRIVE_OFF_STONE = -800;
+    public final int DRIVE_INTO_STONE = 40;
+
+    public final int TURRET_FOR_WALL = 500;
+    public final int TURRET_FOR_RELIC = -625;
+
+    public final double ELBOW_RELIC = 0.0;
+    public final double WRIST_RELIC = 0.0;
 
     //Need to get these values correct for followLine() to work.
     public final double FLOOR_COLOR = 0.0;
@@ -135,8 +165,9 @@ public class RRHardwarePresets{
 
 
         //Vuforia Initialization parameters.
+        OpenGLMatrix lastLocation = null;
         int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName()); //Sets camera feed to display on phone.
-        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(); // If you want to deactivate the Camera Monitor View, to save power. You can just not pass in cameraMonitorViewID.
+        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId); // If you want to deactivate the Camera Monitor View, to save power. You can just not pass in cameraMonitorViewID.
         VuforiaParameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
         VuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //Sets phone to use back camera.
         this.vuforia = ClassFactory.createVuforiaLocalizer(VuforiaParameters); //Initializes VuforiaLocalizer object as vuforia.
