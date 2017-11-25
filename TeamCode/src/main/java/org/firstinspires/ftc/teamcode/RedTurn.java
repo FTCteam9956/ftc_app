@@ -44,56 +44,6 @@ public class RedTurn extends LinearOpMode {
 
         if (testArea == true) {
 
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-            while (opModeIsActive()) {
-                if (vuMark == RelicRecoveryVuMark.UNKNOWN) { //Test to see if image is visible
-                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-                    telemetry.addData("Pose", format(pose));
-
-                    telemetry.addData("VuMark", "%s visible", vuMark);
-
-
-                    //Break apart the pose into transitive and rotational componenets
-                    if (pose != null) {
-                        VectorF trans = pose.getTranslation();
-                        Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                        //Extract XYZ values of the offset of the target in relation to our robot
-                        robot.tX = trans.get(0);
-                        robot.tY = trans.get(0);
-                        robot.tZ = trans.get(0);
-                        //Extract rotational components of the target in relation to our robot
-                        robot.rX = rot.firstAngle;
-                        robot.rY = rot.secondAngle;
-                        robot.rZ = rot.thirdAngle;
-                    }
-
-                    //Waiting for turret to stop moving.
-                    if (vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
-                        telemetry.addData("vuMark", "% visible", vuMark);
-                        telemetry.addData("X =", robot.tX);
-                        telemetry.addData("Y =", robot.tY);
-                        telemetry.addData("Z =", robot.tZ);
-                    }
-                    if (vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
-                        telemetry.addData("vuMark", "% visible", vuMark);
-                        telemetry.addData("X =", robot.tX);
-                        telemetry.addData("Y =", robot.tY);
-                        telemetry.addData("Z =", robot.tZ);
-                    }
-                    if(vuMark == RelicRecoveryVuMark.RIGHT){ //Right seen.
-                        telemetry.addData("vuMark", "% visible", vuMark);
-                        telemetry.addData("X =", robot.tX);
-                        telemetry.addData("Y =", robot.tY);
-                        telemetry.addData("Z =", robot.tZ);
-                    }
-                }else{
-                        telemetry.addData("vuMark is", "not visible");
-                    }
-                    telemetry.update();
-
-            }
         }
                 else {
                     //--AUTO SCRIPT START--
