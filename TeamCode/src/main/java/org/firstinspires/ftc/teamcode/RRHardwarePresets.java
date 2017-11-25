@@ -116,7 +116,6 @@ public class RRHardwarePresets{
         jewelSensor.enableLed(false);
         floorSensor.enableLed(false);
 
-
         //IMU Initialization parameters.
         BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
         IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
