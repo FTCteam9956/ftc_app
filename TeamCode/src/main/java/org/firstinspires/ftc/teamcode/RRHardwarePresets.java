@@ -55,7 +55,7 @@ public class RRHardwarePresets{
     public final double WRIST_FOLDED = 1.00;
     public final double CLAW_CLOSED = 0;
     public final double CLAW_OPENED = 1;
-    public final double CLAW_KINDAOPEN = 0.3;
+    public final double CLAW_MID = 0.3;
     public final double TWIST_UP = 0.76;
     public final double TWIST_DOWN = 0.38;
 
@@ -143,6 +143,15 @@ public class RRHardwarePresets{
     }
 
     //---UNIVERSAL METHODS BELOW---
+
+    //Initializes Servos to a position.
+    public void initServoPositions(){
+        this.jewelArm.setPosition(JEWEL_ARM_UP);
+        this.wrist.setPosition(WRIST_FOLDED);
+        this.elbow.setPosition(ELBOW_FOLDED);
+        this.claw.setPosition(CLAW_CLOSED);
+        this.clawTwist.setPosition(TWIST_UP);
+    }
 
     //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
     public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){

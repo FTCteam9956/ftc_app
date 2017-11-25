@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "TeleOpTest", group = "Teleop")
 //@Disabled
@@ -18,67 +17,51 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //Right Stick Y- Right Side Drive
 //Left Trigger - Rotate turret left
 //Right Trigger - Rotate turret right
-//DPad Up - Raise JewelArm
-//DPad Down - Lower JewelArm
+//DPad Down - Toggle JewelArm position
 
 //Gamepad 2
-//Left Stick Button - Toggle Arm Control Mode
-
-//(Linear Mode)
-//Left Stick Y - Moves arm along linear projection of Arm.
-
-//(Free Control Mode)
-//Right Stick X - Move Arm at elbow Servo
-//Left Stick X - Move Arm at wrist Servo
-//DPad Left - Move Arm at shoulder
-//DPad Right - Move Arm at shoulder
-
+//Right Stick X - Move Arm at Elbow Servo
+//Left Stick X - Move Arm at Wrist Servo
+//DPad Left + Right - Move Arm at Shoulder
 //DPad Up - Raise with winch
 //DPad Down - Lower with winch
-
 //A Button - Fully Retract Arm
 //Y Button - Fully Extend Arm
-
+//Right Bumper - Toggle Claw Position
+//Left Bumper - Toggle Claw Rotation
 
 public class TeleOpTest extends LinearOpMode{
+
+    //Instantiation of RRHardwarePresets
     RRHardwarePresets robot = new RRHardwarePresets();
 
-    //    public static int armMode = 0; // 0 = Sweeping Mode, 1 = Agile Mode
-    int clawMode = 0;
+    //Variables used for toggles
+    public static int clawMode = 0;
+    public static int clawTwistMode = 0;
+    public static int jewelArmMode = 0;
+    public static int shoulderPosition;
 
     @Override
     public void runOpMode(){
         robot.init(hardwareMap);
         waitForStart();
-
-        robot.setRunMode("STOP_AND_RESET_ENCODER");
-        robot.setRunMode("RUN_USING_ENCODER");
-
-
-        //INIT POSITIONS
-        robot.jewelArm.setPosition(robot.JEWEL_ARM_UP); //Raised
-        robot.wrist.setPosition(robot.WRIST_FOLDED); //Folded in
-        robot.elbow.setPosition(robot.ELBOW_FOLDED);
-        robot.claw.setPosition(robot.CLAW_CLOSED);
-        robot.clawTwist.setPosition(robot.TWIST_UP);
-        sleep(500);
-
-
-        //Setting this to RUN_TO_POSITION to try and keep it in one place.
-        //       robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        int currentPos = robot.shoulder.getCurrentPosition();
+        robot.initServoPositions(); //This is where our motors move into their initial positions.
+        robot.setRunMode("STOP_AND_RESET_ENCODER"); //Resets all encoders.
+        robot.setRunMode("RUN_USING_ENCODER"); //Changes all motors to RUN_USING_ENCODER mode.
+        robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Changes shoulder motor to RUN_TO_POSITION mode.
+        this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets the static values shoulderPosition
 
         while(opModeIsActive()){
 
             //---GAMEPAD 1---
 
-            //Sets power for DC motors. (TANK DRIVE)
-            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y / 3));
-            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y / 3));
-            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y / 3));
-            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y / 3));
+            //TANK DRIVE
+            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y));
+            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y));
+            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y));
+            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y));
 
-            //DC motor turret controls.
+            //TURRET
             if(gamepad1.right_trigger > 0.5){
                 robot.turretMotor.setPower(0.15);
             }else if(gamepad1.left_trigger > 0.5){
@@ -87,9 +70,21 @@ public class TeleOpTest extends LinearOpMode{
                 robot.turretMotor.setPower(0.0);
             }
 
+            //JEWEL ARM
+            if(gamepad1.dpad_down && jewelArmMode == 0){
+                robot.jewelArm.setPosition(robot.JEWEL_ARM_DOWN);
+                this.jewelArmMode = 1;
+                sleep(500);
+            }
+            if(gamepad1.dpad_down && jewelArmMode == 1){
+                robot.jewelArm.setPosition(robot.JEWEL_ARM_UP);
+                this.jewelArmMode = 0;
+                sleep(500);
+            }
+
             //---GAMEPAD 2---
 
-            //Controls winchMotor
+            //WINCH
             if(gamepad2.dpad_up){
                 robot.winchMotor.setPower(-0.15);
             }else if(gamepad2.dpad_down){
@@ -98,7 +93,7 @@ public class TeleOpTest extends LinearOpMode{
                 robot.winchMotor.setPower(0.0);
             }
 
-            //Extends and retracts arm.
+            //ARM POSITION PRESETS
             if(gamepad2.y){
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 700, 150);
             }
@@ -106,127 +101,70 @@ public class TeleOpTest extends LinearOpMode{
                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 700, 150);
             }
 
-            //Swaps armMode between (Linear Mode) and (Free Control Mode)
-//            if (gamepad2.left_stick_button) {
-//                if (armMode == 0) {
-//                    this.armMode = 1;
-//                    sleep(500);
-//                } else if (armMode == 1) {
-//                    this.armMode = 0;
-//                    sleep(500);
-//                }
-//            }
-
-            //armMode behaviors. aka switches between the modes that control the arm
-//            if (armMode == 0) {
-//                if (gamepad2.left_stick_y != 0) {
-//                    double elbowCurrentPosition = robot.elbow.getPosition(); //Gets current arm position.
-//                    double wristCurrentPosition = robot.wrist.getPosition();
-//                    robot.elbow.setPosition(elbowCurrentPosition + (-gamepad2.left_stick_y * .002));//Moves the arm.
-//                    robot.wrist.setPosition(wristCurrentPosition + (-gamepad2.left_stick_y * .002));//Moves the arm.
-//                    telemetry.addData("CurrentPosition1", elbowCurrentPosition);
-//                    telemetry.addData("CurrentPosition2", wristCurrentPosition);
-//                } else if (gamepad2.right_stick_y != 0) {
-//                    double currentPosition2 = robot.wrist.getPosition();
-//                    robot.wrist.setPosition(currentPosition2 + (-gamepad2.left_stick_y * .002));//Moves the arm.
-//                    telemetry.addData("position", currentPosition2);
-//                } else if (gamepad2.left_stick_y != 0 && gamepad2.right_stick_y != 0) {
-//                    double currentPosition2 = robot.wrist.getPosition();
-//                    robot.wrist.setPosition(currentPosition2);
-//
-//                }
-//                //Open and close claw
-//                if (gamepad2.right_bumper) {
-//                    clawMode = clawMode+1;
-//                    sleep(500);
-//                }
-//                // Different Claw Positions
-//                if (clawMode >= 3) {
-//                    clawMode = 0;
-//                }
-//                if (clawMode == 0) {
-//                    robot.claw.setPosition(robot.CLAW_OPENED);
-//                    telemetry.addData("Status", clawMode);
-//                }
-//                if (clawMode == 1) {
-//                    robot.claw.setPosition(robot.CLAW_KINDAOPEN);
-//                }
-//                if (clawMode == 2) {
-//                    robot.claw.setPosition(robot.CLAW_CLOSED);
-//                }
-//
-//                //Twists the claw
-//                if (gamepad2.right_trigger > 0.5) {
-//                    robot.clawTwist.setPosition(robot.TWIST_UP);
-//                }
-//                if (gamepad2.left_trigger > 0.5) {
-//                    robot.clawTwist.setPosition(robot.TWIST_DOWN);
-//                }
-//            }
-//
-//            if (armMode == 1) {
-            //Controls at shoulder
-            //From above this line declares it int currentPos =robot.shoulder.getCurrentPosition();
-            if(gamepad2.left_stick_x >= 0.005){
-                // robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 5);
-                robot.shoulder.setPower(0.2);
-                //currentPos = robot.shoulder.getCurrentPosition();//Set the position to lock at;
-            }else if(gamepad2.left_stick_x <= -0.005){
-                // robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 5);
-                robot.shoulder.setPower(-0.2);
-                //currentPos = robot.shoulder.getCurrentPosition();
+            //SHOULDER
+            if(gamepad2.dpad_left){
+                robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 10); //Sets TargetPosition to currentPosition + 1 encoder tick.
+                robot.shoulder.setPower(0.35); //Sets power to run to TargetPosition
+                while(robot.shoulder.isBusy()){
+                    //Waiting for shoulder to reach destination
+                }
+                this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets new Shoulder Position
+            }else if(gamepad2.dpad_right){
+                robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 10); //Sets TargetPosition to currentPosition - 1 encoder tick.
+                robot.shoulder.setPower(0.35); //Sets power to run to TargetPosition
+                while(robot.shoulder.isBusy()){
+                    //Waiting for shoulder to reach destination
+                }
+                this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets new Shoulder Position
             }else{
-                //robot.shoulder.setTargetPosition(currentPos);
-                robot.shoulder.setPower(0.0);
+                robot.shoulder.setTargetPosition(shoulderPosition); //Sets TargetPosition to the static shoulder position value.
+                robot.shoulder.setPower(1.00); //Sets power to run to TargetPosition
             }
-            //Controls at elbow
-            if(Math.abs(gamepad2.right_stick_y) >= 0.05){
-                robot.elbow.setPosition(robot.elbow.getPosition() + (-gamepad2.right_stick_y * 0.005));
+
+            //ELBOW
+            if(Math.abs(gamepad2.right_stick_x) >= 0.05){
+                robot.elbow.setPosition(robot.elbow.getPosition() + (-gamepad2.right_stick_x * 0.005));
             }else{
                 robot.elbow.setPosition(robot.elbow.getPosition());
             }
-            //Controls at wrist
-            if(Math.abs(gamepad2.left_stick_y) >= 0.05){
-                robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_y * 0.005));
+
+            //WRIST
+            if(Math.abs(gamepad2.left_stick_x) >= 0.05){
+                robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_x * 0.005));
             }else{
                 robot.wrist.setPosition(robot.wrist.getPosition());
             }
-            //Open and close claw
 
-//            if(gamepad2.right_bumper){
-//                robot.claw.setPosition(robot.CLAW_OPENED);
-//         }
-//            if(gamepad2.left_bumper){
-//                robot.claw.setPosition(robot.CLAW_CLOSED);
-//            }
-
-            if(gamepad2.right_bumper){
-                clawMode = clawMode + 1;
+            //CLAW
+            if(gamepad2.right_bumper && clawMode == 0){
+                robot.claw.setPosition(robot.CLAW_OPENED);
+                this.clawMode = 1;
                 sleep(500);
             }
-            // Different Claw Positions
-            if(clawMode >= 3){
-                clawMode = 0;
+            if(gamepad2.right_bumper && clawMode == 1){
+                robot.claw.setPosition(robot.CLAW_MID);
+                this.clawMode = 2;
+                sleep(500);
             }
-            if(clawMode == 0){
-                robot.claw.setPosition(robot.CLAW_OPENED);
-            }
-            if(clawMode == 1){
-                robot.claw.setPosition(robot.CLAW_KINDAOPEN);
-            }
-            if(clawMode == 2){
+            if(gamepad2.right_bumper && clawMode == 2){
                 robot.claw.setPosition(robot.CLAW_CLOSED);
+                this.clawMode = 0;
+                sleep(500);
             }
-            //Twists the claw
-            if(gamepad2.right_trigger > 0.5){
-                robot.clawTwist.setPosition(robot.TWIST_UP);
-            }
-            if(gamepad2.left_trigger > 0.5){
+
+            //CLAW TWIST
+            if(gamepad2.left_bumper && clawTwistMode == 0){
                 robot.clawTwist.setPosition(robot.TWIST_DOWN);
+                this.clawTwistMode = 1;
+                sleep(500);
+            }
+            if(gamepad2.left_bumper && clawTwistMode == 1){
+                robot.clawTwist.setPosition(robot.TWIST_UP);
+                this.clawTwistMode = 0;
+                sleep(500);
             }
 
             //---TELEMETRY---
-            //Telemetry
             //telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
             //telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
             //telemetry.addData("right1 encoder", robot.right1.getCurrentPosition());
@@ -235,18 +173,16 @@ public class TeleOpTest extends LinearOpMode{
             //telemetry.addData("Left2 Power", robot.left2.getPower());
             //telemetry.addData("Right1 Power", robot.right1.getPower());
             //telemetry.addData("Right2 Power", robot.right2.getPower());
-            //telemetry.addData("Claw Position", robot.claw.getPosition());
-            //telemetry.addData("JewelArm Position", robot.jewelArm.getPosition());
-            //telemetry.addData("Left Stick", gamepad1.left_stick_y);
-            //telemetry.addData("Right Stick", gamepad1.right_stick_y);
-            //telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
-            //telemetry.addData("Floor Sensor", robot.floorSensor.argb());
-            //telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
-            //telemetry.addData("Elbow Position", robot.elbow.getPosition());
-            //telemetry.addData("Wrist Position", robot.wrist.getPosition());
-            telemetry.addData("ClawPosition", clawMode);
+            telemetry.addData("Claw Position", robot.claw.getPosition());
+            telemetry.addData("JewelArm Position", robot.jewelArm.getPosition());
+            telemetry.addData("Left Stick", gamepad1.left_stick_y);
+            telemetry.addData("Right Stick", gamepad1.right_stick_y);
+            telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
+            telemetry.addData("Floor Sensor", robot.floorSensor.argb());
+            telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
+            telemetry.addData("Elbow Position", robot.elbow.getPosition());
+            telemetry.addData("Wrist Position", robot.wrist.getPosition());
             telemetry.addData("ShoulderPosition", robot.shoulder.getCurrentPosition());
-            telemetry.addData("CurrentPos Value", currentPos);
 
             telemetry.update();
             idle();
@@ -258,12 +194,14 @@ public class TeleOpTest extends LinearOpMode{
 
     //Used to smooth out acceleration of robot.
     public static float speedAdjust(float stickInput){
+        float returnValue;
         if(stickInput > 0){
-            return(stickInput * stickInput);
+            returnValue = (stickInput * stickInput);
         }else if(stickInput < 0){
-            return(-1 * (stickInput * stickInput));
+            returnValue = (-1 * (stickInput * stickInput));
         }else{
-            return(stickInput);
+            returnValue = (stickInput);
         }
+        return(returnValue/3);
     }
 }
