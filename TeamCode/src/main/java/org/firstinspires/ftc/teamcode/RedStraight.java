@@ -55,62 +55,63 @@ public class RedStraight extends LinearOpMode{
                 int targetPosition = lookForVuMark(relicTemplate);
             }
         }else{
-            while (opModeIsActive()) {
-                //--AUTO SCRIPT START--
+            //--AUTO SCRIPT START--
 
-                //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
-                robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 2000);
+            //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
+            robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 2000);
 
-                //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
-                int loopBreak = 0;
-                while (loopBreak == 0) {
-                    sleep(1000);
-                    if (robot.jewelSensor.red() > 52) {
-                        knockOffBall(1);
-                        telemetry.addData("Status", "Confirmed Red Ball!");
+            //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
+            int loopBreak = 0;
+            while (loopBreak == 0) {
+                sleep(1000);
+                if (robot.jewelSensor.red() > 52) {
+                    knockOffBall(1);
+                    telemetry.addData("Status", "Confirmed Red Ball!");
+                    loopBreak = 1;
+                } else if (robot.jewelSensor.red() <= 52) {
+                    if (robot.jewelSensor.blue() > 20) {
+                        knockOffBall(0);
+                        telemetry.addData("Status", "Confirmed Blue Ball!");
                         loopBreak = 1;
-                    } else if (robot.jewelSensor.red() <= 52) {
-                        if (robot.jewelSensor.blue() > 20) {
-                            knockOffBall(0);
-                            telemetry.addData("Status", "Confirmed Blue Ball!");
-                            loopBreak = 1;
-                        } else {
-                            telemetry.addData("Status", "Cannot determine color!");
-                            loopBreak = 1;
-                        }
+                    } else {
+                        telemetry.addData("Status", "Cannot determine color!");
+                        loopBreak = 1;
                     }
-                    telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
-                    telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
-                    telemetry.update();
                 }
-                sleep(500);
+                telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
+                telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
+                telemetry.update();
+            }
+            sleep(500);
 
-                //Raises jewel arm into JEWEL_ARM_UP position with 1000 steps over 2 seconds.
-                robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 2000);
-                sleep(500);
+            //Raises jewel arm into JEWEL_ARM_UP position with 1000 steps over 2 seconds.
+            robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 2000);
+            sleep(500);
 
-                //Drive backwards off of the balancing stone to place the block.
-                robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
-                sleep(500);
+            //Drive backwards off of the balancing stone to place the block.
+            robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
+            sleep(500);
 
-                //Drive forwards into stone to give us a known location.
-                robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
-                sleep(500);
+            //Drive forwards into stone to give us a known location.
+            robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
+            sleep(500);
 
-                //Finds out what VuMark we are looking at and returns corresponding int.
-                int targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
-                sleep(500);
-
-                //Opens claw to place block
-                robot.claw.setPosition(robot.CLAW_OPENED);
-                sleep(500);
-
-                //Folds arm and prepares to grab relic once game starts.
-                robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
-                robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
-                robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
+            //Finds out what VuMark we are looking at and returns corresponding int.
+            int targetPosition = 0;
+            while(targetPosition == 0){
+                targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
                 sleep(500);
             }
+
+            //Opens claw to place block
+            robot.claw.setPosition(robot.CLAW_OPENED);
+            sleep(500);
+
+            //Folds arm and prepares to grab relic once game starts.
+            robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
+            robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
+            robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
+            sleep(500);
         }
     }
 

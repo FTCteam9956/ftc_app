@@ -57,8 +57,8 @@ public class RRHardwarePresets{
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     // Jewel Arm Constants
-    public final double JEWEL_ARM_UP = 0.45;
-    public final double JEWEL_ARM_DOWN = 0.05;
+    public final double JEWEL_ARM_UP = 0.20;
+    public final double JEWEL_ARM_DOWN = 0.85;
 
     //Set Position Constants
     public final double ELBOW_UNFOLDED = 0.30;
@@ -89,7 +89,7 @@ public class RRHardwarePresets{
     public final double WRIST_RIGHT = 0.4;
 
     public final int DRIVE_OFF_STONE = -800;
-    public final int DRIVE_INTO_STONE = 40;
+    public final int DRIVE_INTO_STONE = 140;
 
     public final int TURRET_FOR_WALL = 500;
     public final int TURRET_FOR_RELIC = -625;
@@ -184,7 +184,7 @@ public class RRHardwarePresets{
 
     //Initializes Servos to a position.
     public void initServoPositions(){
-        this.jewelArm.setPosition(JEWEL_ARM_UP);
+        this.moveServo(this.jewelArm, this.JEWEL_ARM_UP, 750, 1000);
         this.wrist.setPosition(WRIST_FOLDED);
         this.elbow.setPosition(ELBOW_FOLDED);
         this.claw.setPosition(CLAW_CLOSED);
