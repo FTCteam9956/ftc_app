@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -13,44 +13,57 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "RedTurn", group = "Autonomous")
-//@Disabled
+    @Autonomous(name = "VuforiaRelic", group = "Vuforia")
+    //@Disabled
+    public class RedTurn extends LinearOpMode {
+        public RRHardwarePresets robot = new RRHardwarePresets();
 
-public class RedTurn extends LinearOpMode {
-    public RRHardwarePresets robot = new RRHardwarePresets();
+        OpenGLMatrix lastLocation = null; // WARNING: VERY INACCURATE, USE ONLY TO ADJUST TO FIND IMAGE AGAIN! DO NOT BASE MAJOR MOVEMENTS OFF OF THIS!!
+        double tX; // X value extracted from our the offset of the traget relative to the robot.
+        double tZ; // Same as above but for Z
+        double tY; // Same as above but for Y
+        // -----------------------------------
+        double rX; // X value extracted from the rotational components of the tartget relitive to the robot
+        double rY; // Same as above but for Y
+        double rZ; // Same as above but for Z
 
-    @Override
-    public void runOpMode() {
-        robot.init(hardwareMap); //Robot moves during init().
+        VuforiaLocalizer vuforia;
 
-        robot.setRunMode("STOP_AND_RESET_ENCODER");
-        robot.setRunMode("RUN_USING_ENCODER");
+        public void runOpMode() {
+            robot.init(hardwareMap); //Robot moves during init().
 
-        //Vuforia Trackables.
-        VuforiaTrackables relicTrackables = robot.vuforia.loadTrackablesFromAsset("RelicVuMark"); //I believe this loads VuMark data from the assets folder in FtcRobotController.
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+            robot.setRunMode("STOP_AND_RESET_ENCODER");
+            robot.setRunMode("RUN_USING_ENCODER");
 
-        waitForStart();
+            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+            parameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
+            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; // Use FRONT Camera (Change to BACK if you want to use that one)
+            parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES; // Display Axes
 
-        //Relic Trackables
-        relicTrackables.activate();
+            this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+            VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+            VuforiaTrackable relicTemplate = relicTrackables.get(0);
+            waitForStart();
 
-        boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
+            relicTrackables.activate(); // Activate Vuforia
 
-        if (testArea == true) {
+            while (opModeIsActive()) {
+                boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
 
-        }
-                else {
+                if (testArea == true) {
+
+                } else {
                     //--AUTO SCRIPT START--
 
                     //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
                     robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 2000);
-                    telemetry.addData("Status", "Dropping JewelArm");
 
                     //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
                     int loopBreak = 0;
@@ -70,7 +83,6 @@ public class RedTurn extends LinearOpMode {
                                 loopBreak = 1;
                             }
                         }
-                        telemetry.addData("Status", "Reading Ball");
                         telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
                         telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
                         telemetry.update();
@@ -79,145 +91,97 @@ public class RedTurn extends LinearOpMode {
 
                     //Raises jewel arm into JEWEL_ARM_UP position with 1000 steps over 2 seconds.
                     robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 2000);
-                    telemetry.addData("Status", "Lifting JewelArm Up");
                     sleep(500);
-
-                    //Search for and confirm VuMark.relicTemplate);
-                    String targetPosition = scanForVuMark(relicTemplate);
 
                     //Drive backwards off of the balancing stone to place the block.
                     robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
-                    telemetry.addData("Status", "Driving Off Stone");
                     sleep(500);
 
                     //Drive into the balancing stone to give us a known position
                     robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
-                    telemetry.addData("Status", "Driving Into Stone");
                     sleep(500);
 
                     //Set position of the turret
                     robot.turretMotor.setTargetPosition(robot.TURRET_FOR_WALL);
-                    telemetry.addData("Status", "Turning Turret");
 
-                    //Place the block according to the vuMark results.
-                    if (targetPosition.equals("left")) {
-                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
-                        telemetry.addData("Status", "Placeing Block in Left");
-                        robot.shoulder.setTargetPosition(0);
-                    }
-                    if (targetPosition.equals("right")) {
-                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
-                        telemetry.addData("Status", "Placeing Block in Right");
-                        robot.shoulder.setTargetPosition(0);
-                    }
-                    if (targetPosition.equals("center")) {
-                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-                        telemetry.addData("Status", "Placeing Block in Center");
-                        robot.shoulder.setTargetPosition(0);
-                    }
-                    if (targetPosition.equals("gone forever")) {
-                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-                        telemetry.addData("Status", "Undetermined, Placing in Center");
-                        robot.shoulder.setTargetPosition(0);
-                    }
-                    robot.claw.setPosition(robot.CLAW_OPENED);
-                    telemetry.addData("Status", "Opening Claw");
-
-                    //Move the arm and turret to
-                    robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
-                    telemetry.addData("Status", "Folding Arm In");
-                    sleep(500);
-
-                    robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
-                    telemetry.addData("Status", "Spinning Turret for Arm");
-                    sleep(500);
-
-                    robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
-                    telemetry.addData("Status", "Moving Arm Out for Relic");
-                }
-            }
-
-            //---AUTONOMOUS ONLY METHODS BELOW---
-
-            //Moves the jewelArm depending on what the input is.
-            public void knockOffBall(int selection){
-                //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
-                robot.setRunMode("STOP_AND_RESET_ENCODER");
-                robot.setRunMode("RUN_TO_POSITION");
-                if (selection == 0) {
-                    robot.turretMotor.setTargetPosition(200);
-                }
-                if (selection == 1) {
-                    robot.turretMotor.setTargetPosition(-200);
-                }
-                robot.turretMotor.setPower(0.15);
-                while(robot.turretMotor.isBusy()){
-                    //Waiting while turret turns.
-                }
-                sleep(500);
-                robot.turretMotor.setPower(0.0);
-                robot.setRunMode("RUN_USING_ENCODER");
-            }
-
-            //NEEDS TO BE TESTED.
-            //Scans for VuForia Target. returns a string of either "none", "right", "left", or "center"
-            //power sets scanning speed, distance sets range of "scan", relicTemplate is the VuforiaTrackable we are looking for.
-            public String scanForVuMark(VuforiaTrackable relicTemp) {
-                //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
-                robot.setRunMode("STOP_AND_RESET_ENCODER");
-                robot.setRunMode("RUN_TO_POSITION");
-                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemp);
-                String decidingMark = "none"; //Used to return String
-
-                while (opModeIsActive()) {
-                    if (vuMark == RelicRecoveryVuMark.UNKNOWN) { //Test to see if image is visible
-                        OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemp.getListener()).getPose();
-                        //telemetry.addData("Pose", format(pose));
-
-                        //Break apart the pose into transitive and rotational componenets
+                    RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    if (vuMark != RelicRecoveryVuMark.UNKNOWN) { // Test to see if image is visable
+                        OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose(); // Get Positional value to use later
+                        telemetry.addData("Pose", format(pose));
                         if (pose != null) {
                             VectorF trans = pose.getTranslation();
                             Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                            //Extract XYZ values of the offset of the target in relation to our robot
-                            robot.tX = trans.get(0);
-                            robot.tY = trans.get(0);
-                            robot.tZ = trans.get(0);
-                            //Extract rotational components of the target in relation to our robot
-                            robot.rX = rot.firstAngle;
-                            robot.rY = rot.secondAngle;
-                            robot.rZ = rot.thirdAngle;
+                            // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                            tX = trans.get(0);
+                            tY = trans.get(1);
+                            tZ = trans.get(2);
+
+                            // Extract the rotational components of the target relative to the robot. NOTE: VERY IMPORTANT IF BASING MOVEMENT OFF OF THE IMAGE!!!!
+                            rX = rot.firstAngle;
+                            rY = rot.secondAngle;
+                            rZ = rot.thirdAngle;
                         }
-                    }
-                    //Waiting for turret to stop moving.
-                        if(vuMark == RelicRecoveryVuMark.LEFT) {//Left seen.
-                            telemetry.addData("vuMark if", "Left");
-                            telemetry.addData("X =", robot.tX);
-                            telemetry.addData("Y =", robot.tY);
-                            telemetry.addData("Z =", robot.tZ);
-                            decidingMark = "left";
-                        }if(vuMark == RelicRecoveryVuMark.CENTER) { //Center seen.
-                            telemetry.addData("vuMark is", "Center");
-                            telemetry.addData("X =", robot.tX);
-                            telemetry.addData("Y =", robot.tY);
-                            telemetry.addData("Z =", robot.tZ);
-                            decidingMark = "center";
-                        }if(vuMark == RelicRecoveryVuMark.RIGHT) { //Right seen.
-                            telemetry.addData("vuMark is", "Right");
-                            telemetry.addData("X =", robot.tX);
-                            telemetry.addData("Y =", robot.tY);
-                            telemetry.addData("Z =", robot.tZ);
-                            decidingMark = "right";
-                        }else{
-                            telemetry.addData("vuMark is", "not visible");
-                            decidingMark = "gone forever";
+                        if (vuMark == RelicRecoveryVuMark.LEFT) { // Test to see if Image is the "LEFT" image and display value.
+                            telemetry.addData("VuMark is", "Left");
+                            telemetry.addData("X =", tX);
+                            telemetry.addData("Y =", tY);
+                            telemetry.addData("Z =", tZ);
+                            robot.moveMultipleServo(robot.elbow, robot.wrist, robot.TELBOW_LEFT, robot.TWRIST_LEFT, 1000, 2000);
+                            robot.shoulder.setTargetPosition(0);
+                        } else if (vuMark == RelicRecoveryVuMark.RIGHT) { // Test to see if Image is the "RIGHT" image and display values.
+                            telemetry.addData("VuMark is", "Right");
+                            telemetry.addData("X =", tX);
+                            telemetry.addData("Y =", tY);
+                            telemetry.addData("Z =", tZ);
+                            robot.moveMultipleServo(robot.elbow, robot.wrist, robot.TELBOW_RIGHT, robot.TWRIST_RIGHT, 1000, 2000);
+                            robot.shoulder.setTargetPosition(0);
+                        }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
+                            telemetry.addData("VuMark is", "Center");
+                            telemetry.addData("X =", tX);
+                            telemetry.addData("Y =", tY);
+                            telemetry.addData("Z =", tZ);
+                            robot.moveMultipleServo(robot.elbow, robot.wrist, robot.TELBOW_CENTER, robot.TWRIST_CENTER, 1000, 2000);
+                            robot.shoulder.setTargetPosition(0);
                         }
-                        telemetry.addData("Status", decidingMark);
-                        telemetry.update();
+                    }else{
+                        telemetry.addData("VuMark", "not visible");
+                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.TELBOW_CENTER, robot.TWRIST_CENTER, 1000, 2000);
+                        robot.shoulder.setTargetPosition(0);
                     }
-                return(decidingMark);
+                    telemetry.update();
+
+                    robot.claw.setPosition(robot.CLAW_OPENED);
+
+                    //Move the arm and turret to
+                    robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
+                    robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
+
+                    robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
+                }
             }
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+        }
+        public void knockOffBall(int selection){
+            //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
+            robot.setRunMode("STOP_AND_RESET_ENCODER");
+            robot.setRunMode("RUN_TO_POSITION");
+            if (selection == 0) {
+                robot.turretMotor.setTargetPosition(200);
+            }
+            if (selection == 1) {
+                robot.turretMotor.setTargetPosition(-200);
+            }
+            robot.turretMotor.setPower(0.15);
+            while(robot.turretMotor.isBusy()){
+                //Waiting while turret turns.
+            }
+            sleep(500);
+            robot.turretMotor.setPower(0.0);
+            robot.setRunMode("RUN_USING_ENCODER");
+        }
+        String format(OpenGLMatrix transformationMatrix){
+            return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+        }
     }
-}
+
+

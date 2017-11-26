@@ -23,28 +23,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.lang.InterruptedException;
 
-
 @Autonomous(name = "RedStraight", group = "Autonomous")
 //@Disabled
 
 public class RedStraight extends LinearOpMode{
 
     public RRHardwarePresets robot = new RRHardwarePresets();
-
-    OpenGLMatrix lastLocation = null; // WARNING: VERY INACCURATE, USE ONLY TO ADJUST TO FIND IMAGE AGAIN! DO NOT BASE MAJOR MOVEMENTS OFF OF THIS!!
-    double tX; // X value extracted from our the offset of the traget relative to the robot.
-    double tZ; // Same as above but for Z
-    double tY; // Same as above but for Y
-    // -----------------------------------
-    double rX; // X value extracted from the rotational components of the tartget relitive to the robot
-    double rY; // Same as above but for Y
-    double rZ; // Same as above but for Z
-
     VuforiaLocalizer vuforia;
 
-    public void runOpMode() {
-        robot.init(hardwareMap); //Robot moves during init().
-
+    public void runOpMode(){
+        robot.init(hardwareMap);
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
 
@@ -57,16 +45,17 @@ public class RedStraight extends LinearOpMode{
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
         waitForStart();
 
         relicTrackables.activate(); // Activate Vuforia
 
-        while (opModeIsActive()) {
-            boolean testArea = true; //CHANGE THIS BOOLEAN TO RUN TEST AREA. PUT IN SO WE DON'T HAVE TO RUN ENTIRE SCRIPT TO TEST.
-
-            if(testArea == true){
-
-            }else{
+        if(true){
+            while(opModeIsActive()) {
+                int targetPosition = lookForVuMark(relicTemplate);
+            }
+        }else{
+            while (opModeIsActive()) {
                 //--AUTO SCRIPT START--
 
                 //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
@@ -74,9 +63,9 @@ public class RedStraight extends LinearOpMode{
 
                 //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
                 int loopBreak = 0;
-                while(loopBreak == 0){
+                while (loopBreak == 0) {
                     sleep(1000);
-                    if(robot.jewelSensor.red() > 52){
+                    if (robot.jewelSensor.red() > 52) {
                         knockOffBall(1);
                         telemetry.addData("Status", "Confirmed Red Ball!");
                         loopBreak = 1;
@@ -108,63 +97,55 @@ public class RedStraight extends LinearOpMode{
                 robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
                 sleep(500);
 
-                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                if (vuMark != RelicRecoveryVuMark.UNKNOWN) { // Test to see if image is visable
-                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose(); // Get Positional value to use later
-                    telemetry.addData("Pose", format(pose));
-                    if (pose != null) {
-                        VectorF trans = pose.getTranslation();
-                        Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                //Finds out what VuMark we are looking at and returns corresponding int.
+                int targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
+                sleep(500);
 
-                        // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                        tX = trans.get(0);
-                        tY = trans.get(1);
-                        tZ = trans.get(2);
-
-                        // Extract the rotational components of the target relative to the robot. NOTE: VERY IMPORTANT IF BASING MOVEMENT OFF OF THE IMAGE!!!!
-                        rX = rot.firstAngle;
-                        rY = rot.secondAngle;
-                        rZ = rot.thirdAngle;
-                    }
-                    if (vuMark == RelicRecoveryVuMark.LEFT) { // Test to see if Image is the "LEFT" image and display value.
-                        telemetry.addData("VuMark is", "Left");
-                        telemetry.addData("X =", tX);
-                        telemetry.addData("Y =", tY);
-                        telemetry.addData("Z =", tZ);
-                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
-                        robot.shoulder.setTargetPosition(0);
-                    } else if (vuMark == RelicRecoveryVuMark.RIGHT) { // Test to see if Image is the "RIGHT" image and display values.
-                        telemetry.addData("VuMark is", "Right");
-                        telemetry.addData("X =", tX);
-                        telemetry.addData("Y =", tY);
-                        telemetry.addData("Z =", tZ);
-                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
-                        robot.shoulder.setTargetPosition(0);
-                    } else if (vuMark == RelicRecoveryVuMark.CENTER) { // Test to see if Image is the "CENTER" image and display values.
-                        telemetry.addData("VuMark is", "Center");
-                        telemetry.addData("X =", tX);
-                        telemetry.addData("Y =", tY);
-                        telemetry.addData("Z =", tZ);
-                        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-                        robot.shoulder.setTargetPosition(0);
-                    }
-                } else {
-                    telemetry.addData("VuMark", "not visible");
-                    robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-                    robot.shoulder.setTargetPosition(0);
-                }
-                telemetry.update();
-
+                //Opens claw to place block
                 robot.claw.setPosition(robot.CLAW_OPENED);
+                sleep(500);
 
-                //Move the arm and turret to
+                //Folds arm and prepares to grab relic once game starts.
                 robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
                 robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
-
                 robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
+                sleep(500);
             }
         }
     }
+
+    //Looks for VuMark and positions arm accordingly. Returns int based on what it saw for debugging purposes
+    public int lookForVuMark(VuforiaTrackable rTemplate){
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);
+        int returnValue = -1;
+        if(vuMark != RelicRecoveryVuMark.UNKNOWN){
+            if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
+                telemetry.addData("VuMark is", "Left");
+                robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
+                robot.shoulder.setTargetPosition(0);
+                returnValue = 1;
+            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
+                telemetry.addData("VuMark is", "Right");
+                robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
+                robot.shoulder.setTargetPosition(0);
+                returnValue = 2;
+            }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
+                telemetry.addData("VuMark is", "Center");
+                robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+                robot.shoulder.setTargetPosition(0);
+                returnValue = 3;
+            }
+        }else{
+            telemetry.addData("VuMark", "not visible");
+            robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+            robot.shoulder.setTargetPosition(0);
+            returnValue = 0;
+        }
+        telemetry.update();
+        return(returnValue);
+    }
+
+    //Moves the turret to knock off jewel based on what input is given
     public void knockOffBall(int selection){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         robot.setRunMode("STOP_AND_RESET_ENCODER");
@@ -182,10 +163,6 @@ public class RedStraight extends LinearOpMode{
         sleep(500);
         robot.turretMotor.setPower(0.0);
         robot.setRunMode("RUN_USING_ENCODER");
-    }
-
-    String format(OpenGLMatrix transformationMatrix){
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }
 
