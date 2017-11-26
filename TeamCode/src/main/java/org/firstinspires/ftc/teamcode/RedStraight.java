@@ -182,6 +182,7 @@ public class RedStraight extends LinearOpMode{
         robot.turretMotor.setPower(0.0);
         robot.setRunMode("RUN_USING_ENCODER");
     }
+
     String format(OpenGLMatrix transformationMatrix){
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
