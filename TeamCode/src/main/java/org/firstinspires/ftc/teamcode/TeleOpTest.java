@@ -39,7 +39,7 @@ public class TeleOpTest extends LinearOpMode{
     public static int clawMode = 0;
     public static int clawTwistMode = 0;
     public static int jewelArmMode = 0;
-    public static int shoulderPosition;
+    //public static int shoulderPosition;
 
     @Override
     public void runOpMode(){
@@ -48,8 +48,8 @@ public class TeleOpTest extends LinearOpMode{
         robot.initServoPositions(); //This is where our motors move into their initial positions.
         robot.setRunMode("STOP_AND_RESET_ENCODER"); //Resets all encoders.
         robot.setRunMode("RUN_USING_ENCODER"); //Changes all motors to RUN_USING_ENCODER mode.
-        robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Changes shoulder motor to RUN_TO_POSITION mode.
-        this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets the static values shoulderPosition
+        //robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Changes shoulder motor to RUN_TO_POSITION mode.
+        //this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets the static values shoulderPosition
 
         while(opModeIsActive()){
 
@@ -86,9 +86,9 @@ public class TeleOpTest extends LinearOpMode{
 
             //WINCH
             if(gamepad2.dpad_up){
-                robot.winchMotor.setPower(-0.15);
+                robot.winchMotor.setPower(-0.35);
             }else if(gamepad2.dpad_down){
-                robot.winchMotor.setPower(0.15);
+                robot.winchMotor.setPower(0.35);
             }else{
                 robot.winchMotor.setPower(0.0);
             }
@@ -103,22 +103,22 @@ public class TeleOpTest extends LinearOpMode{
 
             //SHOULDER
             if(gamepad2.dpad_left){
-                robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 10); //Sets TargetPosition to currentPosition + 1 encoder tick.
-                robot.shoulder.setPower(0.35); //Sets power to run to TargetPosition
-                while(robot.shoulder.isBusy()){
+                //robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 10); //Sets TargetPosition to currentPosition + 1 encoder tick.
+                robot.shoulder.setPower(0.5); //Sets power to run to TargetPosition
+                //while(robot.shoulder.isBusy()){
                     //Waiting for shoulder to reach destination
-                }
-                this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets new Shoulder Position
+                //}
+                //this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets new Shoulder Position
             }else if(gamepad2.dpad_right){
-                robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 10); //Sets TargetPosition to currentPosition - 1 encoder tick.
-                robot.shoulder.setPower(0.35); //Sets power to run to TargetPosition
-                while(robot.shoulder.isBusy()){
+                //robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 10); //Sets TargetPosition to currentPosition - 1 encoder tick.
+                robot.shoulder.setPower(-0.5); //Sets power to run to TargetPosition
+                //while(robot.shoulder.isBusy()){
                     //Waiting for shoulder to reach destination
-                }
-                this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets new Shoulder Position
+                //}
+                //this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets new Shoulder Position
             }else{
-                robot.shoulder.setTargetPosition(shoulderPosition); //Sets TargetPosition to the static shoulder position value.
-                robot.shoulder.setPower(1.00); //Sets power to run to TargetPosition
+                //robot.shoulder.setTargetPosition(shoulderPosition); //Sets TargetPosition to the static shoulder position value.
+                robot.shoulder.setPower(0.0); //Sets power to run to TargetPosition
             }
 
             //ELBOW
@@ -183,6 +183,8 @@ public class TeleOpTest extends LinearOpMode{
             telemetry.addData("Elbow Position", robot.elbow.getPosition());
             telemetry.addData("Wrist Position", robot.wrist.getPosition());
             telemetry.addData("ShoulderPosition", robot.shoulder.getCurrentPosition());
+            telemetry.addData("ShoulderPower", robot.shoulder.getPower());
+            telemetry.addData("ShoulderBehavior", robot.shoulder.getZeroPowerBehavior());
 
             telemetry.update();
             idle();

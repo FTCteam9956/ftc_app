@@ -73,20 +73,20 @@ public class RRHardwarePresets{
     public final double TWIST_UP = 0.0;
     public final double TWIST_DOWN = 0.38;
 
-     //Constants for placing block and autonomous
-     public final double TELBOW_CENTER = 0.0;
-    public final double TWRIST_CENTER = 0.0;
-    public final double TELBOW_LEFT = 0.0;
-    public final double TWRIST_LEFT = 0.0;
-    public final double TELBOW_RIGHT = 0.0;
-    public final double TWRIST_RIGHT = 0.0;
+    //Constants for placing block and autonomous
+    public final double TELBOW_CENTER = 0.4;
+    public final double TWRIST_CENTER = 0.3;
+    public final double TELBOW_LEFT = 0.35;
+    public final double TWRIST_LEFT = 0.25;
+    public final double TELBOW_RIGHT = 0.5;
+    public final double TWRIST_RIGHT = 0.4;
 
-    public final double ELBOW_CENTER = 0.0;
-    public final double WRIST_CENTER = 0.0;
-    public final double ELBOW_LEFT = 0.0;
-    public final double WRIST_LEFT = 0.0;
-    public final double ELBOW_RIGHT = 0.0;
-    public final double WRIST_RIGHT = 0.0;
+    public final double ELBOW_CENTER = 0.4;
+    public final double WRIST_CENTER = 0.3;
+    public final double ELBOW_LEFT = 0.35;
+    public final double WRIST_LEFT = 0.25;
+    public final double ELBOW_RIGHT = 0.5;
+    public final double WRIST_RIGHT = 0.4;
 
     public final int DRIVE_OFF_STONE = -800;
     public final int DRIVE_INTO_STONE = 40;
@@ -94,8 +94,8 @@ public class RRHardwarePresets{
     public final int TURRET_FOR_WALL = 500;
     public final int TURRET_FOR_RELIC = -625;
 
-    public final double ELBOW_RELIC = 0.0;
-    public final double WRIST_RELIC = 0.0;
+    public final double ELBOW_RELIC = 0.9;
+    public final double WRIST_RELIC = 0.4;
 
     //Need to get these values correct for followLine() to work.
     public final double FLOOR_COLOR = 0.0;
@@ -146,7 +146,6 @@ public class RRHardwarePresets{
         right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         winchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Sensor LED control.

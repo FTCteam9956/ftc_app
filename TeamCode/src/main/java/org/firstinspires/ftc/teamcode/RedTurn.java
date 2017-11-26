@@ -50,6 +50,7 @@ public class RedTurn extends LinearOpMode {
 
                     //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
                     robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 2000);
+                    telemetry.addData("Status", "Dropping JewelArm");
 
                     //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
                     int loopBreak = 0;
@@ -69,6 +70,7 @@ public class RedTurn extends LinearOpMode {
                                 loopBreak = 1;
                             }
                         }
+                        telemetry.addData("Status", "Reading Ball");
                         telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
                         telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
                         telemetry.update();
@@ -77,6 +79,7 @@ public class RedTurn extends LinearOpMode {
 
                     //Raises jewel arm into JEWEL_ARM_UP position with 1000 steps over 2 seconds.
                     robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 1000, 2000);
+                    telemetry.addData("Status", "Lifting JewelArm Up");
                     sleep(500);
 
                     //Search for and confirm VuMark.relicTemplate);
@@ -84,39 +87,53 @@ public class RedTurn extends LinearOpMode {
 
                     //Drive backwards off of the balancing stone to place the block.
                     robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
+                    telemetry.addData("Status", "Driving Off Stone");
                     sleep(500);
 
                     //Drive into the balancing stone to give us a known position
                     robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
+                    telemetry.addData("Status", "Driving Into Stone");
                     sleep(500);
 
                     //Set position of the turret
                     robot.turretMotor.setTargetPosition(robot.TURRET_FOR_WALL);
+                    telemetry.addData("Status", "Turning Turret");
 
                     //Place the block according to the vuMark results.
                     if (targetPosition.equals("left")) {
                         robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
+                        telemetry.addData("Status", "Placeing Block in Left");
                         robot.shoulder.setTargetPosition(0);
                     }
                     if (targetPosition.equals("right")) {
                         robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
+                        telemetry.addData("Status", "Placeing Block in Right");
                         robot.shoulder.setTargetPosition(0);
                     }
                     if (targetPosition.equals("center")) {
                         robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+                        telemetry.addData("Status", "Placeing Block in Center");
                         robot.shoulder.setTargetPosition(0);
                     }
                     if (targetPosition.equals("gone forever")) {
                         robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+                        telemetry.addData("Status", "Undetermined, Placing in Center");
                         robot.shoulder.setTargetPosition(0);
                     }
                     robot.claw.setPosition(robot.CLAW_OPENED);
+                    telemetry.addData("Status", "Opening Claw");
 
                     //Move the arm and turret to
                     robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
+                    telemetry.addData("Status", "Folding Arm In");
+                    sleep(500);
+
                     robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
+                    telemetry.addData("Status", "Spinning Turret for Arm");
+                    sleep(500);
 
                     robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
+                    telemetry.addData("Status", "Moving Arm Out for Relic");
                 }
             }
 
