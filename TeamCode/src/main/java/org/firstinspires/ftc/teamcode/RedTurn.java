@@ -29,7 +29,10 @@ public class RedTurn extends LinearOpMode{
         robot.init(hardwareMap); //Robot moves during init().
 
         robot.setRunMode("STOP_AND_RESET_ENCODER");
+        robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setRunMode("RUN_USING_ENCODER");
+        robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -47,9 +50,18 @@ public class RedTurn extends LinearOpMode{
         relicTrackables.activate(); // Activate Vuforia
 
         //--AUTO SCRIPT START--
-
+//        robot.rotateTurret(0.15, 500, "CW");
+//        robot.rotateTurret(0.15, 250, "CCW");
+//
         //Finds out what VuMark we are looking at and returns corresponding int.
         int targetPosition = 0;
+//        long initTime = System.nanoTime();
+//        long timeOutTime = 500000000; //In Nanoseconds.
+//        while(targetPosition == 0 && ((System.nanoTime() - initTime)) > timeOutTime){
+//            targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
+//            //sleep(500);
+//        }
+
         while(targetPosition == 0){
             targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
             sleep(500);
@@ -70,6 +82,8 @@ public class RedTurn extends LinearOpMode{
                 if (robot.jewelSensor.blue() > 20){
                     knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
+                    sleep(300);
+
                     loopBreak = 1;
                 }else{
                     telemetry.addData("Status", "Cannot determine color!");
@@ -92,6 +106,10 @@ public class RedTurn extends LinearOpMode{
 
         //Drive into the balancing stone to give us a known position
         robot.driveForwardSetDistance(0.10, robot.DRIVE_INTO_STONE);
+        sleep(500);
+
+        //Turn Turret X amount degrees
+        robot.rotateTurret(0.1, 1850, "CW" );
         sleep(500);
 
 //        //Set position of the turret
@@ -139,8 +157,9 @@ public class RedTurn extends LinearOpMode{
     }
     public void knockOffBall(int selection){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
-        robot.setRunMode("STOP_AND_RESET_ENCODER");
-        robot.setRunMode("RUN_TO_POSITION");
+        //robot.setRunMode("STOP_AND_RESET_ENCODER");
+        robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         if (selection == 0) {
             robot.turretMotor.setTargetPosition(200);
         }
@@ -151,10 +170,16 @@ public class RedTurn extends LinearOpMode{
         while(robot.turretMotor.isBusy()){
             //Waiting while turret turns.
         }
-        sleep(500);
-        robot.turretMotor.setPower(0.0);
-        robot.setRunMode("RUN_USING_ENCODER");
+        sleep(100);
+//        robot.turretMotor.setTargetPosition(0);
+//        robot.turretMotor.setPower(0.15);
+//        while(robot.turretMotor.isBusy()){
+//            //Waiting while turret turns.
+//        }
+//        robot.turretMotor.setPower(0.0);
+//        robot.setRunMode("RUN_USING_ENCODER");
     }
+
     String format(OpenGLMatrix transformationMatrix){
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
