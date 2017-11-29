@@ -56,7 +56,7 @@ public class RedTurn extends LinearOpMode{
 //
         //Finds out what VuMark we are looking at and returns corresponding int.
         int targetPosition = 0;
-//        long initTime = System.nanoTime();
+
 //        long timeOutTime = 500000000; //In Nanoseconds.
 //        while(targetPosition == 0 && ((System.nanoTime() - initTime)) > timeOutTime){
 //            targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
