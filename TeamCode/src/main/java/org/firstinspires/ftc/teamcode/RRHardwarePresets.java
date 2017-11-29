@@ -67,8 +67,8 @@ public class RRHardwarePresets{
     public final double WRIST_FOLDED = 1.00;
 
     //Claw Constants
-    public final double CLAW_CLOSED = 0;
-    public final double CLAW_OPENED = 1;
+    public final double CLAW_CLOSED = 0.00;
+    public final double CLAW_OPENED = 1.00;
     public final double CLAW_MID = 0.3;
     public final double TWIST_UP = 0.0;
     public final double TWIST_DOWN = 0.38;
@@ -76,8 +76,8 @@ public class RRHardwarePresets{
     //Constants for placing block and autonomous
     public final double TELBOW_CENTER = 0.4;
     public final double TWRIST_CENTER = 0.3;
-    public final double TELBOW_LEFT = 0.35;
-    public final double TWRIST_LEFT = 0.25;
+    public final double TELBOW_LEFT = 0.65;
+    public final double TWRIST_LEFT = 0.55;
     public final double TELBOW_RIGHT = 0.5;
     public final double TWRIST_RIGHT = 0.4;
 

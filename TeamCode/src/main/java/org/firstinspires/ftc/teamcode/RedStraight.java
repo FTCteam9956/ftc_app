@@ -89,11 +89,11 @@ public class RedStraight extends LinearOpMode{
             sleep(500);
 
             //Drive backwards off of the balancing stone to place the block.
-            robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE );
+            robot.driveForwardSetDistance(0.2, robot.DRIVE_OFF_STONE );
             sleep(500);
 
             //Drive forwards into stone to give us a known location.
-            robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE );
+            robot.driveForwardSetDistance(0.2, robot.DRIVE_INTO_STONE );
             sleep(500);
 
             //Finds out what VuMark we are looking at and returns corresponding int.
@@ -122,8 +122,10 @@ public class RedStraight extends LinearOpMode{
         if(vuMark != RelicRecoveryVuMark.UNKNOWN){
             if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
                 telemetry.addData("VuMark is", "Left");
-                robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
-                robot.shoulder.setTargetPosition(0);
+               //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
+                robot.moveServo(robot.elbow, robot.ELBOW_LEFT, 1000, 2000);
+                robot.moveServo(robot.wrist, robot.WRIST_LEFT, 1000, 2000);
+                robot.shoulder.setTargetPosition(300);
                 returnValue = 1;
             }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
                 telemetry.addData("VuMark is", "Right");
