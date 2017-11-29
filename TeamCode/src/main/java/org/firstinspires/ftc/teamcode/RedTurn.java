@@ -68,7 +68,7 @@ public class RedTurn extends LinearOpMode{
         }
 
         //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
-        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 1000, 2000);
+        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 500, 1000);
 
         //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
         int loopBreak = 0;
@@ -92,12 +92,13 @@ public class RedTurn extends LinearOpMode{
             }
             telemetry.addData("Jewel Sensor - Red", robot.jewelSensor.red());
             telemetry.addData("Jewel Sensor - Blue", robot.jewelSensor.blue());
+            telemetry.addData("CPosition:", robot.turretMotor.getCurrentPosition());
             telemetry.update();
         }
         sleep(500);
 
         //Raises jewel arm into JEWEL_ARM_UP position with 750 steps over 1 second.
-        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 750, 1000);
+        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 500, 660);
         sleep(500);
 
         //Drive backwards off of the balancing stone to place the block.
@@ -109,18 +110,15 @@ public class RedTurn extends LinearOpMode{
         sleep(500);
 
         //Turn Turret X amount degrees
-        robot.rotateTurret(0.1, 1850, "CW" );
+        this.rotateTurret(0.3, 1835, "CW" );
         sleep(500);
 
-//        //Set position of the turret
-//        robot.turretMotor.setTargetPosition(robot.TURRET_FOR_WALL);
-//
-//        //Opens claw to drop block
+        //Opens claw to drop block
 //        robot.claw.setPosition(robot.CLAW_OPENED);
 //
 //        //Move the arm and turret to
-//        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
-//        robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
+        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
+        robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
 //
 //        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
     }
@@ -168,6 +166,8 @@ public class RedTurn extends LinearOpMode{
         }
         robot.turretMotor.setPower(0.15);
         while(robot.turretMotor.isBusy()){
+            telemetry.addData("CPosition:" , robot.turretMotor.getCurrentPosition());
+            telemetry.update();
             //Waiting while turret turns.
         }
         sleep(100);
@@ -179,7 +179,34 @@ public class RedTurn extends LinearOpMode{
 //        robot.turretMotor.setPower(0.0);
 //        robot.setRunMode("RUN_USING_ENCODER");
     }
-
+    public void rotateTurret(double power, int location, String direction){
+        //setRunMode("STOP_AND_RESET_ENCODER");
+        //setRunMode("RUN_TO_POSITION");
+        robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(direction.equals("CW")){
+            robot.turretMotor.setTargetPosition(location);
+            robot.turretMotor.setPower(-power);
+            while(robot.turretMotor.isBusy()){
+                telemetry.addData("CPosition:", robot.turretMotor.getCurrentPosition());
+                telemetry.update();
+                //waiting for turret to turn
+            }
+            robot.turretMotor.setPower(0.0);
+            //setRunMode("RUN_USING_ENCODER");
+        }
+        if(direction.equals("CCW")){
+            robot.turretMotor.setTargetPosition(location);
+            robot.turretMotor.setPower(power);
+            while(robot.turretMotor.isBusy()){
+                telemetry.addData("CPosition:", robot.turretMotor.getCurrentPosition());
+                telemetry.update();
+                //waiting for turret to turn
+            }
+            robot.turretMotor.setPower(0.0);
+            //setRunMode("RUN_USING_ENCODER");
+        }
+        robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
     String format(OpenGLMatrix transformationMatrix){
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }

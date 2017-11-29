@@ -89,7 +89,7 @@ public class RRHardwarePresets{
     public final double WRIST_RIGHT = 0.4;
 
     public final int DRIVE_OFF_STONE = -800;
-    public final int DRIVE_INTO_STONE = 115;
+    public final int DRIVE_INTO_STONE = 100;
 
     public final int TURRET_FOR_WALL = 560;
     public final int TURRET_FOR_RELIC = -625;
@@ -335,30 +335,30 @@ public class RRHardwarePresets{
         setRunMode("RUN_USING_ENCODER");
     }
     //It rotates the turret independant of encoders in the hardware class
-    public void rotateTurret(double power, int location, String direction){
-        //setRunMode("STOP_AND_RESET_ENCODER");
-        //setRunMode("RUN_TO_POSITION");
-        this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if(direction.equals("CW")){
-            this.turretMotor.setTargetPosition(location);
-            this.turretMotor.setPower(-power);
-            while(this.turretMotor.isBusy()){
-                //waiting for turret to turn
-            }
-            this.turretMotor.setPower(0.0);
-            //setRunMode("RUN_USING_ENCODER");
-        }
-        if(direction.equals("CCW")){
-            this.turretMotor.setTargetPosition(location);
-            this.turretMotor.setPower(power);
-            while(this.turretMotor.isBusy()){
-                //waiting for turret to turn
-            }
-            this.turretMotor.setPower(0.0);
-            //setRunMode("RUN_USING_ENCODER");
-        }
-        this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
+//    public void rotateTurret(double power, int location, String direction){
+//        //setRunMode("STOP_AND_RESET_ENCODER");
+//        //setRunMode("RUN_TO_POSITION");
+//        this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        if(direction.equals("CW")){
+//            this.turretMotor.setTargetPosition(location);
+//            this.turretMotor.setPower(-power);
+//            while(this.turretMotor.isBusy()){
+//                //waiting for turret to turn
+//            }
+//            this.turretMotor.setPower(0.0);
+//            //setRunMode("RUN_USING_ENCODER");
+//        }
+//        if(direction.equals("CCW")){
+//            this.turretMotor.setTargetPosition(location);
+//            this.turretMotor.setPower(power);
+//            while(this.turretMotor.isBusy()){
+//                //waiting for turret to turn
+//            }
+//            this.turretMotor.setPower(0.0);
+//            //setRunMode("RUN_USING_ENCODER");
+//        }
+//        this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//    }
     //Sets the run mode of all DC motors. Test is this works in both autonomous and teleOp modes.
     public void setRunMode(String input){
         if(input.equals("STOP_AND_RESET_ENCODER")) {
