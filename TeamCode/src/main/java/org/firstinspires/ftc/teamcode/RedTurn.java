@@ -54,18 +54,16 @@ public class RedTurn extends LinearOpMode{
 //        robot.rotateTurret(0.15, 500, "CW");
 //        robot.rotateTurret(0.15, 250, "CCW");
 //
+
         //Finds out what VuMark we are looking at and returns corresponding int.
         int targetPosition = 0;
-
-//        long timeOutTime = 500000000; //In Nanoseconds.
-//        while(targetPosition == 0 && ((System.nanoTime() - initTime)) > timeOutTime){
-//            targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
-//            //sleep(500);
-//        }
-
+        long initTime = (System.nanoTime()/1000000); //Converting nanoseconds to Milliseconds.
+        long timeOutTime = 5000; //In Milliseconds.
         while(targetPosition == 0){
-            targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE
-            sleep(500);
+            targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
+            if(((System.nanoTime()/1000000) - initTime) > timeOutTime){
+                targetPosition = 4;
+            }
         }
 
         //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
