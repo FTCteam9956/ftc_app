@@ -32,8 +32,10 @@ public class RedTurn extends LinearOpMode{
         robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setRunMode("RUN_USING_ENCODER");
         robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        robot.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -51,14 +53,11 @@ public class RedTurn extends LinearOpMode{
         relicTrackables.activate(); // Activate Vuforia
 
         //--AUTO SCRIPT START--
-//        robot.rotateTurret(0.15, 500, "CW");
-//        robot.rotateTurret(0.15, 250, "CCW");
-//
 
         //Finds out what VuMark we are looking at and returns corresponding int.
         int targetPosition = 0;
-        long initTime = (System.nanoTime()/1000000); //Converting nanoseconds to Milliseconds.
-        long timeOutTime = 5000; //In Milliseconds.
+        long initTime = (System.nanoTime()/1000000); //Converting Nanoseconds to Milliseconds.
+        long timeOutTime = 3000; //In Milliseconds.
         while(targetPosition == 0){
             targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
             if(((System.nanoTime()/1000000) - initTime) > timeOutTime){
@@ -82,7 +81,6 @@ public class RedTurn extends LinearOpMode{
                     knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
                     sleep(300);
-
                     loopBreak = 1;
                 }else{
                     telemetry.addData("Status", "Cannot determine color!");
@@ -112,42 +110,26 @@ public class RedTurn extends LinearOpMode{
         this.rotateTurret(0.3, 1835, "CW");
         sleep(500);
 
-        robot.shoulder.setTargetPosition(robot.TSHOULD_POSITION_LEFT);
-        robot.shoulder.setPower(0.01);
-        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
+        //Raises Winch
+        robot.winchMotor.setTargetPosition(300);
+        robot.winchMotor.setPower(0.35);
 
 
-//        if(RelicRecoveryVuMark.from(relicTemplate) == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
-//            telemetry.addData("VuMark is", "Left");
-//            //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
-//            robot.moveServo(robot.elbow, robot.ELBOW_LEFT, 1000, 2000);
-//            robot.moveServo(robot.wrist, robot.WRIST_LEFT, 1000, 2000);
-//            robot.shoulder.setTargetPosition(300);
-//        }else if(RelicRecoveryVuMark.from(relicTemplate) == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
-//            telemetry.addData("VuMark is", "Right");
-//            robot.moveServo(robot.elbow, robot.ELBOW_LEFT, 1000, 2000);
-//            robot.moveServo(robot.wrist, robot.WRIST_LEFT, 1000, 2000);
-//            robot.shoulder.setTargetPosition(300);
-//        }else if(RelicRecoveryVuMark.from(relicTemplate) == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
-//            telemetry.addData("VuMark is", "Center");
-//            robot.moveServo(robot.elbow, robot.ELBOW_LEFT, 1000, 2000);
-//            robot.moveServo(robot.wrist, robot.WRIST_LEFT, 1000, 2000);
-//            robot.shoulder.setTargetPosition(300);
-//        }
-//        else{
-//        telemetry.addData("VuMark", "not visible");
-//            robot.moveServo(robot.elbow, robot.ELBOW_LEFT, 1000, 2000);
-//            robot.moveServo(robot.wrist, robot.WRIST_LEFT, 1000, 2000);
-//            robot.shoulder.setTargetPosition(300);
-//    }
-        //Opens claw to drop block
-     //   robot.claw.setPosition(robot.CLAW_OPENED);
+        Position.setRobot(robot);
 
-//        //Move the arm and turret to
-      //  robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 1000, 2000);
-       // robot.turretMotor.setTargetPosition(robot.TURRET_FOR_RELIC);
-//
-//        robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RELIC, robot.WRIST_RELIC, 1000, 2000);
+        //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
+        if(targetPosition == 1){
+            robot.redTurnLeft.execute();
+        }
+        else if(targetPosition == 2){
+            robot.redTurnRight.execute();
+        }
+        else if(targetPosition == 3){
+            robot.redTurnCenter.execute();
+        }
+        else if(targetPosition == 4){
+
+        }
     }
 
     //Looks for VuMark and positions arm accordingly. Returns int based on what it saw for debugging purposes
@@ -198,13 +180,7 @@ public class RedTurn extends LinearOpMode{
             //Waiting while turret turns.
         }
         sleep(100);
-//        robot.turretMotor.setTargetPosition(0);
-//        robot.turretMotor.setPower(0.15);
-//        while(robot.turretMotor.isBusy()){
-//            //Waiting while turret turns.
-//        }
-//        robot.turretMotor.setPower(0.0);
-//        robot.setRunMode("RUN_USING_ENCODER");
+
     }
     public void rotateTurret(double power, int location, String direction){
         //setRunMode("STOP_AND_RESET_ENCODER");

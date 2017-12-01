@@ -58,7 +58,7 @@ public class RRHardwarePresets{
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     // Jewel Arm Constants
-    public final double JEWEL_ARM_UP = 0.20;
+    public final double JEWEL_ARM_UP = 0.01;
     public final double JEWEL_ARM_DOWN = 0.85;
 
     //Set Position Constants
@@ -66,6 +66,25 @@ public class RRHardwarePresets{
     public final double ELBOW_FOLDED = 1.00;
     public final double WRIST_UNFOLDED = 0.30;
     public final double WRIST_FOLDED = 1.00;
+
+    //Positions
+    public Position redTurnLeft = new Position(-66, 0.73, 0.29);
+    public Position redTurnCenter = new Position(-135, 0.66, 0.29);
+    public Position redTurnRight = new Position(-135, 0.66, 0.30);
+
+    //public Position redStraightLeft = new Position();
+    //public Position redStraightCenter = new Position();
+    //public Position redStraightRight = new Position();
+
+    //public Position blueStraightLeft = new Position();
+    //public Position blueStraightCenter = new Position();
+    //public Position blueStraightRight = new Position();
+
+    //public Position blueTurnLeft = new Position();
+    //public Position blueTurnCenter = new Position();
+    //public Position blueTurnRight = new Position();
+
+
 
     //Claw Constants
     public final double CLAW_CLOSED = 0.00;
@@ -77,7 +96,7 @@ public class RRHardwarePresets{
     //Constants for placing block and autonomous
     public final double TELBOW_CENTER = 0.66;
     public final double TWRIST_CENTER = 0.29;
-    public final int TSHOULDER_POSITION_CENTER = -135;
+    public final int TSHOULDER_POSITION_CENTER = 35;
     public final double TELBOW_LEFT = 0.73;
     public final double TWRIST_LEFT = 0.29;
     public final int TSHOULD_POSITION_LEFT = -66;
@@ -372,7 +391,7 @@ public class RRHardwarePresets{
             this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //this.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         if(input.equals("RUN_WITHOUT_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -380,7 +399,7 @@ public class RRHardwarePresets{
             this.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            this.winchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            //this.winchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         if(input.equals("RUN_USING_ENCODER")) {
@@ -389,7 +408,7 @@ public class RRHardwarePresets{
             this.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            this.winchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //this.winchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.shoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         if(input.equals("RUN_TO_POSITION")) {

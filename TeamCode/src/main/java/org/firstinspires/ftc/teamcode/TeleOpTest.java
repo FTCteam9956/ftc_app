@@ -48,6 +48,7 @@ public class TeleOpTest extends LinearOpMode{
         robot.initServoPositions(); //This is where our motors move into their initial positions.
         robot.setRunMode("STOP_AND_RESET_ENCODER"); //Resets all encoders.
         robot.setRunMode("RUN_USING_ENCODER"); //Changes all motors to RUN_USING_ENCODER mode.
+        robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Changes shoulder motor to RUN_TO_POSITION mode.
         //this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets the static values shoulderPosition
 
@@ -86,11 +87,14 @@ public class TeleOpTest extends LinearOpMode{
 
             //WINCH
             if(gamepad2.dpad_up){
-                robot.winchMotor.setPower(-0.35);
+                robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() + 20);
+                robot.winchMotor.setPower(0.35);
             }else if(gamepad2.dpad_down){
+                robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() - 20);
                 robot.winchMotor.setPower(0.35);
             }else{
-                robot.winchMotor.setPower(0.0);
+                robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition());
+                robot.winchMotor.setPower(1.0);
             }
 
             //ARM POSITION PRESETS
@@ -124,14 +128,14 @@ public class TeleOpTest extends LinearOpMode{
 
             //ELBOW
             if(Math.abs(gamepad2.right_stick_x) >= 0.05){
-                robot.elbow.setPosition(robot.elbow.getPosition() + (-gamepad2.right_stick_x * 0.005));
+                robot.elbow.setPosition(robot.elbow.getPosition() + (-gamepad2.right_stick_x * 0.01));
             }else{
                 robot.elbow.setPosition(robot.elbow.getPosition());
             }
 
             //WRIST
             if(Math.abs(gamepad2.left_stick_x) >= 0.05){
-                robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_x * 0.005));
+                robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_x * 0.01));
             }else{
                 robot.wrist.setPosition(robot.wrist.getPosition());
             }
