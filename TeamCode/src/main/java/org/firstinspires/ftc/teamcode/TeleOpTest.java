@@ -104,14 +104,15 @@ public class TeleOpTest extends LinearOpMode{
             //SHOULDER
             if(gamepad2.dpad_left){
                 //robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 10); //Sets TargetPosition to currentPosition + 1 encoder tick.
-                robot.shoulder.setPower(0.5); //Sets power to run to TargetPosition
+                robot.shoulder.setPower(speedAdjust(0.5));
                 //while(robot.shoulder.isBusy()){
                     //Waiting for shoulder to reach destination
                 //}
                 //this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets new Shoulder Position
             }else if(gamepad2.dpad_right){
                 //robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 10); //Sets TargetPosition to currentPosition - 1 encoder tick.
-                robot.shoulder.setPower(-0.5); //Sets power to run to TargetPosition
+                robot.shoulder.setPower(speedAdjust(-0.5)); //Sets power to run to TargetPosition
+
                 //while(robot.shoulder.isBusy()){
                     //Waiting for shoulder to reach destination
                 //}
@@ -165,10 +166,10 @@ public class TeleOpTest extends LinearOpMode{
             }
 
             //---TELEMETRY---
-            //telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
-            //telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
-            //telemetry.addData("right1 encoder", robot.right1.getCurrentPosition());
-            //telemetry.addData("right2 encoder", robot.right2.getCurrentPosition());
+            telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
+            telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
+            telemetry.addData("right1 encoder", robot.right1.getCurrentPosition());
+            telemetry.addData("right2 encoder", robot.right2.getCurrentPosition());
             //telemetry.addData("Left1 Power", robot.left1.getPower());
             //telemetry.addData("Left2 Power", robot.left2.getPower());
             //telemetry.addData("Right1 Power", robot.right1.getPower());
@@ -195,8 +196,8 @@ public class TeleOpTest extends LinearOpMode{
     //---TELEOP ONLY METHODS BELOW---
 
     //Used to smooth out acceleration of robot.
-    public static float speedAdjust(float stickInput){
-        float returnValue;
+    public static double speedAdjust(double stickInput){
+        double returnValue;
         if(stickInput > 0){
             returnValue = (stickInput * stickInput);
         }else if(stickInput < 0){

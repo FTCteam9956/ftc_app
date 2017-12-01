@@ -1,4 +1,5 @@
 //RRHardwarePresets.java
+//
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -74,12 +75,15 @@ public class RRHardwarePresets{
     public final double TWIST_DOWN = 0.38;
 
     //Constants for placing block and autonomous
-    public final double TELBOW_CENTER = 0.4;
-    public final double TWRIST_CENTER = 0.3;
-    public final double TELBOW_LEFT = 0.65;
-    public final double TWRIST_LEFT = 0.55;
-    public final double TELBOW_RIGHT = 0.5;
-    public final double TWRIST_RIGHT = 0.4;
+    public final double TELBOW_CENTER = 0.66;
+    public final double TWRIST_CENTER = 0.29;
+    public final int TSHOULDER_POSITION_CENTER = -135;
+    public final double TELBOW_LEFT = 0.73;
+    public final double TWRIST_LEFT = 0.29;
+    public final int TSHOULD_POSITION_LEFT = -66;
+    public final double TELBOW_RIGHT = 0.6;
+    public final double TWRIST_RIGHT = 0.3;
+    public final int TSHOULDER_POSITION_RIGHT = -135;
 
     public final double ELBOW_CENTER = 0.4;
     public final double WRIST_CENTER = 0.3;

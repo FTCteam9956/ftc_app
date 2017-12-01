@@ -112,8 +112,8 @@ public class RedTurn extends LinearOpMode{
         this.rotateTurret(0.3, 1835, "CW");
         sleep(500);
 
-        robot.shoulder.setTargetPosition(200);
-        robot.shoulder.setPower(0.1);
+        robot.shoulder.setTargetPosition(robot.TSHOULD_POSITION_LEFT);
+        robot.shoulder.setPower(0.01);
         robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
 
 
