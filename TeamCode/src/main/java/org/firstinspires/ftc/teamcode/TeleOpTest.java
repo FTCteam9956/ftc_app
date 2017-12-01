@@ -39,7 +39,6 @@ public class TeleOpTest extends LinearOpMode{
     public static int clawMode = 0;
     public static int clawTwistMode = 0;
     public static int jewelArmMode = 0;
-    //public static int shoulderPosition;
 
     @Override
     public void runOpMode(){
@@ -49,8 +48,6 @@ public class TeleOpTest extends LinearOpMode{
         robot.setRunMode("STOP_AND_RESET_ENCODER"); //Resets all encoders.
         robot.setRunMode("RUN_USING_ENCODER"); //Changes all motors to RUN_USING_ENCODER mode.
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Changes shoulder motor to RUN_TO_POSITION mode.
-        //this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets the static values shoulderPosition
 
         while(opModeIsActive()){
 

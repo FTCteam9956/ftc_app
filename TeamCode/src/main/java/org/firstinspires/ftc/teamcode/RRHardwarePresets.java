@@ -28,13 +28,11 @@ public class RRHardwarePresets{
     public DcMotor right2;
     public DcMotor turretMotor;
     public DcMotor winchMotor;
-
-    //Arm Servos
-    public Servo elbow;
-    public Servo wrist;
     public DcMotor shoulder;
 
     //Servos
+    public Servo elbow;
+    public Servo wrist;
     public Servo claw;
     public Servo clawTwist;
     public Servo jewelArm;
@@ -44,18 +42,6 @@ public class RRHardwarePresets{
     public ColorSensor floorSensor;
     public BNO055IMU imu1;
     public BNO055IMU imu2;
-
-    //Vuforia Information
-    public VuforiaLocalizer vuforia;
-
-    //Vuforia
-    double tX; //X value extracted from the offset of the target relative to the robot
-    double tY; //Y value extracted from the offset of the target relative to the robot
-    double tZ; //Z value extracted from the offset of the target relative to the robot
-    //--------------------------------------------------------------------------------------------------------
-    double rX; //X value extractecd from the rotational componenets of the target relative to the robot
-    double rY; //Y value extractecd from the rotational componenets of the target relative to the robot
-    double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     // Jewel Arm Constants
     public final double JEWEL_ARM_UP = 0.01;
@@ -67,7 +53,7 @@ public class RRHardwarePresets{
     public final double WRIST_UNFOLDED = 0.30;
     public final double WRIST_FOLDED = 1.00;
 
-    //Positions
+    //Autonomous Positions
     public Position redTurnLeft = new Position(-66, 0.73, 0.29);
     public Position redTurnCenter = new Position(-135, 0.66, 0.29);
     public Position redTurnRight = new Position(-135, 0.66, 0.30);
@@ -84,8 +70,6 @@ public class RRHardwarePresets{
     //public Position blueTurnCenter = new Position();
     //public Position blueTurnRight = new Position();
 
-
-
     //Claw Constants
     public final double CLAW_CLOSED = 0.00;
     public final double CLAW_OPENED = 1.00;
@@ -93,32 +77,9 @@ public class RRHardwarePresets{
     public final double TWIST_UP = 0.0;
     public final double TWIST_DOWN = 0.38;
 
-    //Constants for placing block and autonomous
-    public final double TELBOW_CENTER = 0.66;
-    public final double TWRIST_CENTER = 0.29;
-    public final int TSHOULDER_POSITION_CENTER = 35;
-    public final double TELBOW_LEFT = 0.73;
-    public final double TWRIST_LEFT = 0.29;
-    public final int TSHOULD_POSITION_LEFT = -66;
-    public final double TELBOW_RIGHT = 0.6;
-    public final double TWRIST_RIGHT = 0.3;
-    public final int TSHOULDER_POSITION_RIGHT = -135;
-
-    public final double ELBOW_CENTER = 0.4;
-    public final double WRIST_CENTER = 0.3;
-    public final double ELBOW_LEFT = 0.35;
-    public final double WRIST_LEFT = 0.25;
-    public final double ELBOW_RIGHT = 0.5;
-    public final double WRIST_RIGHT = 0.4;
 
     public final int DRIVE_OFF_STONE = -800;
     public final int DRIVE_INTO_STONE = 100;
-
-    public final int TURRET_FOR_WALL = 560;
-    public final int TURRET_FOR_RELIC = -625;
-
-    public final double ELBOW_RELIC = 0.9;
-    public final double WRIST_RELIC = 0.4;
 
     //Need to get these values correct for followLine() to work.
     public final double FLOOR_COLOR = 0.0;
@@ -130,7 +91,7 @@ public class RRHardwarePresets{
         System.out.println("Created new RRHardwarePresets Object!");
     }
 
-    public void init(HardwareMap hwm) {
+    public void init(HardwareMap hwm){
 
         //Mappings.
         HwMap = hwm;
@@ -176,7 +137,7 @@ public class RRHardwarePresets{
         floorSensor.enableLed(false);
     }
 
-        //IMU Initialization parameters.
+//        IMU Initialization parameters.
 //        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
 //        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 //        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -192,18 +153,47 @@ public class RRHardwarePresets{
 //        //Giving parameters to create imu2.
 //        imu2 = HwMap.get(BNO055IMU.class, "imu2");
 //        imu2.initialize(IMUParameters);
-//
-//
-//        //Vuforia Initialization parameters.
-//        OpenGLMatrix lastLocation = null;
-//        int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName()); //Sets camera feed to display on phone.
-//        VuforiaLocalizer.Parameters VuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId); // If you want to deactivate the Camera Monitor View, to save power. You can just not pass in cameraMonitorViewID.
-//        VuforiaParameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
-//        VuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //Sets phone to use back camera.
-//        this.vuforia = ClassFactory.createVuforiaLocalizer(VuforiaParameters); //Initializes VuforiaLocalizer object as vuforia.
-//    }
 
     //---UNIVERSAL METHODS BELOW---
+
+    public void rotateTurret(double power, int location, String direction){
+        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(direction.equals("CW")){
+            turretMotor.setTargetPosition(location);
+            turretMotor.setPower(-power);
+            while(turretMotor.isBusy()){
+                //waiting for turret to turn
+            }
+            turretMotor.setPower(0.0);
+        }
+        if(direction.equals("CCW")){
+            turretMotor.setTargetPosition(location);
+            turretMotor.setPower(power);
+            while(turretMotor.isBusy()){
+                //waiting for turret to turn
+            }
+            turretMotor.setPower(0.0);
+        }
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void knockOffBall(int selection){
+        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
+        setRunMode("STOP_AND_RESET_ENCODER");
+        setRunMode("RUN_TO_POSITION");
+        if (selection == 0) {
+            turretMotor.setTargetPosition(200);
+        }
+        if (selection == 1) {
+            turretMotor.setTargetPosition(-200);
+        }
+        turretMotor.setPower(0.15);
+        while(turretMotor.isBusy()){
+            //Waiting while turret turns.
+        }
+        turretMotor.setPower(0.0);
+        setRunMode("RUN_USING_ENCODER");
+    }
 
     //Initializes Servos to a position.
     public void initServoPositions(){
@@ -357,32 +347,7 @@ public class RRHardwarePresets{
         //Sets back to RUN_USING_ENCODER mode.
         setRunMode("RUN_USING_ENCODER");
     }
-    //It rotates the turret independant of encoders in the hardware class
-//    public void rotateTurret(double power, int location, String direction){
-//        //setRunMode("STOP_AND_RESET_ENCODER");
-//        //setRunMode("RUN_TO_POSITION");
-//        this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        if(direction.equals("CW")){
-//            this.turretMotor.setTargetPosition(location);
-//            this.turretMotor.setPower(-power);
-//            while(this.turretMotor.isBusy()){
-//                //waiting for turret to turn
-//            }
-//            this.turretMotor.setPower(0.0);
-//            //setRunMode("RUN_USING_ENCODER");
-//        }
-//        if(direction.equals("CCW")){
-//            this.turretMotor.setTargetPosition(location);
-//            this.turretMotor.setPower(power);
-//            while(this.turretMotor.isBusy()){
-//                //waiting for turret to turn
-//            }
-//            this.turretMotor.setPower(0.0);
-//            //setRunMode("RUN_USING_ENCODER");
-//        }
-//        this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//    }
-    //Sets the run mode of all DC motors. Test is this works in both autonomous and teleOp modes.
+
     public void setRunMode(String input){
         if(input.equals("STOP_AND_RESET_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

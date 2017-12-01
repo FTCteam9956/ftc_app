@@ -73,12 +73,12 @@ public class RedTurn extends LinearOpMode{
         while (loopBreak == 0){
             sleep(1000);
             if(robot.jewelSensor.red() > 52){
-                knockOffBall(0);
+                robot.knockOffBall(0);
                 telemetry.addData("Status", "Confirmed Red Ball!");
                 loopBreak = 1;
             }else if(robot.jewelSensor.red() <= 52){
                 if (robot.jewelSensor.blue() > 20){
-                    knockOffBall(1);
+                    robot.knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
                     sleep(300);
                     loopBreak = 1;
@@ -107,7 +107,7 @@ public class RedTurn extends LinearOpMode{
         sleep(500);
 
         //Turn Turret X amount degrees
-        this.rotateTurret(0.3, 1835, "CW");
+        robot.rotateTurret(0.3, 1835, "CW");
         sleep(500);
 
         //Raises Winch
@@ -139,78 +139,19 @@ public class RedTurn extends LinearOpMode{
         if(vuMark != RelicRecoveryVuMark.UNKNOWN){
             if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
                 telemetry.addData("VuMark is", "Left");
-                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
-                //robot.shoulder.setTargetPosition(0);
                 returnValue = 1;
             }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
                 telemetry.addData("VuMark is", "Right");
-                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
-                //robot.shoulder.setTargetPosition(0);
                 returnValue = 2;
             }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
                 telemetry.addData("VuMark is", "Center");
-                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-                //robot.shoulder.setTargetPosition(0);
                 returnValue = 3;
             }
         }else{
             telemetry.addData("VuMark", "not visible");
-            //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-            //robot.shoulder.setTargetPosition(0);
             returnValue = 0;
         }
         telemetry.update();
         return(returnValue);
-    }
-    public void knockOffBall(int selection){
-        //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
-        //robot.setRunMode("STOP_AND_RESET_ENCODER");
-        robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if (selection == 0) {
-            robot.turretMotor.setTargetPosition(200);
-        }
-        if (selection == 1) {
-            robot.turretMotor.setTargetPosition(-200);
-        }
-        robot.turretMotor.setPower(0.15);
-        while(robot.turretMotor.isBusy() && opModeIsActive()){
-            telemetry.addData("CPosition:" , robot.turretMotor.getCurrentPosition());
-            telemetry.update();
-            //Waiting while turret turns.
-        }
-        sleep(100);
-
-    }
-    public void rotateTurret(double power, int location, String direction){
-        //setRunMode("STOP_AND_RESET_ENCODER");
-        //setRunMode("RUN_TO_POSITION");
-        robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if(direction.equals("CW")){
-            robot.turretMotor.setTargetPosition(location);
-            robot.turretMotor.setPower(-power);
-            while(robot.turretMotor.isBusy() && opModeIsActive()){
-                telemetry.addData("CPosition:", robot.turretMotor.getCurrentPosition());
-                telemetry.update();
-                //waiting for turret to turn
-            }
-            robot.turretMotor.setPower(0.0);
-            //setRunMode("RUN_USING_ENCODER");
-        }
-        if(direction.equals("CCW")){
-            robot.turretMotor.setTargetPosition(location);
-            robot.turretMotor.setPower(power);
-            while(robot.turretMotor.isBusy() && opModeIsActive()){
-                telemetry.addData("CPosition:", robot.turretMotor.getCurrentPosition());
-                telemetry.update();
-                //waiting for turret to turn
-            }
-            robot.turretMotor.setPower(0.0);
-            //setRunMode("RUN_USING_ENCODER");
-        }
-        robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    String format(OpenGLMatrix transformationMatrix){
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }
