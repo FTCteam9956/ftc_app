@@ -1,5 +1,5 @@
+//RedTurn.java
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -23,8 +23,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class RedTurn extends LinearOpMode{
     public RRHardwarePresets robot = new RRHardwarePresets();
 
-    VuforiaLocalizer vuforia;
-
     public void runOpMode(){
         robot.init(hardwareMap); //Robot moves during init().
 
@@ -37,20 +35,10 @@ public class RedTurn extends LinearOpMode{
         robot.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; // Use FRONT Camera (Change to BACK if you want to use that one)
-        parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES; // Display Axes
-
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-
         waitForStart();
 
         robot.initServoPositions();
-        relicTrackables.activate(); // Activate Vuforia
+        robot.relicTrackables.activate(); // Activate Vuforia
 
         //--AUTO SCRIPT START--
 
@@ -59,7 +47,7 @@ public class RedTurn extends LinearOpMode{
         long initTime = (System.nanoTime()/1000000); //Converting Nanoseconds to Milliseconds.
         long timeOutTime = 3000; //In Milliseconds.
         while(targetPosition == 0){
-            targetPosition = lookForVuMark(relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
+            targetPosition = robot.lookForVuMark(robot.relicTemplate); //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
             if(((System.nanoTime()/1000000) - initTime) > timeOutTime){
                 targetPosition = 4;
             }
@@ -114,9 +102,6 @@ public class RedTurn extends LinearOpMode{
         robot.winchMotor.setTargetPosition(300);
         robot.winchMotor.setPower(0.35);
 
-
-        Position.setRobot(robot);
-
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
         if(targetPosition == 1){
             robot.redTurnLeft.execute();
@@ -130,28 +115,5 @@ public class RedTurn extends LinearOpMode{
         else if(targetPosition == 4){
 
         }
-    }
-
-    //Looks for VuMark and positions arm accordingly. Returns int based on what it saw for debugging purposes
-    public int lookForVuMark(VuforiaTrackable rTemplate){
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);
-        int returnValue = -1;
-        if(vuMark != RelicRecoveryVuMark.UNKNOWN){
-            if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
-                telemetry.addData("VuMark is", "Left");
-                returnValue = 1;
-            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
-                telemetry.addData("VuMark is", "Right");
-                returnValue = 2;
-            }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
-                telemetry.addData("VuMark is", "Center");
-                returnValue = 3;
-            }
-        }else{
-            telemetry.addData("VuMark", "not visible");
-            returnValue = 0;
-        }
-        telemetry.update();
-        return(returnValue);
     }
 }

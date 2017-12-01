@@ -1,7 +1,5 @@
 //RRHardwarePresets.java
-//
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
@@ -14,12 +12,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class RRHardwarePresets{
 
     //Hardware Map.
     HardwareMap HwMap;
+
+    //Vuforia
+    VuforiaLocalizer vuforia;
+    VuforiaTrackables relicTrackables;
+    VuforiaTrackable relicTemplate;
 
     //DcMotors
     public DcMotor left1;
@@ -53,22 +59,22 @@ public class RRHardwarePresets{
     public final double WRIST_UNFOLDED = 0.30;
     public final double WRIST_FOLDED = 1.00;
 
+    public Position armFolded = new Position();
+    public Position armExtended = new Position();
+
     //Autonomous Positions
     public Position redTurnLeft = new Position(-66, 0.73, 0.29);
     public Position redTurnCenter = new Position(-135, 0.66, 0.29);
     public Position redTurnRight = new Position(-135, 0.66, 0.30);
-
-    //public Position redStraightLeft = new Position();
-    //public Position redStraightCenter = new Position();
-    //public Position redStraightRight = new Position();
-
-    //public Position blueStraightLeft = new Position();
-    //public Position blueStraightCenter = new Position();
-    //public Position blueStraightRight = new Position();
-
-    //public Position blueTurnLeft = new Position();
-    //public Position blueTurnCenter = new Position();
-    //public Position blueTurnRight = new Position();
+    public Position redStraightLeft = new Position();
+    public Position redStraightCenter = new Position();
+    public Position redStraightRight = new Position();
+    public Position blueStraightLeft = new Position();
+    public Position blueStraightCenter = new Position();
+    public Position blueStraightRight = new Position();
+    public Position blueTurnLeft = new Position();
+    public Position blueTurnCenter = new Position();
+    public Position blueTurnRight = new Position();
 
     //Claw Constants
     public final double CLAW_CLOSED = 0.00;
@@ -76,7 +82,6 @@ public class RRHardwarePresets{
     public final double CLAW_MID = 0.3;
     public final double TWIST_UP = 0.0;
     public final double TWIST_DOWN = 0.38;
-
 
     public final int DRIVE_OFF_STONE = -800;
     public final int DRIVE_INTO_STONE = 100;
@@ -91,7 +96,7 @@ public class RRHardwarePresets{
         System.out.println("Created new RRHardwarePresets Object!");
     }
 
-    public void init(HardwareMap hwm){
+    public void init(HardwareMap hwm) {
 
         //Mappings.
         HwMap = hwm;
@@ -99,18 +104,13 @@ public class RRHardwarePresets{
         left2 = HwMap.dcMotor.get("left2");
         right1 = HwMap.dcMotor.get("right1");
         right2 = HwMap.dcMotor.get("right2");
-
         turretMotor = HwMap.dcMotor.get("turretMotor");
         winchMotor = HwMap.dcMotor.get("winchMotor");
-
         claw = HwMap.servo.get("claw");
         clawTwist = HwMap.servo.get("clawTwist");
-
         jewelArm = HwMap.servo.get("jewelArm");
-
         jewelSensor = HwMap.colorSensor.get("jewelSensor");
         floorSensor = HwMap.colorSensor.get("floorSensor");
-
         elbow = HwMap.servo.get("elbow");
         wrist = HwMap.servo.get("wrist");
         shoulder = HwMap.dcMotor.get("shoulder");
@@ -135,9 +135,19 @@ public class RRHardwarePresets{
         //Sensor LED control.
         jewelSensor.enableLed(false);
         floorSensor.enableLed(false);
-    }
 
-//        IMU Initialization parameters.
+        //Vuforia Initialization parameters
+        int cameraMonitorViewId = HwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; // Use FRONT Camera (Change to BACK if you want to use that one)
+        parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES; // Display Axes
+
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        this.relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
+        this.relicTemplate = relicTrackables.get(0);
+
+//        IMU Initialization parameters
 //        BNO055IMU.Parameters IMUParameters = new BNO055IMU.Parameters();
 //        IMUParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 //        IMUParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -153,8 +163,32 @@ public class RRHardwarePresets{
 //        //Giving parameters to create imu2.
 //        imu2 = HwMap.get(BNO055IMU.class, "imu2");
 //        imu2.initialize(IMUParameters);
+    }
 
     //---UNIVERSAL METHODS BELOW---
+
+    //Looks for VuMark and positions arm accordingly. Returns int based on what it saw for debugging purposes
+    public int lookForVuMark(VuforiaTrackable rTemplate){
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);
+        int returnValue = -1;
+        if(vuMark != RelicRecoveryVuMark.UNKNOWN){
+            if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
+                //telemetry.addData("VuMark is", "Left");
+                returnValue = 1;
+            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
+                //telemetry.addData("VuMark is", "Right");
+                returnValue = 2;
+            }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
+                //telemetry.addData("VuMark is", "Center");
+                returnValue = 3;
+            }
+        }else{
+            //telemetry.addData("VuMark", "not visible");
+            returnValue = 0;
+        }
+        //telemetry.update();
+        return(returnValue);
+    }
 
     public void rotateTurret(double power, int location, String direction){
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

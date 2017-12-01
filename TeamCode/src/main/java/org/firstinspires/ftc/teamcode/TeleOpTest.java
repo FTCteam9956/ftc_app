@@ -1,6 +1,5 @@
 //TeleOpTest.java
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,14 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 
 //---TeleOp Controls---
-
 //Gamepad 1
 //Left Stick Y- Left Side Drive
 //Right Stick Y- Right Side Drive
 //Left Trigger - Rotate turret left
 //Right Trigger - Rotate turret right
 //DPad Down - Toggle JewelArm position
-
 //Gamepad 2
 //Right Stick X - Move Arm at Elbow Servo
 //Left Stick X - Move Arm at Wrist Servo

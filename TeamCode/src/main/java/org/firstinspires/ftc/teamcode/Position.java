@@ -1,8 +1,9 @@
+//Position.java
 package org.firstinspires.ftc.teamcode;
 
 public class Position{
 
-    public static RRHardwarePresets robot;
+    public static RRHardwarePresets robot = new RRHardwarePresets();
 
     public int shoulderPosition;
     public double elbowPosition;
@@ -14,9 +15,7 @@ public class Position{
         this.wristPosition = wp;
     }
 
-    public static void setRobot(RRHardwarePresets inputRobot){
-        robot = inputRobot;
-    }
+    public Position(){}
 
     public void execute(){
         robot.shoulder.setTargetPosition(shoulderPosition);
