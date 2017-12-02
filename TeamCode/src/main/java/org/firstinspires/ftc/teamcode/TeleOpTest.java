@@ -94,15 +94,15 @@ public class TeleOpTest extends LinearOpMode{
                 robot.winchMotor.setPower(0.35);
             }else{
                 robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition());
-                robot.winchMotor.setPower(1.0);
+                robot.winchMotor.setPower(0.99);
             }
 
             //ARM POSITION PRESETS
             if(gamepad2.y){
-                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 700, 150);
+                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 300, 70);
             }
             if(gamepad2.a){
-                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 700, 150);
+                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 300, 70);
             }
 
             //SHOULDER

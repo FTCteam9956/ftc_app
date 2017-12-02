@@ -64,8 +64,8 @@ public class RRHardwarePresets{
     //Set Position Constants
     public final double ELBOW_UNFOLDED = 0.30;
     public final double ELBOW_FOLDED = 1.00;
-    public final double WRIST_UNFOLDED = 0.30;
-    public final double WRIST_FOLDED = 1.00;
+    public final double WRIST_UNFOLDED = 0.7;
+    public final double WRIST_FOLDED = 0.0;
 
     //Positions
     public Position redTurnLeft = new Position(-66, 0.73, 0.29);
@@ -88,10 +88,10 @@ public class RRHardwarePresets{
 
     //Claw Constants
     public final double CLAW_CLOSED = 0.00;
-    public final double CLAW_OPENED = 1.00;
+    public final double CLAW_OPENED = 0.57;
     public final double CLAW_MID = 0.3;
-    public final double TWIST_UP = 0.0;
-    public final double TWIST_DOWN = 0.38;
+    public final double TWIST_UP = 0.562;
+    public final double TWIST_DOWN = 0.928;
 
     //Constants for placing block and autonomous
     public final double TELBOW_CENTER = 0.66;
