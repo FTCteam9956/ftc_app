@@ -67,6 +67,7 @@ public class RRHardwarePresets{
     public final double WRIST_UNFOLDED = 0.7;
     public final double WRIST_FOLDED = 0.0;
 
+
     //Positions
     public Position redTurnLeft = new Position(-66, 0.73, 0.29);
     public Position redTurnCenter = new Position(-135, 0.66, 0.29);
@@ -103,6 +104,21 @@ public class RRHardwarePresets{
     public final double TELBOW_RIGHT = 0.6;
     public final double TWRIST_RIGHT = 0.3;
     public final int TSHOULDER_POSITION_RIGHT = -135;
+
+    //These are the Positions for red turn left
+    public final double REDTURN_WRIST_LEFT = .1655;
+    public final double REDTURN_ELBOW_LEFT = .7378;
+    public final int REDTURN_SHOULDER_LEFT = 321;
+
+    //These are the postions for the red turn right
+    public final double REDTURN_WRIST_RIGHT = .30;
+    public final double REDTURN_ELBOW_RIGHT = .66;
+    public final double REDTURN_SHOULDER_RIGHT = -135;
+
+    //These are the Positions for the red turn center
+    public final double REDTURN_WRIST_CENTER = .29;
+    public final double REDTURN_ELBOW_CENTER = .66;
+    public final double REDTURN_SHOULDER_CENTER = -135;
 
     public final double ELBOW_CENTER = 0.4;
     public final double WRIST_CENTER = 0.3;
@@ -212,7 +228,7 @@ public class RRHardwarePresets{
         this.elbow.setPosition(ELBOW_FOLDED);
         this.claw.setPosition(CLAW_CLOSED);
         this.clawTwist.setPosition(TWIST_UP);
-    }
+}
 
     //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
     public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
@@ -400,7 +416,7 @@ public class RRHardwarePresets{
             this.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            this.shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            //this.shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         if(input.equals("RUN_USING_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -409,14 +425,14 @@ public class RRHardwarePresets{
             this.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            this.shoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //this.shoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         if(input.equals("RUN_TO_POSITION")) {
             this.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }

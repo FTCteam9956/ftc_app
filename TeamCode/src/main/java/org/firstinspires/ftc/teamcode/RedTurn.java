@@ -32,10 +32,10 @@ public class RedTurn extends LinearOpMode{
         robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setRunMode("RUN_USING_ENCODER");
         robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -66,7 +66,7 @@ public class RedTurn extends LinearOpMode{
         }
 
         //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
-        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 500, 1000);
+        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_DOWN, 300, 500);
 
         //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
         int loopBreak = 0;
@@ -95,8 +95,8 @@ public class RedTurn extends LinearOpMode{
         sleep(500);
 
         //Raises jewel arm into JEWEL_ARM_UP position with 750 steps over 1 second.
-        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 500, 660);
-        sleep(500);
+        robot.moveServo(robot.jewelArm, robot.JEWEL_ARM_UP, 300, 300);
+        sleep(50);
 
         //Drive backwards off of the balancing stone to place the block.
         robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
@@ -106,30 +106,48 @@ public class RedTurn extends LinearOpMode{
         robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
         sleep(500);
 
+        //Raises Winch
+        robot.winchMotor.setTargetPosition(300);
+        robot.winchMotor.setPower(0.35);
+
         //Turn Turret X amount degrees
         this.rotateTurret(0.3, 1835, "CW");
         sleep(500);
 
-        //Raises Winch
-        robot.winchMotor.setTargetPosition(300);
-        robot.winchMotor.setPower(0.35);
 
 
         Position.setRobot(robot);
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-        if(targetPosition == 1){
-            robot.redTurnLeft.execute();
-        }
-        else if(targetPosition == 2){
-            robot.redTurnRight.execute();
-        }
-        else if(targetPosition == 3){
-            robot.redTurnCenter.execute();
-        }
-        else if(targetPosition == 4){
+                 if(targetPosition == 1){
+                //robot.redTurnLeft.execute();
+                 robot.shoulder.setTargetPosition(315);
+                 robot.shoulder.setPower(0.1);
+                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_LEFT, robot.REDTURN_ELBOW_LEFT, 500, 900);
+            }
+            else if(targetPosition == 2){
+                //robot.redTurnRight.execute()
+                 robot.shoulder.setTargetPosition(-135);
+                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_RIGHT, robot.REDTURN_ELBOW_RIGHT, 500, 1000);
+                 }
+            else if(targetPosition == 3){
+                //robot.redTurnCenter.execute();
+                 robot.shoulder.setTargetPosition(-135);
+                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
+
+                 }
+            else if(targetPosition == 4){
 
         }
+        //Closes Claw Slightly to push block forward
+        //Test Code - Did not work when tested
+        robot.claw.setPosition(0.3);
+            sleep(300);
+            //opens claw again
+        robot.claw.setPosition(0.57);
+        sleep(100);
+        robot.moveMultipleServo(robot.wrist, robot.elbow, .13, .7, 500, 900);
+
     }
 
     //Looks for VuMark and positions arm accordingly. Returns int based on what it saw for debugging purposes
