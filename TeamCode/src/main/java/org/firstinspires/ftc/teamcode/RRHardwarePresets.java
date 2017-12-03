@@ -105,7 +105,7 @@ public class RRHardwarePresets{
 
     //These are the Positions for red turn left
     public final double REDTURN_WRIST_LEFT = .1400;
-    public final double REDTURN_ELBOW_LEFT = .7378;
+    public final double REDTURN_ELBOW_LEFT = .7230;
     public final int REDTURN_SHOULDER_LEFT = 321;
 
     //These are the postions for the red turn right

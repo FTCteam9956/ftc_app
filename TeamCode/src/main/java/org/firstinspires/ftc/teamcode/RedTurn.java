@@ -138,13 +138,13 @@ public class RedTurn extends LinearOpMode{
             robot.shoulder.setTargetPosition(320);
             robot.shoulder.setPower(0.2);
             sleep(500);
-            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.1655, 0.65, 500, 1000);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.1555, 0.7, 500, 1000);
             //Closes Claw Slightly to push block forward
             //Test Code - Did not work when tested\
             //lower winch
-            robot.winchMotor.setTargetPosition(-600);
+            robot.winchMotor.setTargetPosition(-1000);
             robot.winchMotor.setPower(0.5);
-            sleep(1500);
+            sleep(200);
 
             //Open Claw
             robot.claw.setPosition(0.47);
@@ -155,12 +155,13 @@ public class RedTurn extends LinearOpMode{
             robot.wrist.setPosition(.1600);
             sleep(500);
 
-            robot.winchMotor.setTargetPosition(600);
-            robot.wrist.setPosition(.1400);
-            sleep(500);
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
+            sleep(1000);
 
-            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
-            sleep(10000);
+//            robot.winchMotor.setTargetPosition(600);
+//            sleep(500);
+
+
         } else if (targetPosition == 2) {
 //                 robot.redTurnRight.execute();
 //                     robot.shoulder.setTargetPosition(212);
