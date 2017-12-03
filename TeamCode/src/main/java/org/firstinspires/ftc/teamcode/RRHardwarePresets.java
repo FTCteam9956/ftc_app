@@ -85,8 +85,6 @@ public class RRHardwarePresets{
     //public Position blueTurnCenter = new Position();
     //public Position blueTurnRight = new Position();
 
-
-
     //Claw Constants
     public final double CLAW_CLOSED = 0.00;
     public final double CLAW_OPENED = 0.57;
