@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 //@Disabled
 
 public class TestPose extends LinearOpMode{
-
     //Instantiation of RRHardwarePresets
     RRHardwarePresets robot = new RRHardwarePresets();
 
@@ -18,11 +17,12 @@ public class TestPose extends LinearOpMode{
 
     public void runOpMode(){
         robot.init(hardwareMap);
+        robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         robot.turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         waitForStart();
         while(opModeIsActive()){
-
             if(gamepad1.dpad_right){
                 this.elbowPosition = elbowPosition + 0.01;
                 sleep(50);
@@ -39,7 +39,6 @@ public class TestPose extends LinearOpMode{
                 this.wristPosition = wristPosition - 0.01;
                 sleep(50);
             }
-
             robot.elbow.setPosition(elbowPosition);
             robot.wrist.setPosition(wristPosition);
 
