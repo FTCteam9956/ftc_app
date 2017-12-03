@@ -94,16 +94,14 @@ public class RRHardwarePresets{
     public final double TWIST_UP = 0.562;
     public final double TWIST_DOWN = 0.928;
 
+    public final int WINCH_DOWN = 10;
     //Constants for placing block and autonomous
-    public final double TELBOW_CENTER = 0.66;
-    public final double TWRIST_CENTER = 0.29;
-    public final int TSHOULDER_POSITION_CENTER = 35;
+    public final double TELBOW_CENTER = 0.8;
+    public final double TWRIST_CENTER = 0.6;
     public final double TELBOW_LEFT = 0.73;
     public final double TWRIST_LEFT = 0.29;
-    public final int TSHOULD_POSITION_LEFT = -66;
-    public final double TELBOW_RIGHT = 0.6;
+    public final double TELBOW_RIGHT = 0.64;
     public final double TWRIST_RIGHT = 0.3;
-    public final int TSHOULDER_POSITION_RIGHT = -135;
 
     //These are the Positions for red turn left
     public final double REDTURN_WRIST_LEFT = .1655;
@@ -406,7 +404,7 @@ public class RRHardwarePresets{
             this.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         if(input.equals("RUN_WITHOUT_ENCODER")) {
@@ -432,9 +430,9 @@ public class RRHardwarePresets{
             this.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //this.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //this.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //this.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 

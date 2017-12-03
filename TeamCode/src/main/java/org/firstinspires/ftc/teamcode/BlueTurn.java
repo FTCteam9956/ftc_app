@@ -155,6 +155,35 @@ public class BlueTurn extends LinearOpMode{
             }
         }
     }
+    public int lookForVuMark(VuforiaTrackable rTemplate){
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);
+        int returnValue = -1;
+        if(vuMark != RelicRecoveryVuMark.UNKNOWN){
+            if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
+                telemetry.addData("VuMark is", "Left");
+                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
+                //robot.shoulder.setTargetPosition(0);
+                returnValue = 1;
+            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
+                telemetry.addData("VuMark is", "Right");
+                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
+                //robot.shoulder.setTargetPosition(0);
+                returnValue = 2;
+            }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
+                telemetry.addData("VuMark is", "Center");
+                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+                //robot.shoulder.setTargetPosition(0);
+                returnValue = 3;
+            }
+        }else{
+            telemetry.addData("VuMark", "not visible");
+            //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+            //robot.shoulder.setTargetPosition(0);
+            returnValue = 0;
+        }
+        telemetry.update();
+        return(returnValue);
+    }
     public void knockOffBall(int selection){
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         robot.setRunMode("STOP_AND_RESET_ENCODER");
