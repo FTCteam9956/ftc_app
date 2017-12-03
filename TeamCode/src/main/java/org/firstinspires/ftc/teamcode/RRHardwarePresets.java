@@ -98,8 +98,8 @@ public class RRHardwarePresets{
     //Constants for placing block and autonomous
     public final double TELBOW_CENTER = 0.8;
     public final double TWRIST_CENTER = 0.6;
-    public final double TELBOW_LEFT = 0.73;
-    public final double TWRIST_LEFT = 0.29;
+    public final double TELBOW_LEFT = 0.6;
+    public final double TWRIST_LEFT = 0.6;
     public final double TELBOW_RIGHT = 0.64;
     public final double TWRIST_RIGHT = 0.3;
 
@@ -126,7 +126,7 @@ public class RRHardwarePresets{
     public final double WRIST_RIGHT = 0.4;
 
     public final int DRIVE_OFF_STONE = -800;
-    public final int DRIVE_INTO_STONE = 100;
+    public final int DRIVE_INTO_STONE = 120;
 
     public final int TURRET_FOR_WALL = 560;
     public final int TURRET_FOR_RELIC = -625;

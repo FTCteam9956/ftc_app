@@ -66,6 +66,7 @@ public class RedTurn extends LinearOpMode{
         long initTime = (System.nanoTime()/1000000); //Converting Nanoseconds to Milliseconds.
         long timeOutTime = 3000; //In Milliseconds.
         while(targetPosition == 0){
+            sleep(500);
             targetPosition = lookForVuMark(relicTemplate);//1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
             sleep(1000);
 //            if(((System.nanoTime()/1000000) - initTime) > timeOutTime){
@@ -130,32 +131,30 @@ public class RedTurn extends LinearOpMode{
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
                  if(targetPosition == 1){
                 robot.redTurnLeft.execute();
-                 robot.shoulder.setTargetPosition(315);
+                 robot.shoulder.setTargetPosition(280);
                  robot.shoulder.setPower(0.1);
-                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_LEFT, robot.REDTURN_ELBOW_LEFT, 500, 900);
-  //                robot.shoulder.setTargetPosition(280);
-//                robot.shoulder.setPower(0.1);
-//                robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER 0.6, robot.REDTURN_ELBOW_CENTER 0.6, 500, 1000);
-//                sleep(2000);
-//                robot.shoulder.setTargetPosition(300);
-//                robot.shoulder.setPower(0.1);
+                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_LEFT, robot.REDTURN_ELBOW_LEFT, 500, 1000);
+                 sleep(2000);
+                 robot.shoulder.setTargetPosition(300);
+                 robot.shoulder.setPower(0.1);
             }
             else if(targetPosition == 2){
-                //robot.redTurnRight.execute()
-                 robot.shoulder.setTargetPosition(265);
-                 robot.shoulder.setPower(0.1);
-                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_RIGHT, robot.REDTURN_ELBOW_RIGHT, 500, 1000);
+//                 robot.redTurnRight.execute();
+//                     robot.shoulder.setTargetPosition(212);
+//                     robot.shoulder.setPower(0.1);
+//                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER 0.6, robot.REDTURN_ELBOW_CENTER 0.8, 500, 1000);
+//                     sleep(2000);
+//                     robot.shoulder.setTargetPosition(330);
+//                     robot.shoulder.setPower(0.1);
                  }
             else if(targetPosition == 3){
-                //robot.redTurnCenter.execute();
-                 robot.shoulder.setTargetPosition(325);
-                 robot.shoulder.setPower(0.1);
-                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
-                 sleep(2000);
-                 robot.shoulder.setTargetPosition(350);
-                 robot.shoulder.setPower(0.1);
-                 //sleep(2000);
-
+                     robot.shoulder.setTargetPosition(230);
+                     robot.shoulder.setPower(0.1);
+                     sleep(500);
+                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
+                     sleep(2000);
+                     robot.shoulder.setTargetPosition(330);
+                     robot.shoulder.setPower(0.1);
                  }
             else if(targetPosition == 4){
                      robot.shoulder.setTargetPosition(212);
@@ -168,8 +167,8 @@ public class RedTurn extends LinearOpMode{
         //Closes Claw Slightly to push block forward
         //Test Code - Did not work when tested\
         //lower winch
-        robot.winchMotor.setTargetPosition(10);
-        robot.shoulder.setPower(0.1);
+        robot.winchMotor.setTargetPosition(-150);
+        robot.winchMotor.setPower(0.1);
 
         //Open Claw
         robot.claw.setPosition(0.57);
@@ -182,7 +181,7 @@ public class RedTurn extends LinearOpMode{
         robot.winchMotor.setTargetPosition(600);
        sleep(500);
 
-        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
+        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
         sleep(10000);
 //        robot.claw.setPosition(0.5);
 
