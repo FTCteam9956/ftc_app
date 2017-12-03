@@ -66,12 +66,12 @@ public class RedTurn extends LinearOpMode{
         long initTime = (System.nanoTime()/1000000); //Converting Nanoseconds to Milliseconds.
         long timeOutTime = 3000; //In Milliseconds.
         while(targetPosition == 0){
-            sleep(500);
+            sleep(1000);
             targetPosition = lookForVuMark(relicTemplate);//1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
             sleep(1000);
-//            if(((System.nanoTime()/1000000) - initTime) > timeOutTime){
-//                targetPosition = 4;
-//            }
+            if(((System.nanoTime()/1000000) - initTime) > timeOutTime){
+                targetPosition = 4;
+            }
         }
 
         //Lowers jewel arm into JEWEL_ARM_DOWN position with 1000 steps over 2 seconds.
@@ -113,7 +113,7 @@ public class RedTurn extends LinearOpMode{
 
         //Drive backwards off of the balancing stone to place the block.
         robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
-        while(robot.left1.isBusy()){
+        while(robot.anyMotorsBusy() && opModeIsActive()){
             //kicks it out of stuck if it does get stuck
         }
 
@@ -129,14 +129,16 @@ public class RedTurn extends LinearOpMode{
         Position.setRobot(robot);
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-                 if(targetPosition == 1){
-                robot.redTurnLeft.execute();
-                 robot.shoulder.setTargetPosition(280);
+            if(targetPosition == 1){
+                 robot.shoulder.setTargetPosition(260);
                  robot.shoulder.setPower(0.1);
+                 sleep(500);
                  robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_LEFT, robot.REDTURN_ELBOW_LEFT, 500, 1000);
-                 sleep(2000);
-                 robot.shoulder.setTargetPosition(300);
-                 robot.shoulder.setPower(0.1);
+                 sleep(500);
+                 robot.shoulder.setTargetPosition(320);
+                 robot.shoulder.setPower(0.3);
+                 sleep(500);
+                 robot.moveServo(robot.wrist, 0.1655, 500, 1000);
             }
             else if(targetPosition == 2){
 //                 robot.redTurnRight.execute();
@@ -157,28 +159,31 @@ public class RedTurn extends LinearOpMode{
                      robot.shoulder.setPower(0.1);
                  }
             else if(targetPosition == 4){
-                     robot.shoulder.setTargetPosition(212);
-                     robot.shoulder.setPower(0.1);
-                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
-                     sleep(2000);
-                     robot.shoulder.setTargetPosition(330);
-                     robot.shoulder.setPower(0.1);
+//                     robot.shoulder.setTargetPosition(230);
+//                     robot.shoulder.setPower(0.1);
+                     //sleep(500);
+//                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
+//                     sleep(2000);
+//                     robot.shoulder.setTargetPosition(330);
+//                     robot.shoulder.setPower(0.1);
         }
         //Closes Claw Slightly to push block forward
         //Test Code - Did not work when tested\
         //lower winch
-        robot.winchMotor.setTargetPosition(-150);
+        robot.winchMotor.setTargetPosition(-500);
         robot.winchMotor.setPower(0.1);
-
+        sleep(1500);
         //Open Claw
-        robot.claw.setPosition(0.57);
+        robot.claw.setPosition(0.47);
         sleep(300);
 
         robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 40);
         robot.shoulder.setPower(0.4);
+        robot.wrist.setPosition(.1600);
         sleep(500);
 
         robot.winchMotor.setTargetPosition(600);
+        robot.wrist.setPosition(.1400);
        sleep(500);
 
         robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);

@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.lang.InterruptedException;
 
 @Autonomous(name = "RedStraight", group = "Autonomous")
-//@Disabled
+@Disabled
 
 public class RedStraight extends LinearOpMode{
 
