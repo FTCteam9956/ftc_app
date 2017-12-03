@@ -29,7 +29,7 @@ public class RedTurn extends LinearOpMode{
     VuforiaLocalizer vuforia;
 
     public final double DRIVE_LIMITER = 2;
-    public void runOpMode(){
+    public void runOpMode() {
         robot.init(hardwareMap); //Robot moves during init().
 
         robot.setRunMode("STOP_AND_RESET_ENCODER");
@@ -63,13 +63,13 @@ public class RedTurn extends LinearOpMode{
 
         //Finds out what VuMark we are looking at and returns corresponding int.
         int targetPosition = 0;
-        long initTime = (System.nanoTime()/1000000); //Converting Nanoseconds to Milliseconds.
+        long initTime = (System.nanoTime() / 1000000); //Converting Nanoseconds to Milliseconds.
         long timeOutTime = 3000; //In Milliseconds.
-        while(targetPosition == 0){
+        while (targetPosition == 0) {
             sleep(1000);
             targetPosition = lookForVuMark(relicTemplate);//1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
             sleep(1000);
-            if(((System.nanoTime()/1000000) - initTime) > timeOutTime){
+            if (((System.nanoTime() / 1000000) - initTime) > timeOutTime) {
                 targetPosition = 4;
             }
         }
@@ -79,18 +79,18 @@ public class RedTurn extends LinearOpMode{
 
         //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
         int loopBreak = 0;
-        while (loopBreak == 0){
+        while (loopBreak == 0) {
             sleep(1000);
-            if(robot.jewelSensor.red() > 52){
+            if (robot.jewelSensor.red() > 52) {
                 knockOffBall(0);
                 telemetry.addData("Status", "Confirmed Red Ball!");
                 loopBreak = 1;
-            }else if(robot.jewelSensor.red() <= 52){
-                if (robot.jewelSensor.blue() > 20){
+            } else if (robot.jewelSensor.red() <= 52) {
+                if (robot.jewelSensor.blue() > 20) {
                     knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
                     loopBreak = 1;
-                }else{
+                } else {
                     telemetry.addData("Status", "Cannot determine color!");
                     loopBreak = 1;
                 }
@@ -113,7 +113,7 @@ public class RedTurn extends LinearOpMode{
 
         //Drive backwards off of the balancing stone to place the block.
         robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
-        while(robot.anyMotorsBusy() && opModeIsActive()){
+        while (robot.anyMotorsBusy() && opModeIsActive()) {
             //kicks it out of stuck if it does get stuck
         }
 
@@ -129,18 +129,39 @@ public class RedTurn extends LinearOpMode{
         Position.setRobot(robot);
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-            if(targetPosition == 1){
-                 robot.shoulder.setTargetPosition(260);
-                 robot.shoulder.setPower(0.1);
-                 sleep(500);
-                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_LEFT, robot.REDTURN_ELBOW_LEFT, 500, 1000);
-                 sleep(500);
-                 robot.shoulder.setTargetPosition(320);
-                 robot.shoulder.setPower(0.3);
-                 sleep(500);
-                 robot.moveServo(robot.wrist, 0.1655, 500, 1000);
-            }
-            else if(targetPosition == 2){
+        if (targetPosition == 1) {
+            robot.shoulder.setTargetPosition(260);
+            robot.shoulder.setPower(0.1);
+            sleep(500);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_LEFT, robot.REDTURN_ELBOW_LEFT, 500, 1000);
+            sleep(500);
+            robot.shoulder.setTargetPosition(320);
+            robot.shoulder.setPower(0.2);
+            sleep(500);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.1655, 0.65, 500, 1000);
+            //Closes Claw Slightly to push block forward
+            //Test Code - Did not work when tested\
+            //lower winch
+            robot.winchMotor.setTargetPosition(-600);
+            robot.winchMotor.setPower(0.5);
+            sleep(1500);
+
+            //Open Claw
+            robot.claw.setPosition(0.47);
+            sleep(300);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 20);
+            robot.shoulder.setPower(0.4);
+            robot.wrist.setPosition(.1600);
+            sleep(500);
+
+            robot.winchMotor.setTargetPosition(600);
+            robot.wrist.setPosition(.1400);
+            sleep(500);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
+            sleep(10000);
+        } else if (targetPosition == 2) {
 //                 robot.redTurnRight.execute();
 //                     robot.shoulder.setTargetPosition(212);
 //                     robot.shoulder.setPower(0.1);
@@ -148,50 +169,89 @@ public class RedTurn extends LinearOpMode{
 //                     sleep(2000);
 //                     robot.shoulder.setTargetPosition(330);
 //                     robot.shoulder.setPower(0.1);
-                 }
-            else if(targetPosition == 3){
-                     robot.shoulder.setTargetPosition(230);
-                     robot.shoulder.setPower(0.1);
-                     sleep(500);
-                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
-                     sleep(2000);
-                     robot.shoulder.setTargetPosition(330);
-                     robot.shoulder.setPower(0.1);
-                 }
-            else if(targetPosition == 4){
+            //Closes Claw Slightly to push block forward
+            //Test Code - Did not work when tested\
+            //lower winch
+            robot.winchMotor.setTargetPosition(-600);
+            robot.winchMotor.setPower(0.5);
+            sleep(1500);
+
+            //Open Claw
+            robot.claw.setPosition(0.47);
+            sleep(300);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 20);
+            robot.shoulder.setPower(0.4);
+            robot.wrist.setPosition(.1600);
+            sleep(500);
+
+            robot.winchMotor.setTargetPosition(600);
+            robot.wrist.setPosition(.1400);
+            sleep(500);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
+            sleep(10000);
+        } else if (targetPosition == 3) {
+            robot.shoulder.setTargetPosition(230);
+            robot.shoulder.setPower(0.1);
+            sleep(500);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
+            sleep(2000);
+            robot.shoulder.setTargetPosition(330);
+            robot.shoulder.setPower(0.1);
+            //Closes Claw Slightly to push block forward
+            //Test Code - Did not work when tested\
+            //lower winch
+            robot.winchMotor.setTargetPosition(-600);
+            robot.winchMotor.setPower(0.5);
+            sleep(1500);
+
+            //Open Claw
+            robot.claw.setPosition(0.47);
+            sleep(300);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 20);
+            robot.shoulder.setPower(0.4);
+            robot.wrist.setPosition(.1600);
+            sleep(500);
+
+            robot.winchMotor.setTargetPosition(600);
+            robot.wrist.setPosition(.1400);
+            sleep(500);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
+            sleep(10000);
+        } else if (targetPosition == 4) {
 //                     robot.shoulder.setTargetPosition(230);
 //                     robot.shoulder.setPower(0.1);
-                     //sleep(500);
+            //sleep(500);
 //                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
 //                     sleep(2000);
 //                     robot.shoulder.setTargetPosition(330);
 //                     robot.shoulder.setPower(0.1);
+            //Closes Claw Slightly to push block forward
+            //Test Code - Did not work when tested\
+            //lower winch
+            robot.winchMotor.setTargetPosition(-600);
+            robot.winchMotor.setPower(0.5);
+            sleep(1500);
+
+            //Open Claw
+            robot.claw.setPosition(0.47);
+            sleep(300);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 20);
+            robot.shoulder.setPower(0.4);
+            robot.wrist.setPosition(.1600);
+            sleep(500);
+
+            robot.winchMotor.setTargetPosition(600);
+            robot.wrist.setPosition(.1400);
+            sleep(500);
+
+            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
+            sleep(10000);
         }
-        //Closes Claw Slightly to push block forward
-        //Test Code - Did not work when tested\
-        //lower winch
-        robot.winchMotor.setTargetPosition(-500);
-        robot.winchMotor.setPower(0.1);
-        sleep(1500);
-        //Open Claw
-        robot.claw.setPosition(0.47);
-        sleep(300);
-
-        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 40);
-        robot.shoulder.setPower(0.4);
-        robot.wrist.setPosition(.1600);
-        sleep(500);
-
-        robot.winchMotor.setTargetPosition(600);
-        robot.wrist.setPosition(.1400);
-       sleep(500);
-
-        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
-        sleep(10000);
-//        robot.claw.setPosition(0.5);
-
-        //robot.moveMultipleServo(robot.wrist, robot.elbow, .13, .7, 500, 900);
-
     }
 
     //Looks for VuMark and positions arm accordingly. Returns int based on what it saw for debugging purposes
