@@ -125,7 +125,7 @@ public class RRHardwarePresets{
     public final double ELBOW_RIGHT = 0.5;
     public final double WRIST_RIGHT = 0.4;
 
-    public final int DRIVE_OFF_STONE = -800;
+    //public final int DRIVE_OFF_STONE = -800;
     public final int DRIVE_INTO_STONE = 120;
 
     public final int TURRET_FOR_WALL = 560;

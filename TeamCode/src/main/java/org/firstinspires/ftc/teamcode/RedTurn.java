@@ -41,7 +41,6 @@ public class RedTurn extends LinearOpMode{
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AU0kxmH/////AAAAGV4QPVzzlk6Hl969cSL2pmM4F6TuzhWZS/dKbY45MEzS31OYJxLbKewdt1CSFrmpvrpPnIYZyBJt3kFRJQCtEXet0LHd2KtBB5NsDTuBADfgIsQk+7TSWSTFDjSi8SpKaXtAjZPKePwGDaIKf5VK6mRBYaWxqTHpZFBlelejLHxib8qweOFrJjKTsbgsb2pwVNFhDeJabbI5aed8JSI8LxHs0368ezQfnCz3UK9u8pC1DkKgcwdgoJ0OXBKChXB4v2lEnIrQf7ROYcPtVuRJJ5/prBoyfR11pvp69iCA25Cttz9xVsdZ9VliuQJ4UO37Hzhz1dB2SPnxTQQmCJMDoDKqe3wpiCFu8ThQ4pmS05ka";
@@ -111,86 +110,55 @@ public class RedTurn extends LinearOpMode{
         robot.winchMotor.setPower(0.35);
         sleep(100);
 
-        //Drive backwards off of the balancing stone to place the block.
-        robot.driveForwardSetDistance(0.15, robot.DRIVE_OFF_STONE);
-        while(robot.anyMotorsBusy() && opModeIsActive()){
-            //kicks it out of stuck if it does get stuck
+        //Drive backwards off of the balancing stone.
+        robot.driveForwardSetDistance(0.15, -800);
+        while(robot.anyMotorsBusy()){
+            //while motor is busy
         }
 
-        //Drive into the balancing stone to give us a known position
-        robot.driveForwardSetDistance(0.15, robot.DRIVE_INTO_STONE);
-        sleep(500);
+        //Drive to red mid line.
+        robot.driveForwardWithInterrupt(0.15, -1200, "red");
 
-        //Turn Turret X amount degrees
-        this.rotateTurret(0.3, 1835, "CW");
-        sleep(500);
+        //Back up to known position.
+        robot.driveForwardSetDistance(0.15, 400);
 
-
-        Position.setRobot(robot);
+        //Rotate 90 degrees
+        robot.turnDirection(0.15, 500, "CW");
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-            if(targetPosition == 1){
-                 robot.shoulder.setTargetPosition(260);
-                 robot.shoulder.setPower(0.1);
-                 sleep(500);
-                 robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_LEFT, robot.REDTURN_ELBOW_LEFT, 500, 1000);
-                 sleep(500);
-                 robot.shoulder.setTargetPosition(320);
-                 robot.shoulder.setPower(0.3);
-                 sleep(500);
-                 robot.moveServo(robot.wrist, 0.1655, 500, 1000);
-            }
-            else if(targetPosition == 2){
-//                 robot.redTurnRight.execute();
-//                     robot.shoulder.setTargetPosition(212);
-//                     robot.shoulder.setPower(0.1);
-//                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER 0.6, robot.REDTURN_ELBOW_CENTER 0.8, 500, 1000);
-//                     sleep(2000);
-//                     robot.shoulder.setTargetPosition(330);
-//                     robot.shoulder.setPower(0.1);
-                 }
-            else if(targetPosition == 3){
-                     robot.shoulder.setTargetPosition(230);
-                     robot.shoulder.setPower(0.1);
-                     sleep(500);
-                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
-                     sleep(2000);
-                     robot.shoulder.setTargetPosition(330);
-                     robot.shoulder.setPower(0.1);
-                 }
-            else if(targetPosition == 4){
-//                     robot.shoulder.setTargetPosition(230);
-//                     robot.shoulder.setPower(0.1);
-                     //sleep(500);
-//                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
-//                     sleep(2000);
-//                     robot.shoulder.setTargetPosition(330);
-//                     robot.shoulder.setPower(0.1);
+        if(targetPosition == 1){
+
         }
-        //Closes Claw Slightly to push block forward
-        //Test Code - Did not work when tested\
-        //lower winch
+        else if(targetPosition == 2){
+
+        }
+        else if(targetPosition == 3){
+
+        }
+        else if(targetPosition == 4){
+
+        }
+
+        //Lower winch into position to drop
         robot.winchMotor.setTargetPosition(-500);
         robot.winchMotor.setPower(0.1);
-        sleep(1500);
-        //Open Claw
+        sleep(50);
+
+        //Open Claw to drop block
         robot.claw.setPosition(0.47);
-        sleep(300);
+        sleep(50);
 
-        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 40);
-        robot.shoulder.setPower(0.4);
-        robot.wrist.setPosition(.1600);
-        sleep(500);
-
-        robot.winchMotor.setTargetPosition(600);
-        robot.wrist.setPosition(.1400);
-       sleep(500);
-
-        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
-        sleep(10000);
-//        robot.claw.setPosition(0.5);
-
-        //robot.moveMultipleServo(robot.wrist, robot.elbow, .13, .7, 500, 900);
+//        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 40);
+//        robot.shoulder.setPower(0.4);
+//        robot.wrist.setPosition(.1600);
+//        sleep(50);
+//
+//        robot.winchMotor.setTargetPosition(600);
+//        robot.wrist.setPosition(.1400);
+//        sleep(50);
+//
+//        robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
+//        sleep(10000);
 
     }
 
