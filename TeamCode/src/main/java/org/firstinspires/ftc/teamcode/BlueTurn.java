@@ -91,7 +91,7 @@ public class BlueTurn extends LinearOpMode{
                 sleep(500);
 
                 //Drive backwards off of the balancing stone to place the block.
-                robot.driveForwardSetDistance(0.15, -robot.DRIVE_OFF_STONE);
+                //robot.driveForwardSetDistance(0.15, -robot.DRIVE_OFF_STONE);
                 sleep(500);
 
                 //Drive into the balancing stone to give us a known position

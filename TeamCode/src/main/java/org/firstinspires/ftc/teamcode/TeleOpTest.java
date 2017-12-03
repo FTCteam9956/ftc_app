@@ -88,16 +88,15 @@ public class TeleOpTest extends LinearOpMode{
                 robot.turretMotor.setPower(0.99);
             }
 
-
             //ARM POSITION PRESETS
-            if(gamepad2.y){
-                shoulderPosition = 420;
+            //if(gamepad2.y){
+            //    shoulderPosition = 420;
                 //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_UNFOLDED, robot.ELBOW_UNFOLDED, 300, 70);
-            }
-            if(gamepad2.a){
-                shoulderPosition = 0;
+            //}
+            //if(gamepad2.a){
+            //    shoulderPosition = 0;
                 //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 300, 70);
-            }
+            //}
 
             //ARM
             if (gamepad2.right_stick_y < 0.05) {
@@ -105,8 +104,8 @@ public class TeleOpTest extends LinearOpMode{
                 robot.shoulder.setTargetPosition(shoulderPosition);
                 robot.shoulder.setPower(0.1);
 
-                robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
-                robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (90 * 0.00388));
+                //robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
+                //robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (90 * 0.00388));
 
             }else if(gamepad2.right_stick_y > 0.05){
                 shoulderPosition = shoulderPosition - controllerToPosition(gamepad2.right_stick_y);
@@ -121,6 +120,8 @@ public class TeleOpTest extends LinearOpMode{
                 robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
                 robot.wrist.setPosition((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388);
             }
+
+
 
             //ELBOW
             if (Math.abs(gamepad2.right_stick_x) >= 0.05) {

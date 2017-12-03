@@ -111,19 +111,23 @@ public class RedTurn extends LinearOpMode{
         sleep(100);
 
         //Drive backwards off of the balancing stone.
-        robot.driveForwardSetDistance(0.15, -800);
+        robot.driveForwardSetDistance(0.15, -825);
         while(robot.anyMotorsBusy()){
             //while motor is busy
         }
 
         //Drive to red mid line.
-        robot.driveForwardWithInterrupt(0.15, -1200, "red");
+        //robot.driveForwardWithInterrupt(0.15, -1200, "red");
 
         //Back up to known position.
-        robot.driveForwardSetDistance(0.15, 400);
+        //robot.driveForwardSetDistance(0.15, 400);
 
         //Rotate 90 degrees
-        robot.turnDirection(0.15, 500, "CW");
+        //350 //375
+        robot.turnDirection(0.15, 385, "CW");
+
+        //Drive straight
+        //robot.driveForwardSetDistance(0.15, -200);
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
         if(targetPosition == 1){
