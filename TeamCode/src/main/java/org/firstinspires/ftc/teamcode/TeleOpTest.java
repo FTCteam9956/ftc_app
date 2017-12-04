@@ -50,6 +50,9 @@ public class TeleOpTest extends LinearOpMode{
         robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
+        robot.winchMotor.setTargetPosition(400);
+        robot.winchMotor.setPower(0.3);
+        sleep(500);
         robot.initServoPositions(); //This is where our motors move into their initial positions.
 
         //this.shoulderPosition = robot.shoulder.getCurrentPosition(); //Sets the static values shoulderPosition
