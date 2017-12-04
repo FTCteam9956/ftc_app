@@ -1,5 +1,5 @@
 //RRHardwarePresets.java
-//
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -67,7 +67,6 @@ public class RRHardwarePresets{
     public final double WRIST_UNFOLDED = 0.7;
     public final double WRIST_FOLDED = 0.0;
 
-
     //Positions
     public Position redTurnLeft = new Position(-66, 0.73, 0.29);
     public Position redTurnCenter = new Position(-135, 0.66, 0.29);
@@ -84,8 +83,6 @@ public class RRHardwarePresets{
     //public Position blueTurnLeft = new Position();
     //public Position blueTurnCenter = new Position();
     //public Position blueTurnRight = new Position();
-
-
 
     //Claw Constants
     public final double CLAW_CLOSED = 0.00;

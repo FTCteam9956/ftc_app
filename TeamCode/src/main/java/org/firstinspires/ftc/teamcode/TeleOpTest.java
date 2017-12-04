@@ -43,13 +43,17 @@ public class TeleOpTest extends LinearOpMode{
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.setRunMode("STOP_AND_RESET_ENCODER"); //Resets all encoders.
+        robot.setRunMode("STOP_AND_RESET_ENCODER");//Resets all encoders.
+        robot.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setRunMode("RUN_USING_ENCODER");
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Changes shoulder motor to RUN_TO_POSITION mode.
         robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
+
         robot.winchMotor.setTargetPosition(400);
         robot.winchMotor.setPower(0.3);
         sleep(500);
@@ -62,32 +66,32 @@ public class TeleOpTest extends LinearOpMode{
             //---GAMEPAD 1---
 
             //TANK DRIVE
-            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /4));
-            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /4));
-            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /4));
-            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /4));
+            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /3));
+            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /3));
+            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /3));
+            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /3));
 
             //---GAMEPAD 2---
 
             //WINCH
             if (gamepad2.dpad_up) {
                 robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() + 30);
-                robot.winchMotor.setPower(0.35);
+                robot.winchMotor.setPower(0.4);
             } else if (gamepad2.dpad_down) {
                 robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() - 30);
-                robot.winchMotor.setPower(0.35);
+                robot.winchMotor.setPower(0.4);
             } else {
                 robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition());
                 robot.winchMotor.setPower(0.99);
             }
 
             //TURRET
-            if (gamepad2.left_stick_x > 0.05) {
-                robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() + 10);
-                robot.turretMotor.setPower(0.4);
-            } else if (gamepad2.left_stick_x < -0.05){
-                robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() - 10);
-                robot.turretMotor.setPower(0.4);
+            if (gamepad2.left_stick_x < 0.05) {
+                robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() + 20);
+                robot.turretMotor.setPower(0.6);
+            } else if (gamepad2.left_stick_x > -0.05){
+                robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() - 20);
+                robot.turretMotor.setPower(0.6);
             } else {
                 robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition());
                 robot.turretMotor.setPower(0.99);
