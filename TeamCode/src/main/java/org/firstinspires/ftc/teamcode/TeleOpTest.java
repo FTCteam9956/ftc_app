@@ -39,8 +39,13 @@ public class TeleOpTest extends LinearOpMode{
     public static int clawMode = 0;
     public static int clawTwistMode = 0;
     public static int shoulderPosition = 0;
+    public static int wristMode = 0;
     public static int wristAngle = 90;
+    public static int wristVar = 0;
 
+//    public int shoulderPosition (int value) {
+//        return Math.max(1000, Math.min(value, 0));
+//    }
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
@@ -74,10 +79,10 @@ public class TeleOpTest extends LinearOpMode{
 
             //WINCH
             if (gamepad2.dpad_up) {
-                robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() + 30);
+                robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() + 15);
                 robot.winchMotor.setPower(0.35);
             } else if (gamepad2.dpad_down) {
-                robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() - 30);
+                robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition() - 15);
                 robot.winchMotor.setPower(0.35);
             } else {
                 robot.winchMotor.setTargetPosition(robot.winchMotor.getTargetPosition());
@@ -111,23 +116,64 @@ public class TeleOpTest extends LinearOpMode{
             }
 
             //ARM
-                if (gamepad2.right_stick_y < 0.05) {
-                    shoulderPosition = shoulderPosition + controllerToPosition(gamepad2.right_stick_y);
-                    robot.shoulder.setTargetPosition(shoulderPosition);
-                    robot.shoulder.setPower(0.1);
-                    robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
-                    robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (wristAngle * 0.00388));
-                }else if(gamepad2.right_stick_y > 0.05){
-                    shoulderPosition = shoulderPosition - controllerToPosition(gamepad2.right_stick_y);
-                    robot.shoulder.setTargetPosition(shoulderPosition);
-                    robot.shoulder.setPower(0.1);
-                    robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
-                    robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (wristAngle * 0.00388));
-                } else {
-                    robot.shoulder.setTargetPosition(shoulderPosition);
-                    robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
-                    robot.wrist.setPosition((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388);
+            if(gamepad2.right_trigger > 0.5){
+                if (wristMode == 0){
+                    wristMode = 1;
+                    sleep(200);
                 }
+                else if (wristMode == 1){
+                    wristMode = 0;
+                    wristVar = 90;
+                    sleep(200);
+                }
+                else {
+
+                }
+            }
+
+            if(wristMode == 0) {
+                wristAngle = wristVar;
+                if (gamepad2.x){
+                    wristVar += 2;
+                }
+                if (gamepad2.b){
+                    wristVar += -2;
+                }
+            }
+            if(wristMode == 1){
+                wristAngle = 90;
+
+            }
+
+            if(shoulderPosition < 0){
+                shoulderPosition = 0;
+            }
+            if (wristVar < 0){
+                wristVar = 0;
+            }
+            if (wristAngle < 0){
+                wristAngle = 0;
+            }
+
+            if (gamepad2.right_stick_y < 0.05) {
+                shoulderPosition = shoulderPosition + controllerToPosition(gamepad2.right_stick_y);
+                robot.shoulder.setTargetPosition(shoulderPosition);
+                robot.shoulder.setPower(0.2);
+                robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
+                robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (wristAngle * 0.00388));
+            } else if (gamepad2.right_stick_y > 0.05) {
+                shoulderPosition = shoulderPosition - controllerToPosition(gamepad2.right_stick_y);
+                robot.shoulder.setTargetPosition(shoulderPosition);
+                robot.shoulder.setPower(0.2);
+                robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
+                robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (wristAngle * 0.00388));
+            } else {
+                robot.shoulder.setTargetPosition(shoulderPosition);
+                robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
+                robot.wrist.setPosition((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388);
+            }
+
+
 
 
 //                robot.shoulder.setTargetPosition(robot.shoulder.getTargetPosition());
@@ -166,32 +212,32 @@ public class TeleOpTest extends LinearOpMode{
             }
 
             //WRIST
-            if (Math.abs(gamepad2.left_stick_x) >= 0.05) {
-                robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_x * 0.01));
-            } else {
-                robot.wrist.setPosition(robot.wrist.getPosition());
-            }
+//            if (Math.abs(gamepad2.left_stick_x) >= 0.05) {
+//                robot.wrist.setPosition(robot.wrist.getPosition() + (-gamepad2.left_stick_x * 0.01));
+//            } else {
+//                robot.wrist.setPosition(robot.wrist.getPosition());
+//            }
 
             //CLAW
             if (gamepad2.right_bumper && clawMode == 0) {
                 robot.claw.setPosition(robot.CLAW_OPENED);
                 this.clawMode = 1;
-                sleep(500);
+                sleep(300);
             }
             if (gamepad2.right_bumper && clawMode == 1) {
                 robot.claw.setPosition(robot.CLAW_MID);
                 this.clawMode = 2;
-                sleep(500);
+                sleep(300);
             }
             if (gamepad2.right_bumper && clawMode == 2) {
                 robot.claw.setPosition(robot.CLAW_CLOSED);
                 this.clawMode = 3;
-                sleep(500);
+                sleep(300);
             }
             if (gamepad2.right_bumper && clawMode == 3) {
                 robot.claw.setPosition(robot.CLAW_MID);
                 this.clawMode = 0;
-                sleep(500);
+                sleep(300);
             }
 
             //CLAW TWIST
@@ -207,45 +253,49 @@ public class TeleOpTest extends LinearOpMode{
             }
 
             //---TELEMETRY---
-            telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
-            telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
-            telemetry.addData("right1 encoder", robot.right1.getCurrentPosition());
-            telemetry.addData("right2 encoder", robot.right2.getCurrentPosition());
-            //telemetry.addData("Left1 Power", robot.left1.getPower());
-            //telemetry.addData("Left2 Power", robot.left2.getPower());
-            //telemetry.addData("Right1 Power", robot.right1.getPower());
-            //telemetry.addData("Right2 Power", robot.right2.getPower());
-            telemetry.addData("Claw Position", robot.claw.getPosition());
-            telemetry.addData("JewelArm Position", robot.jewelArm.getPosition());
-            telemetry.addData("Left Stick", gamepad1.left_stick_y);
-            telemetry.addData("Right Stick", gamepad1.right_stick_y);
-            telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
-            telemetry.addData("Floor Sensor", robot.floorSensor.argb());
-            telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
-            telemetry.addData("Elbow Position", robot.elbow.getPosition());
-            telemetry.addData("Wrist Position", robot.wrist.getPosition());
-            telemetry.addData("ShoulderPosition", robot.shoulder.getCurrentPosition());
-            telemetry.addData("ShoulderPower", robot.shoulder.getPower());
-            telemetry.addData("ShoulderBehavior", robot.shoulder.getZeroPowerBehavior());
-            telemetry.addData("WinchShoulder", robot.winchMotor.getCurrentPosition());
+//            telemetry.addData("left1 encoder", robot.left1.getCurrentPosition());
+//            telemetry.addData("left2 encoder", robot.left2.getCurrentPosition());
+//            telemetry.addData("right1 encoder", robot.right1.getCurrentPosition());
+//            telemetry.addData("right2 encoder", robot.right2.getCurrentPosition());
+//            //telemetry.addData("Left1 Power", robot.left1.getPower());
+//            //telemetry.addData("Left2 Power", robot.left2.getPower());
+//            //telemetry.addData("Right1 Power", robot.right1.getPower());
+//            //telemetry.addData("Right2 Power", robot.right2.getPower());
+//            telemetry.addData("Claw Position", robot.claw.getPosition());
+//            telemetry.addData("JewelArm Position", robot.jewelArm.getPosition());
+//            telemetry.addData("Left Stick", gamepad1.left_stick_y);
+//            telemetry.addData("Right Stick", gamepad1.right_stick_y);
+//            telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
+//            telemetry.addData("Floor Sensor", robot.floorSensor.argb());
+//            telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
+//            telemetry.addData("Elbow Position", robot.elbow.getPosition());
+//            telemetry.addData("Wrist Position", robot.wrist.getPosition());
+//            telemetry.addData("ShoulderPosition", robot.shoulder.getCurrentPosition());
+//            telemetry.addData("ShoulderPower", robot.shoulder.getPower());
+//            telemetry.addData("ShoulderBehavior", robot.shoulder.getZeroPowerBehavior());
+//            telemetry.addData("WinchShoulder", robot.winchMotor.getCurrentPosition());
             telemetry.addData("ShoulderPosition", shoulderPosition);
             telemetry.addData("Shoulder Encoder", robot.shoulder.getCurrentPosition());
             telemetry.addData("Stick", gamepad2.right_stick_y);
+            telemetry.addData("WristMode", wristMode);
+            telemetry.addData("WristAngle", wristAngle);
+            telemetry.addData("WristVar",wristVar);
             telemetry.update();
             idle();
 
         }//WhileOpModeIsActive() End.
     }
 
+
     //---TELEOP ONLY METHODS BELOW---
 
     public static int controllerToPosition(float stickValue){
         float returnValue = 0;
         if(stickValue > 0){
-            returnValue = stickValue * 8;
+            returnValue = stickValue * 2;
         }
         if(stickValue < 0){
-            returnValue = stickValue * -8;
+            returnValue = stickValue * -2;
         }
         return((int)returnValue);
     }
