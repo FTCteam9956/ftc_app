@@ -39,6 +39,7 @@ public class TeleOpTest extends LinearOpMode{
     public static int clawMode = 0;
     public static int clawTwistMode = 0;
     public static int shoulderPosition = 0;
+    public static int wristAngle = 90;
 
     @Override
     public void runOpMode() {
@@ -47,7 +48,7 @@ public class TeleOpTest extends LinearOpMode{
         robot.setRunMode("RUN_USING_ENCODER");
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION); //Changes shoulder motor to RUN_TO_POSITION mode.
-        robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
         robot.winchMotor.setTargetPosition(400);
@@ -61,11 +62,13 @@ public class TeleOpTest extends LinearOpMode{
 
             //---GAMEPAD 1---
 
+            robot.jewelArm.setPosition(0);
+
             //TANK DRIVE
-            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /4));
-            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /4));
-            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /4));
-            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /4));
+            robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /2));
+            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /2));
+            robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /2));
+            robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /2));
 
             //---GAMEPAD 2---
 
@@ -83,14 +86,18 @@ public class TeleOpTest extends LinearOpMode{
 
             //TURRET
             if (gamepad2.left_stick_x > 0.05) {
-                robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() + 10);
-                robot.turretMotor.setPower(0.4);
+                robot.turretMotor.setPower(gamepad2.left_stick_x * 0.15);
+                //robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() + 10);
+                //robot.turretMotor.setPower(0.4);
             } else if (gamepad2.left_stick_x < -0.05){
-                robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() - 10);
-                robot.turretMotor.setPower(0.4);
+                robot.turretMotor.setPower(gamepad2.left_stick_x * 0.15);
+
+                //robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() - 10);
+                //robot.turretMotor.setPower(0.4);
             } else {
-                robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition());
-                robot.turretMotor.setPower(0.99);
+                robot.turretMotor.setPower(0.0);
+                //robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition());
+                //robot.turretMotor.setPower(0.99);
             }
 
             //ARM POSITION PRESETS
@@ -103,29 +110,24 @@ public class TeleOpTest extends LinearOpMode{
                 //robot.moveMultipleServo(robot.wrist, robot.elbow, robot.WRIST_FOLDED, robot.ELBOW_FOLDED, 300, 70);
             }
 
-
             //ARM
-            if (gamepad2.right_stick_y < 0.05) {
-                shoulderPosition = shoulderPosition + controllerToPosition(gamepad2.right_stick_y);
-                robot.shoulder.setTargetPosition(shoulderPosition);
-                robot.shoulder.setPower(0.1);
-
-                robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
-                robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (90 * 0.00388));
-
-            }else if(gamepad2.right_stick_y > 0.05){
-                shoulderPosition = shoulderPosition - controllerToPosition(gamepad2.right_stick_y);
-                robot.shoulder.setTargetPosition(shoulderPosition);
-                robot.shoulder.setPower(0.1);
-
-                robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
-                robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (90 * 0.00388));
-
-            } else {
-                robot.shoulder.setTargetPosition(shoulderPosition);
-                robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
-                robot.wrist.setPosition((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388);
-            }
+                if (gamepad2.right_stick_y < 0.05) {
+                    shoulderPosition = shoulderPosition + controllerToPosition(gamepad2.right_stick_y);
+                    robot.shoulder.setTargetPosition(shoulderPosition);
+                    robot.shoulder.setPower(0.1);
+                    robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
+                    robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (wristAngle * 0.00388));
+                }else if(gamepad2.right_stick_y > 0.05){
+                    shoulderPosition = shoulderPosition - controllerToPosition(gamepad2.right_stick_y);
+                    robot.shoulder.setTargetPosition(shoulderPosition);
+                    robot.shoulder.setPower(0.1);
+                    robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
+                    robot.wrist.setPosition(((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) + (wristAngle * 0.00388));
+                } else {
+                    robot.shoulder.setTargetPosition(shoulderPosition);
+                    robot.elbow.setPosition(1 - ((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388) * 2);
+                    robot.wrist.setPosition((robot.shoulder.getCurrentPosition() / 4.6) * 0.00388);
+                }
 
 
 //                robot.shoulder.setTargetPosition(robot.shoulder.getTargetPosition());
@@ -258,6 +260,6 @@ public class TeleOpTest extends LinearOpMode{
         }else{
             returnValue = (stickInput);
         }
-        return(returnValue/3);
+        return(returnValue);
     }
 }

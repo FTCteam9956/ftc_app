@@ -57,6 +57,8 @@ public class RRHardwarePresets{
     double rY; //Y value extractecd from the rotational componenets of the target relative to the robot
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
+
+
     // Jewel Arm Constants
     public final double JEWEL_ARM_UP = 0.01;
     public final double JEWEL_ARM_DOWN = 0.85;
@@ -400,7 +402,7 @@ public class RRHardwarePresets{
             this.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
@@ -409,7 +411,7 @@ public class RRHardwarePresets{
             this.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            //this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //this.shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -418,7 +420,7 @@ public class RRHardwarePresets{
             this.left2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //this.shoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }

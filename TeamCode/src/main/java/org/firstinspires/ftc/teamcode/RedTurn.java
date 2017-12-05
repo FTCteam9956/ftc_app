@@ -37,7 +37,7 @@ public class RedTurn extends LinearOpMode{
         robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setRunMode("RUN_USING_ENCODER");
-        robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
