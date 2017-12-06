@@ -90,12 +90,12 @@ public class TeleOpTest extends LinearOpMode{
             }
 
             //TURRET
-            if (gamepad2.left_stick_x > 0.05) {
-                robot.turretMotor.setPower(gamepad2.left_stick_x * 0.15);
+            if (gamepad2.left_stick_x < 0.05) {
+                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.15);
                 //robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() + 10);
                 //robot.turretMotor.setPower(0.4);
-            } else if (gamepad2.left_stick_x < -0.05){
-                robot.turretMotor.setPower(gamepad2.left_stick_x * 0.15);
+            } else if (gamepad2.left_stick_x > -0.05){
+                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.15);
 
                 //robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() - 10);
                 //robot.turretMotor.setPower(0.4);
@@ -120,42 +120,31 @@ public class TeleOpTest extends LinearOpMode{
                 if (wristMode == 0){
                     wristMode = 1;
                     sleep(200);
-                }
-                else if (wristMode == 1){
+                }else if (wristMode == 1){
                     wristMode = 0;
                     wristVar = 90;
                     sleep(200);
-                }
-                else {
-
+                } else {
                 }
             }
-
             if(wristMode == 0) {
                 wristAngle = wristVar;
                 if (gamepad2.x){
                     wristVar += 2;
-                }
-                if (gamepad2.b){
+                }if (gamepad2.b){
                     wristVar += -2;
                 }
             }
             if(wristMode == 1){
                 wristAngle = 90;
 
-            }
-
-            if(shoulderPosition < 0){
+            }if(shoulderPosition < 0){
                 shoulderPosition = 0;
-            }
-            if (wristVar < 0){
+            }if (wristVar < 0){
                 wristVar = 0;
-            }
-            if (wristAngle < 0){
+            }if (wristAngle < 0){
                 wristAngle = 0;
-            }
-
-            if (gamepad2.right_stick_y < 0.05) {
+            }if (gamepad2.right_stick_y < 0.05) {
                 shoulderPosition = shoulderPosition + controllerToPosition(gamepad2.right_stick_y);
                 robot.shoulder.setTargetPosition(shoulderPosition);
                 robot.shoulder.setPower(0.2);

@@ -136,16 +136,13 @@ public class BlueTurn extends LinearOpMode{
             robot.shoulder.setPower(0.1);
             sleep(5000);
             robot.moveMultipleServo(robot.wrist, robot.elbow, 0.1, 0.9, 500, 1000);
-
             //lower winch
             robot.winchMotor.setTargetPosition(-1000);
             robot.winchMotor.setPower(0.2);
             sleep(5000);
-
             //Open Claw
             robot.claw.setPosition(0.47);
             sleep(5000);
-
             robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
             sleep(5000);
 
@@ -153,30 +150,24 @@ public class BlueTurn extends LinearOpMode{
             robot.shoulder.setTargetPosition(0);
             robot.shoulder.setPower(0.1);
             sleep(1000);
-
             //Move Turret to Position
             robot.turretMotor.setTargetPosition(-250);
             robot.turretMotor.setPower(0.1);
             sleep(1000);
-
             //Move Shoulder
             robot.shoulder.setTargetPosition(120);
             robot.shoulder.setPower(0.1);
             sleep(1000);
-
             //Move Arm
             robot.moveMultipleServo(robot.wrist, robot.elbow, 0.15, 0.85, 500, 1000);
             sleep(1000);
-
             //Lower Winch
             robot.winchMotor.setTargetPosition(-1250);
             robot.winchMotor.setPower(0.3);
             sleep(4000);
-
             //Open Claw
             robot.claw.setPosition(0.47);
             sleep(1000);
-
             //Move Shoulder Away
             robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
             sleep(1000);
@@ -185,76 +176,45 @@ public class BlueTurn extends LinearOpMode{
             robot.shoulder.setTargetPosition(0);
             robot.shoulder.setPower(0.1);
             sleep(1000);
-
             robot.turretMotor.setTargetPosition(-150);
             robot.turretMotor.setPower(0.1);
             sleep(1000);
-
             robot.shoulder.setTargetPosition(120);
             robot.shoulder.setPower(0.1);
             sleep(1000);
-
             robot.moveMultipleServo(robot.wrist, robot.elbow, 0.2, 0.9, 500, 1000);
             sleep(1000);
-
             //lower winch
             robot.winchMotor.setTargetPosition(-1250);
             robot.winchMotor.setPower(0.3);
             sleep(4000);
-
             //Open Claw
             robot.claw.setPosition(0.47);
             sleep(1000);
-
             robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
             sleep(1000);
 
         } else if (targetPosition == 4) {
-            robot.shoulder.setTargetPosition(130);
+            robot.shoulder.setTargetPosition(0);
             robot.shoulder.setPower(0.1);
-            sleep(5000);
-            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.1, 0.9, 500, 1000);
-
+            sleep(1000);
+            robot.turretMotor.setTargetPosition(-150);
+            robot.turretMotor.setPower(0.1);
+            sleep(1000);
+            robot.shoulder.setTargetPosition(120);
+            robot.shoulder.setPower(0.1);
+            sleep(1000);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.2, 0.9, 500, 1000);
+            sleep(1000);
             //lower winch
-            robot.winchMotor.setTargetPosition(-1000);
-            robot.winchMotor.setPower(0.2);
-            sleep(5000);
-
+            robot.winchMotor.setTargetPosition(-1250);
+            robot.winchMotor.setPower(0.3);
+            sleep(4000);
             //Open Claw
             robot.claw.setPosition(0.47);
-            sleep(5000);
-
+            sleep(1000);
             robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
-            sleep(5000);
-//                     robot.shoulder.setTargetPosition(230);
-//                     robot.shoulder.setPower(0.1);
-            //sleep(500);
-//                     robot.moveMultipleServo(robot.wrist, robot.elbow, robot.REDTURN_WRIST_CENTER, robot.REDTURN_ELBOW_CENTER, 500, 1000);
-//                     sleep(2000);
-//                     robot.shoulder.setTargetPosition(330);
-//                     robot.shoulder.setPower(0.1);
-            //Closes Claw Slightly to push block forward
-            //Test Code - Did not work when tested\
-            //lower winch
-//            robot.winchMotor.setTargetPosition(-600);
-//            robot.winchMotor.setPower(0.5);
-//            sleep(1500);
-//
-//            //Open Claw
-//            robot.claw.setPosition(0.47);
-//            sleep(300);
-//
-//            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() + 20);
-//            robot.shoulder.setPower(0.4);
-//            robot.wrist.setPosition(.1600);
-//            sleep(500);
-//
-//            robot.winchMotor.setTargetPosition(600);
-//            robot.wrist.setPosition(.1400);
-//            sleep(500);
-//
-//            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 50);
-//            sleep(10000);
+            sleep(1000);
         }
     }
 

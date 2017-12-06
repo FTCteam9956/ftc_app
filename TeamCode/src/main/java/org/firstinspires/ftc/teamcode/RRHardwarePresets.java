@@ -402,7 +402,7 @@ public class RRHardwarePresets{
             this.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //this.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
@@ -411,7 +411,7 @@ public class RRHardwarePresets{
             this.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            //this.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //this.shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -420,7 +420,7 @@ public class RRHardwarePresets{
             this.left2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //this.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //this.winchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //this.shoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
