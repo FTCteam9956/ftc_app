@@ -27,19 +27,20 @@ public class TestPose extends LinearOpMode{
         robot.turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         waitForStart();
         while(opModeIsActive()){
-            if(gamepad1.dpad_right){
+            if(elbowPosition < 0){
+                elbowPosition = 0;
+            }if(wristPosition < 0){
+                wristPosition = 0;
+            }if(gamepad1.dpad_right){
                 this.elbowPosition = elbowPosition + 0.01;
                 sleep(50);
-            }
-            if(gamepad1.dpad_left){
+            }if(gamepad1.dpad_left){
                 this.elbowPosition = elbowPosition - 0.01;
                 sleep(50);
-            }
-            if(gamepad1.dpad_up){
+            }if(gamepad1.dpad_up){
                 this.wristPosition = wristPosition + 0.01;
                 sleep(50);
-            }
-            if(gamepad1.dpad_down){
+            }if(gamepad1.dpad_down){
                 this.wristPosition = wristPosition - 0.01;
                 sleep(50);
             }

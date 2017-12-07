@@ -91,11 +91,11 @@ public class TeleOpTest extends LinearOpMode{
 
             //TURRET
             if (gamepad2.left_stick_x < 0.05) {
-                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.15);
+                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.2);
                 //robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() + 10);
                 //robot.turretMotor.setPower(0.4);
             } else if (gamepad2.left_stick_x > -0.05){
-                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.15);
+                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.2);
 
                 //robot.turretMotor.setTargetPosition(robot.turretMotor.getTargetPosition() - 10);
                 //robot.turretMotor.setPower(0.4);
@@ -254,7 +254,7 @@ public class TeleOpTest extends LinearOpMode{
 //            telemetry.addData("JewelArm Position", robot.jewelArm.getPosition());
 //            telemetry.addData("Left Stick", gamepad1.left_stick_y);
 //            telemetry.addData("Right Stick", gamepad1.right_stick_y);
-//            telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
+            telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
 //            telemetry.addData("Floor Sensor", robot.floorSensor.argb());
 //            telemetry.addData("Jewel Sensor", robot.jewelSensor.argb());
 //            telemetry.addData("Elbow Position", robot.elbow.getPosition());
@@ -267,8 +267,8 @@ public class TeleOpTest extends LinearOpMode{
             telemetry.addData("Shoulder Encoder", robot.shoulder.getCurrentPosition());
             telemetry.addData("Stick", gamepad2.right_stick_y);
             telemetry.addData("WristMode", wristMode);
-            telemetry.addData("WristAngle", wristAngle);
-            telemetry.addData("WristVar",wristVar);
+            //telemetry.addData("WristAngle", wristAngle);
+            //telemetry.addData("WristVar",wristVar);
             telemetry.update();
             idle();
 

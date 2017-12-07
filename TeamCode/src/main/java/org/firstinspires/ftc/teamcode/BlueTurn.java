@@ -135,7 +135,7 @@ public class BlueTurn extends LinearOpMode{
             robot.shoulder.setTargetPosition(130);
             robot.shoulder.setPower(0.1);
             sleep(5000);
-            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.1, 0.9, 500, 1000);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.8, 0.9, 500, 1000);
             //lower winch
             robot.winchMotor.setTargetPosition(-1000);
             robot.winchMotor.setPower(0.2);
@@ -159,7 +159,7 @@ public class BlueTurn extends LinearOpMode{
             robot.shoulder.setPower(0.1);
             sleep(1000);
             //Move Arm
-            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.15, 0.85, 500, 1000);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.15, 0.88, 500, 1000);
             sleep(1000);
             //Lower Winch
             robot.winchMotor.setTargetPosition(-1250);
