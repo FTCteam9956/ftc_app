@@ -156,11 +156,14 @@ public class BlueTurn extends LinearOpMode{
 
             //Open Claw
             robot.claw.setPosition(0.47);
-            sleep(1000);
+            sleep(500);
 
             //Move the shouler away from the wall
             robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
-            sleep(1000);
+            sleep(500);
+
+            robot.wrist.setPosition(0.3);
+            sleep(500);
 
         } else if(targetPosition == 2){//If the reading is RIGHT
             //Set the shouler to it's home position
