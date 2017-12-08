@@ -26,7 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.lang.InterruptedException;
 
 @Autonomous(name = "RedStraight", group = "Autonomous")
-@Disabled
+
 
 public class RedStraight extends LinearOpMode{
 
@@ -74,11 +74,11 @@ public class RedStraight extends LinearOpMode{
         int targetPosition = 0;
         long initTime = (System.nanoTime() / 1000000); //Converting Nanoseconds to Milliseconds.
         long timeOutTime = 3000; //In Milliseconds.
-        while (targetPosition == 0){
+        while (targetPosition == 0) {
             sleep(500);
             targetPosition = lookForVuMark(relicTemplate);//1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
             sleep(500);
-            if (((System.nanoTime() / 1000000) - initTime) > timeOutTime){
+            if (((System.nanoTime() / 1000000) - initTime) > timeOutTime) {
                 targetPosition = 4;
             }
         }
@@ -87,18 +87,18 @@ public class RedStraight extends LinearOpMode{
 
         //Reads color of ball and calls knockOffBall(0), knockOffBall(1) or does nothing.
         int loopBreak = 0;
-        while (loopBreak == 1) {
+        while (loopBreak == 0) {
             sleep(1000);
             if (robot.jewelSensor.red() > 52) {
                 knockOffBall(0);
                 telemetry.addData("Status", "Confirmed Red Ball!");
                 loopBreak = 1;
-            } else if (robot.jewelSensor.red() <= 52){
-                if(robot.jewelSensor.blue() > 20){
-                    knockOffBall(0);
+            } else if (robot.jewelSensor.red() <= 52) {
+                if (robot.jewelSensor.blue() > 20) {
+                    knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
                     loopBreak = 1;
-                }else{
+                } else {
                     telemetry.addData("Status", "Cannot determine color!");
                     loopBreak = 1;
                 }
@@ -129,10 +129,10 @@ public class RedStraight extends LinearOpMode{
         robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_FOLDED, robot.WRIST_FOLDED, 500, 1000);
 
         //Drive backwards off of the balancing stone to place the block.
-        robot.driveForwardSetDistance(0.25, 4000);
+        robot.driveForwardSetDistance(0.25, -1630);
 
         //Drive into the balancing stone to give us a known position
-        robot.driveForwardSetDistance(0.15, 80); //DRIVE INTO STONE
+        //robot.driveForwardSetDistance(0.15, 80); //DRIVE INTO STONE
 
         //Set turret to home position
         robot.turretMotor.setTargetPosition(0);
@@ -146,79 +146,87 @@ public class RedStraight extends LinearOpMode{
         Position.setRobot(robot);
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-        if (targetPosition == 1){ // If reading is LEFT
+        if (targetPosition == 1) { // If reading is LEFT
+            robot.turretMotor.setTargetPosition(1000);
+            robot.turretMotor.setPower(0.15);
+            sleep(1000);
+
             //Set position of the shoulder
-//            robot.shoulder.setTargetPosition(130);
-//            robot.shoulder.setPower(0.1);
-//            sleep(5000);
+            robot.shoulder.setTargetPosition(50);
+            robot.shoulder.setPower(0.1);
+            sleep(1000);
 
             //Set position of the arm
-//            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.8, 0.9, 500, 1000);
-//            sleep(500);
+            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.27, 1, 500, 1000);
+            sleep(1000);
 
 //            //lower winch
-//            robot.winchMotor.setTargetPosition(-1000);
-//            robot.winchMotor.setPower(0.2);
-//            sleep(5000);
+            robot.winchMotor.setTargetPosition(-1000);
+            robot.winchMotor.setPower(0.2);
+            sleep(1000);
 
 //            //Open Claw
-//            robot.claw.setPosition(0.47);
-//            sleep(5000);
+            robot.claw.setPosition(0.47);
+            sleep(1000);
 
             //Move shoulder away from the block
-//            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
-//            sleep(5000);
+            robot.wrist.setPosition(0.1);
+            sleep(1000);
 
-        } else if(targetPosition == 2){ //If reading is RIGHT
-            //Set shoulder to home position
-//            robot.shoulder.setTargetPosition(0);
-//            robot.shoulder.setPower(0.1);
-//            sleep(1000);
+            robot.shoulder.setTargetPosition(0);
+            robot.shoulder.setPower(0.3);
+            sleep(500);
 
-//            //Move Turret to Position
-//            robot.turretMotor.setTargetPosition(-250);
-//            robot.turretMotor.setPower(0.1);
-//            sleep(1000);
+        } else if (targetPosition == 2) { //If reading is RIGHT
+            if (targetPosition == 1) { // If reading is LEFT
+                robot.turretMotor.setTargetPosition(1000);
+                robot.turretMotor.setPower(0.15);
+                sleep(1000);
 
-//            //Move Shoulder
-//            robot.shoulder.setTargetPosition(120);
-//            robot.shoulder.setPower(0.1);
-//            sleep(1000);
+                //Set position of the shoulder
+                robot.shoulder.setTargetPosition(50);
+                robot.shoulder.setPower(0.1);
+                sleep(1000);
 
-//            //Move Arm
-//            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.15, 0.88, 500, 1000);
-//            sleep(1000);
+                //Set position of the arm
+                robot.moveMultipleServo(robot.wrist, robot.elbow, 0.27, 1, 500, 1000);
+                sleep(1000);
 
-//            //Lower Winch
-//            robot.winchMotor.setTargetPosition(-1250);
-//            robot.winchMotor.setPower(0.3);
-//            sleep(4000);
+//            //lower winch
+                robot.winchMotor.setTargetPosition(-1000);
+                robot.winchMotor.setPower(0.2);
+                sleep(1000);
 
 //            //Open Claw
-//            robot.claw.setPosition(0.47);
-//            sleep(1000);
+                robot.claw.setPosition(0.47);
+                sleep(1000);
 
-//            //Move Shoulder Away
-//            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
-//            sleep(1000);
+                //Move shoulder away from the block
+                robot.wrist.setPosition(0.1);
+                sleep(1000);
 
-        } else if (targetPosition == 3) {// If reading is CENTER
-            //Set shoulder to home position
+                robot.shoulder.setTargetPosition(0);
+                robot.shoulder.setPower(0.3);
+                sleep(500);
+
+
+            } else if (targetPosition == 3) {// If reading is CENTER
+                //Set shoulder to home position
 //            robot.shoulder.setTargetPosition(0);
 //            robot.shoulder.setPower(0.1);
 //            sleep(1000);
 
-            //Set turret position
+                //Set turret position
 //            robot.turretMotor.setTargetPosition(-150);
 //            robot.turretMotor.setPower(0.1);
 //            sleep(1000);
 
-            //Set shoulder position
+                //Set shoulder position
 //            robot.shoulder.setTargetPosition(120);
 //            robot.shoulder.setPower(0.1);
 //            sleep(1000);
 
-            //Set arm Position
+                //Set arm Position
 //            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.2, 0.9, 500, 1000);
 //            sleep(1000);
 
@@ -231,27 +239,27 @@ public class RedStraight extends LinearOpMode{
 //            robot.claw.setPosition(0.47);
 //            sleep(1000);
 
-            //Move shoulder away from block
+                //Move shoulder away from block
 //            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
 //            sleep(1000);
 
-        } else if (targetPosition == 4) {//If reading is still UNKNOWN
-            //Set shoulder to home position
+            } else if (targetPosition == 4) {//If reading is still UNKNOWN
+                //Set shoulder to home position
 //            robot.shoulder.setTargetPosition(0);
 //            robot.shoulder.setPower(0.1);
 //            sleep(1000);
 
-            //Set turret position
+                //Set turret position
 //            robot.turretMotor.setTargetPosition(-150);
 //            robot.turretMotor.setPower(0.1);
 //            sleep(1000);
 
-            //Set shoulder position
+                //Set shoulder position
 //            robot.shoulder.setTargetPosition(120);
 //            robot.shoulder.setPower(0.1);
 //            sleep(1000);
 
-            //Set arm position
+                //Set arm position
 //            robot.moveMultipleServo(robot.wrist, robot.elbow, 0.2, 0.9, 500, 1000);
 //            sleep(1000);
 
@@ -264,9 +272,10 @@ public class RedStraight extends LinearOpMode{
 //            robot.claw.setPosition(0.47);
 //            sleep(1000);
 
-            //Move arm away from block
+                //Move arm away from block
 //            robot.shoulder.setTargetPosition(robot.shoulder.getCurrentPosition() - 100);
 //            sleep(1000);
+            }
         }
     }
     //Looks for VuMark and positions arm accordingly. Returns int based on what it saw for debugging purposes

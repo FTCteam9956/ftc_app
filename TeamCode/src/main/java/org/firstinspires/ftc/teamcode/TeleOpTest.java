@@ -90,9 +90,9 @@ public class TeleOpTest extends LinearOpMode{
 
             //TURRET Spin it with the left stick x
             if (gamepad2.left_stick_x < 0.05) {
-                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.2);
+                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.25);
             } else if (gamepad2.left_stick_x > -0.05){
-                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.2);
+                robot.turretMotor.setPower(gamepad2.left_stick_x * -0.25);
             } else {
                 robot.turretMotor.setPower(0.0);
             }
@@ -192,6 +192,9 @@ public class TeleOpTest extends LinearOpMode{
                 this.clawTwistMode = 0;
                 sleep(500);
             }
+//            if(gamepad2.dpad_left){
+//                moveToRelic(0.59, 0.55, 72, 8);
+//            }
 
             //---TELEMETRY--- shows up on the phone to tell us important things
             telemetry.addData("TurretMotor", robot.turretMotor.getCurrentPosition());
@@ -228,4 +231,14 @@ public class TeleOpTest extends LinearOpMode{
         }
         return(returnValue);
     }
+//    public void moveToRelic(double wristPos, double elbowPos, int shoulderPos, int turretPos){
+//        robot.wrist.setPosition(wristPos);
+//        sleep(500);
+//        robot.elbow.setPosition(elbowPos);
+//        sleep(500);
+//        robot.shoulder.setTargetPosition(shoulderPos);
+//        sleep(500);
+//        robot.turretMotor.setTargetPosition(turretPos);
+//        robot.turretMotor.setPower(0.3);
+//    }
 }
