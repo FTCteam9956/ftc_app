@@ -74,18 +74,6 @@ public class RRHardwarePresets{
     public Position redTurnCenter = new Position(-135, 0.66, 0.29);
     public Position redTurnRight = new Position(-135, 0.66, 0.30);
 
-    //public Position redStraightLeft = new Position();
-    //public Position redStraightCenter = new Position();
-    //public Position redStraightRight = new Position();
-
-    //public Position blueStraightLeft = new Position();
-    //public Position blueStraightCenter = new Position();
-    //public Position blueStraightRight = new Position();
-
-    //public Position blueTurnLeft = new Position();
-    //public Position blueTurnCenter = new Position();
-    //public Position blueTurnRight = new Position();
-
     //Claw Constants
     public final double CLAW_CLOSED = 0.00;
     public final double CLAW_OPENED = 0.57;
@@ -116,6 +104,7 @@ public class RRHardwarePresets{
     public final double REDTURN_WRIST_CENTER = .29;
     public final double REDTURN_ELBOW_CENTER = .66;
     public final double REDTURN_SHOULDER_CENTER = -135;
+
 
     public final double ELBOW_CENTER = 0.4;
     public final double WRIST_CENTER = 0.3;
@@ -226,7 +215,6 @@ public class RRHardwarePresets{
         this.claw.setPosition(CLAW_CLOSED);
         this.clawTwist.setPosition(TWIST_UP);
 }
-
     //Servo we want to move, Position we want to move to, Number of servo movements we want, the time we want this movement to occur over in milliseconds.
     public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
         //Total distance to travel.
@@ -234,7 +222,6 @@ public class RRHardwarePresets{
         //Unit conversion to nanoseconds.
         long time = timeInMilli * 1000000;
         //Per Step values.
-        //double distanceToTravelPerStep = (distanceToTravel / steps);
         long timePerStep = time / steps;
         //Loops number of steps.
         double distanceToTravelPerStep;
@@ -246,7 +233,6 @@ public class RRHardwarePresets{
         for(int counter = 0; counter < steps; counter++){
             double initialTime = System.nanoTime();
             double currentPosition = targetServo.getPosition(); //Gets current arm position.
-            //if(movementFlag == 0) {
             targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
             while((System.nanoTime() - initialTime) < timePerStep){
                 //Wait.
