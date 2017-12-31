@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name = "BlueTurn", group = "Autonomous")
-//@Disabled
+@Disabled
 public class BlueTurn extends LinearOpMode{
     public RRHardwarePresets robot = new RRHardwarePresets();
 

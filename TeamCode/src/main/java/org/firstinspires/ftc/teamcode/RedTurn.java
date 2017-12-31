@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "RedTurn", group = "Autonomous")
-//@Disabled
+@Disabled
 public class RedTurn extends LinearOpMode{
     public RRHardwarePresets robot = new RRHardwarePresets();
 
@@ -39,7 +40,6 @@ public class RedTurn extends LinearOpMode{
         robot.turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -198,7 +198,6 @@ public class RedTurn extends LinearOpMode{
             robot.shoulder.setTargetPosition(0);
             robot.shoulder.setPower(0.1);
             sleep(500);
-
             //Move Wrist
             robot.moveServo(robot.wrist, .30, 300, 500);
             sleep(700);
