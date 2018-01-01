@@ -10,10 +10,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-/**
- * Created by salty on 12/30/2017.
- */
-
 public class NewBlueTurn extends LinearOpMode{
     public GrantsTeleopHardware robot = new GrantsTeleopHardware();
 
@@ -67,7 +63,7 @@ public class NewBlueTurn extends LinearOpMode{
             }
         }
 
-        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
+        //robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
 
         int loopBreak = 0;
         while (loopBreak == 0) {
@@ -93,7 +89,7 @@ public class NewBlueTurn extends LinearOpMode{
         }
         sleep(500);
 
-        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+        //robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
         sleep(500);
 
         robot.driveForwardSetDistance(0.2, -FIRST_DISTANCE);
@@ -127,8 +123,8 @@ public class NewBlueTurn extends LinearOpMode{
 
         robot.driveForwardSetDistance(0.3, SECOND_DISTANCE);
         sleep(5000);
-        robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN);
-        robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN);
+        robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
+        robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
         sleep(5000);
         robot.driveForwardSetDistance(0.3, BACKUP);
         sleep(500);

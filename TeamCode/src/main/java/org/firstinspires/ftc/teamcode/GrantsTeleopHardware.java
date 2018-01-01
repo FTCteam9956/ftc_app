@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-public class GrantsTeleopHardware{
+public class GrantsTeleopHardware {
 
     HardwareMap HwMap;
 
@@ -49,15 +49,17 @@ public class GrantsTeleopHardware{
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     //BLOCK CLAW CONSTANTS
-    public final static double BLOCK_CLAW_OPEN = 1.0;
-    public final static double BLOCK_CLAW_CLOSED = 0.0;
+    public final static double BLOCK_CLAW_OPEN_TOP = 0.6;
+    public final static double BLOCK_CLAW_CLOSED_TOP = 0.3;
+    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.35;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.1;
 
     //RELIC CLAW CONSTANTS
-    public final static double RELIC_CLAW_OPENED = 1.0;
-    public final static double RELIC_CLAW_MIDDLE = 0.5;
+    public final static double RELIC_CLAW_OPENED = 0.4;
+    public final static double RELIC_CLAW_MIDDLE = 0.2;
     public final static double RELIC_CLAW_CLOSED = 0.0;
-    public final static double RELIC_TWIST_DOWN = 0.8;
-    public final static double RELIC_TWIST_UP = 0.2;
+    public final static double RELIC_TWIST_DOWN = 1.0;
+    public final static double RELIC_TWIST_UP = 0.1;
 
     //JEWEL ARM CONSTANTS
     public final static double JEWEL_ARM_UP = 0.7;
@@ -66,9 +68,11 @@ public class GrantsTeleopHardware{
     public final static double ROTATE_MID = 0.5;
     public final static double ROTATE_LEFT = 0.4;
 
-    public GrantsTeleopHardware(){System.out.println("Created new RRHardwarePresets Object!");}
+    public GrantsTeleopHardware() {
+        System.out.println("Created new RRHardwarePresets Object!");
+    }
 
-    public void init(HardwareMap hwm){
+    public void init(HardwareMap hwm) {
         //Mappings.
         HwMap = hwm;
         //Drive Motors
@@ -111,14 +115,16 @@ public class GrantsTeleopHardware{
         //Sensor LED control.
         jewelArm.enableLed(false);
     }
-    public void initServoPositions(){
+
+    public void initServoPositions() {
         this.relicTwist.setPosition(RELIC_TWIST_UP);
         this.relicClaw.setPosition(RELIC_CLAW_CLOSED);
-        this.clawBottom.setPosition(BLOCK_CLAW_CLOSED);
-        this.clawTop.setPosition(BLOCK_CLAW_CLOSED);
+        this.clawBottom.setPosition(BLOCK_CLAW_CLOSED_BOTTOM);
+        this.clawTop.setPosition(BLOCK_CLAW_CLOSED_TOP);
         this.rotateArm.setPosition(ROTATE_MID);
         this.lowerArm.setPosition(JEWEL_ARM_UP);
     }
+
     //Takes power and distance to rotate and "CW" clockwise or "CCW" as directional input.
     public void turnDirection(double power, int distance, String direction) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
@@ -137,7 +143,7 @@ public class GrantsTeleopHardware{
         }
         setMotorPower(power);
         //Waits while turning.
-        while(anyMotorsBusy()){
+        while (anyMotorsBusy()) {
             //Spinning
             //Waiting while turning.
         }
@@ -148,7 +154,7 @@ public class GrantsTeleopHardware{
     }
 
     //Drives forward a certain distance at a certain speed. Only use if no intention to interrupt.
-    public void driveForwardSetDistance(double power, int distance){
+    public void driveForwardSetDistance(double power, int distance) {
         //Resets encoders by setting to STOP_AND_RESET_ENCODER mode.
         setRunMode("STOP_AND_RESET_ENCODER");
         //Sets target distance. Set to negative distance because motor was running backwards.
@@ -158,7 +164,7 @@ public class GrantsTeleopHardware{
         //Sets power for DC Motors.
         setMotorPower(power);
         //Waits while driving to position.
-        while(anyMotorsBusy()){
+        while (anyMotorsBusy()) {
             //Spinning.
             //Waiting for robot to arrive at destination.
         }
@@ -167,32 +173,33 @@ public class GrantsTeleopHardware{
         //Sets back to RUN_USING_ENCODER mode.
         setRunMode("RUN_USING_ENCODER");
     }
+
     //Sets the run mode of all DC motors. Test is this works in both autonomous and teleOp modes.
-    public void setRunMode(String input){
-        if(input.equals("STOP_AND_RESET_ENCODER")){
+    public void setRunMode(String input) {
+        if (input.equals("STOP_AND_RESET_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //this.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        if(input.equals("RUN_WITHOUT_ENCODER")){
+        if (input.equals("RUN_WITHOUT_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             this.slider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-        if(input.equals("RUN_USING_ENCODER")){
+        if (input.equals("RUN_USING_ENCODER")) {
             this.left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.left2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        if(input.equals("RUN_TO_POSITION")){
+        if (input.equals("RUN_TO_POSITION")) {
             this.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -202,16 +209,17 @@ public class GrantsTeleopHardware{
     }
 
     //Returns TRUE if any drive motors are busy and FALSE if not.
-    public boolean anyMotorsBusy(){
+    public boolean anyMotorsBusy() {
         if(this.left1.isBusy() || this.left2.isBusy() || this.right1.isBusy() || this.right2.isBusy()){
-            return (true);
-        }else{
-            return (false);
+                return (true);
+            }
+            else{
+                return (false);
         }
     }
 
     //Sets all drive motor power.
-    public void setMotorPower(double power){
+    public void setMotorPower(double power) {
         this.left1.setPower(power);
         this.left2.setPower(power);
         this.right1.setPower(power);
@@ -219,35 +227,36 @@ public class GrantsTeleopHardware{
     }
 
     //Sets all motors target position.
-    public void setAllTargetPositions(int distance){
+    public void setAllTargetPositions(int distance) {
         left1.setTargetPosition(distance);
         left2.setTargetPosition(distance);
         right1.setTargetPosition(distance);
         right2.setTargetPosition(distance);
     }
-    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli){
-        //Total distance to travel.
-        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
-        //Unit conversion to nanoseconds.
-        long time = timeInMilli * 1000000;
-        //Per Step values.
-        //double distanceToTravelPerStep = (distanceToTravel / steps);
-        long timePerStep = time / steps;
-        //Loops number of steps.
-        double distanceToTravelPerStep;
-        if(targetPosition - targetServo.getPosition() >= 0){
-            distanceToTravelPerStep = (distanceToTravel / steps);
-        }else{
-            distanceToTravelPerStep = (distanceToTravel / steps) * -1;
-        }
-        for(int counter = 0; counter < steps; counter++){
-            double initialTime = System.nanoTime();
-            double currentPosition = targetServo.getPosition(); //Gets current arm position.
-            //if(movementFlag == 0) {
-            targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
-            while((System.nanoTime() - initialTime) < timePerStep){
-                //Wait.
+        public void moveServo (Servo targetServo, double targetPosition, int steps, long timeInMilli)
+        {
+            //Total distance to travel.
+            double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
+            //Unit conversion to nanoseconds.
+            long time = timeInMilli * 1000000;
+            //Per Step values.
+            //double distanceToTravelPerStep = (distanceToTravel / steps);
+            long timePerStep = time / steps;
+            //Loops number of steps.
+            double distanceToTravelPerStep;
+            if (targetPosition - targetServo.getPosition() >= 0) {
+                distanceToTravelPerStep = (distanceToTravel / steps);
+            } else {
+                distanceToTravelPerStep = (distanceToTravel / steps) * -1;
+            }
+            for (int counter = 0; counter < steps; counter++) {
+                double initialTime = System.nanoTime();
+                double currentPosition = targetServo.getPosition(); //Gets current arm position.
+                //if(movementFlag == 0) {
+                targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
+                while ((System.nanoTime() - initialTime) < timePerStep) {
+                    //Wait.
+                }
             }
         }
     }
-}
