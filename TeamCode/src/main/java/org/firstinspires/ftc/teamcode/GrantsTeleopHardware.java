@@ -62,8 +62,8 @@ public class GrantsTeleopHardware {
     public final static double RELIC_TWIST_UP = 0.1;
 
     //JEWEL ARM CONSTANTS
-    public final static double JEWEL_ARM_UP = 0.7;
-    public final static double JEWEL_ARM_DOWN = 0.05;
+    public final static double JEWEL_ARM_UP = 0.85;
+    public final static double JEWEL_ARM_DOWN = 0.25;
     public final static double ROTATE_RIGHT = 0.6;
     public final static double ROTATE_MID = 0.5;
     public final static double ROTATE_LEFT = 0.4;

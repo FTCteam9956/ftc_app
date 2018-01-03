@@ -28,6 +28,9 @@ public class GrantsNewTeleop extends LinearOpMode{
     public static int endGameMode = 0;
     public static int sliderTwsitMode = 0;
 
+    public float rightPower;
+    public float leftPower;
+
     public void runOpMode() {
 
         robot.init(hardwareMap);
@@ -49,10 +52,10 @@ public class GrantsNewTeleop extends LinearOpMode{
             if (opModeIsActive() && endGameMode == 0) {
 
                 //Drive Motor
-                robot.left1.setPower(speedAdjust(gamepad1.left_stick_y));
-            robot.left2.setPower(speedAdjust(gamepad1.left_stick_y));
-            robot.right1.setPower(speedAdjust(gamepad1.left_stick_y));
-            robot.right2.setPower(speedAdjust(gamepad1.left_stick_y));
+                robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /2));
+                robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /2));
+                robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /2));
+                robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /2));
 
                 //Claw Controls
                 //WINCH CONTROLS
@@ -81,35 +84,50 @@ public class GrantsNewTeleop extends LinearOpMode{
                 }
                 //SHOULDER CONTROLS
                 if (gamepad1.dpad_left) {
-                    shoulderPos = shoulderPos + 5;
+                    shoulderPos = shoulderPos + 1;
                     robot.shoulder.setTargetPosition(shoulderPos);
                     robot.shoulder.setPower(0.2);
                 } else if (gamepad1.dpad_right) {
-                    shoulderPos = shoulderPos - 5;
+                    shoulderPos = shoulderPos - 1;
                     robot.shoulder.setTargetPosition(shoulderPos);
                     robot.shoulder.setPower(0.2);
                 } else {
                     robot.shoulder.setTargetPosition(shoulderPos);
                 }
-
+                telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
+                telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
+                telemetry.update();
             }
             if (endGameMode == 1) {
                 //Drive Motors
-            if(gamepad2.left_stick_y < 0.05){
-                robot.setMotorPower(0.5);
-            } else if(gamepad2.left_stick_y > -0.05){
-                robot.setMotorPower(-0.5);
-            }else if (gamepad2.left_stick_x < 0.05){
-                robot.left1.setPower(0.5);
-                robot.left2.setPower(0.5);
-                robot.right1.setPower(-0.5);  //TODO the direction of the turns may be reversed
-                robot.right2.setPower(-0.5);  //TODO the power of the motors may need to be increased/decreased
-            }else if (gamepad2.left_stick_x > -0.05){
-                robot.left1.setPower(-0.5);
-                robot.left2.setPower(-0.5);
-                robot.right1.setPower(0.5);
-                robot.right2.setPower(0.5);
-            }
+//            if(gamepad2.left_stick_y  < 0.05 && gamepad2.left_stick_y != 0){
+//                robot.left1.setPower(speedAdjust(0.5));
+//                robot.left2.setPower(speedAdjust(0.5));
+//                robot.right1.setPower(speedAdjust(0.5));
+//                robot.right2.setPower(speedAdjust(0.5));
+//            } else if(gamepad2.left_stick_y > -0.05){
+//                robot.left1.setPower(speedAdjust(-0.5));
+//                robot.left2.setPower(speedAdjust(-0.5));
+//                robot.right1.setPower(speedAdjust(-0.5));
+//                robot.right2.setPower(speedAdjust(-0.5));
+//            }else if (gamepad2.left_stick_x < 0.05){
+//                robot.left1.setPower(speedAdjust(0.5));
+//                robot.left2.setPower(speedAdjust(0.5));
+//                robot.right1.setPower(speedAdjust(-0.5));
+//                robot.right2.setPower(speedAdjust(-0.5));
+//            }else if (gamepad2.left_stick_x > -0.05){
+//                robot.left1.setPower(speedAdjust(-0.5));
+//                robot.left2.setPower(speedAdjust(-0.5));
+//                robot.right1.setPower(speedAdjust(0.5));
+//                robot.right2.setPower(speedAdjust(0.5));
+//            }
+                leftPower = (gamepad2.left_stick_y + gamepad2.left_stick_x) /2;
+                rightPower = (gamepad2.left_stick_y - gamepad2.left_stick_x) /2;
+
+                robot.left1.setPower(leftPower);
+                robot.left2.setPower(leftPower);
+                robot.right1.setPower(rightPower);
+                robot.right2.setPower(rightPower);
 
                 //Claw Controls
                 //WINCH CONTROLS
