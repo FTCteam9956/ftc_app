@@ -63,11 +63,11 @@ public class GrantsTeleopHardware {
 
     //JEWEL ARM CONSTANTS
     public final static double JEWEL_ARM_UP = 0.85;
-    public final static double JEWEL_ARM_DOWN = 0.27;
+    public final static double JEWEL_ARM_DOWN = 0.25;
     public final static double ROTATE_DOUBLECHECK = 0.15;
-    public final static double ROTATE_RIGHT = 0.6;
-    public final static double ROTATE_MID = 0.16;
-    public final static double ROTATE_LEFT = 0.05;
+    public final static double ROTATE_RIGHT = 0.45;
+    public final static double ROTATE_MID = 0.14;
+    public final static double ROTATE_LEFT = 0;
 
     public GrantsTeleopHardware() {
         System.out.println("Created new RRHardwarePresets Object!");
@@ -165,10 +165,10 @@ public class GrantsTeleopHardware {
         //Sets power for DC Motors.
         setMotorPower(power);
         //Waits while driving to position.
-        while (anyMotorsBusy()) {
+        //while (anyMotorsBusy() ) {
             //Spinning.
             //Waiting for robot to arrive at destination.
-        }
+        //}
         //Stops driving by setting power to 0.0.
         setMotorPower(0.0);
         //Sets back to RUN_USING_ENCODER mode.

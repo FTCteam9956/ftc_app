@@ -21,9 +21,9 @@ public class NewRedTurn extends LinearOpMode{
 
     VuforiaLocalizer vuforia;
 
-    public final static int FIRST_DISTANCE =  1000;
+    public final static int FIRST_DISTANCE =  -900;
     public final static int SECOND_DISTANCE = 2000;
-    public final static int BACKUP = -500;
+    //public final static int BACKUP = 530;
 
     public final static int SHOULDER_POS1 = 80;
     public final static int SHOULDER_POS2 = 76;
@@ -57,18 +57,18 @@ public class NewRedTurn extends LinearOpMode{
         robot.initServoPositions();
         relicTrackables.activate();// Activate Vuforia
 
-////        int targetPosition = 0;
-////        long initTime = (System.nanoTime() / 1000000); //Converting Nanoseconds to Milliseconds.
-////        long timeOutTime = 3000; //In Milliseconds.
-////        while (targetPosition == 0) {
-////            sleep(500);
-////            targetPosition = lookForVuMark(relicTemplate);//1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-////            sleep(500);
-////            if (((System.nanoTime() / 1000000) - initTime) > timeOutTime) {
-////                targetPosition = 4;
-////            }
-////        }
-//
+        int targetPosition = 0;
+        long initTime = (System.nanoTime() / 1000000); //Converting Nanoseconds to Milliseconds.
+        long timeOutTime = 3000; //In Milliseconds.
+        while (targetPosition == 0) {
+            sleep(500);
+            targetPosition = lookForVuMark(relicTemplate);//1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
+            sleep(500);
+            if (((System.nanoTime() / 1000000) - initTime) > timeOutTime) {
+                targetPosition = 4;
+            }
+        }
+
         robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
 
         sleep(1000);
@@ -78,73 +78,97 @@ public class NewRedTurn extends LinearOpMode{
             sleep(1000);
             if (robot.jewelArm.red() > 52) {
                 //knockOffBall(0);
-                robot.rotateArm.setPosition(0.5);
+                robot.rotateArm.setPosition(0.45);
                 telemetry.addData("Status", "Confirmed Red Ball!");
+
                 loopBreak = 1;
             } else if (robot.jewelArm.red() <= 52) {
                 if (robot.jewelArm.blue() > 27) {
                     knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
+                    sleep(1000);
                     loopBreak = 1;
                 } else {
                     telemetry.addData("Status", "Cannot determine color! Double Checking!");
                     robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
                     sleep(500);
-                    robot.rotateArm.setPosition(0.15);
+                    robot.rotateArm.setPosition(0.17);
                     robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
                     sleep(500);
-                    if (robot.jewelArm.red() > 52){
-                        robot.rotateArm.setPosition(0.5);
+                    if (robot.jewelArm.red() > 52) {
+                        robot.rotateArm.setPosition(0.45);
                         telemetry.addData("Status", "Confirmed Red Ball!");
                         loopBreak = 1;
-                    }
-                    else if (robot.jewelArm.red() <= 52) {
+                    } else if (robot.jewelArm.red() <= 52) {
                         if (robot.jewelArm.blue() > 27) {
                             knockOffBall(1);
                             telemetry.addData("Status", "Confirmed Blue Ball!");
+                            sleep(500);
                             loopBreak = 1;
-                        }
-                        else {
+                        } else {
                             telemetry.addData("Status", "Cannot determine color! You screwed up!");
                             loopBreak = 1;
                         }
                     }
-
-
                 }
             }
-            sleep(1000);
+        }
+            telemetry.update();
+            sleep(500);
             robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
             sleep(500);
             robot.rotateArm.setPosition(0.6);
             sleep(500);
+
+        robot.driveForwardSetDistance(-0.2, FIRST_DISTANCE);
+        sleep(500);
+        robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        sleep(500);
+
+        robot.left1.setPower(-0.2);
+        robot.left2.setPower(-0.2);
+        robot.right1.setPower(-0.2);
+        robot.right2.setPower(-0.2);
+        sleep(2000);
+
+        robot.left1.setPower(0);
+        robot.left2.setPower(0);
+        robot.right1.setPower(0);
+        robot.right2.setPower(0);
+        sleep(300);
+
+        robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.driveForwardSetDistance(0.2, -200);
+        sleep(1000);
+
+        robot.turnDirection(0.2, 600, "CW");
+
+        if (targetPosition == 1) {
+            robot.shoulder.setTargetPosition(SHOULDER_POS1);
+            sleep(1000);
         }
-//        sleep(500);
-//
-//        //robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
-//        sleep(500);
-//
-//        robot.driveForwardSetDistance(0.2, FIRST_DISTANCE);
-//        sleep(5000);
-//
-//        //LEFT = 1: RIGHT = 2: CENTER = 3: NOT READ = 4
-//        if (targetPosition == 1){
-//            robot.shoulder.setTargetPosition(SHOULDER_POS1);
-//            sleep(5000);
-//            robot.turnDirection(0.2, TURN1, "CCW");
-//            sleep(5000);
-//
-//        } else if(targetPosition == 2){
-//            robot.shoulder.setTargetPosition(SHOULDER_POS2);
-//            sleep(5000);
-//            robot.turnDirection(0.2, TURN2, "CCW");
-//            sleep(5000);
-//
-//        } else if (targetPosition == 3) {
-//            robot.shoulder.setTargetPosition(SHOULDER_POS3);
-//            sleep(5000);
-//            robot.turnDirection(0.2, TURN3, "CCW");
-//            sleep(5000);
+        if (targetPosition == 2) {
+            robot.shoulder.setTargetPosition(SHOULDER_POS2);
+            sleep(1000);
+        }
+         else if (targetPosition == 3) {
+        robot.shoulder.setTargetPosition(SHOULDER_POS3);
+        sleep(1000);
+    }
+    else {
+
+        }
 //
 //        } else if (targetPosition == 4) {
 //            robot.shoulder.setTargetPosition(SHOULDER_POS3);
@@ -162,35 +186,36 @@ public class NewRedTurn extends LinearOpMode{
 //        sleep(500);
 //    }
 //
-//    public int lookForVuMark(VuforiaTrackable rTemplate){
-//        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);
-//        int returnValue = 0;
-//        if(vuMark != RelicRecoveryVuMark.UNKNOWN){
-//            if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
-//                telemetry.addData("VuMark is", "Left");
-//                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
-//                //robot.shoulder.setTargetPosition(0);
-//                returnValue = 1;
-//            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
-//                telemetry.addData("VuMark is", "Right");
-//                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
-//                //robot.shoulder.setTargetPosition(0);
-//                returnValue = 2;
-//            }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
-//                telemetry.addData("VuMark is", "Center");
-//                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-//                //robot.shoulder.setTargetPosition(0);
-//                returnValue = 3;
-//            }
-//        }else{
-//            telemetry.addData("VuMark", "not visible");
-//            //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
-//            //robot.shoulder.setTargetPosition(0);
-//            returnValue = 4;
-//        }
-//        telemetry.update();
-//        return(returnValue);
-//    }
+    public int lookForVuMark(VuforiaTrackable rTemplate){
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);
+        int returnValue = 0;
+        if(vuMark != RelicRecoveryVuMark.UNKNOWN){
+            if(vuMark == RelicRecoveryVuMark.LEFT){ // Test to see if Image is the "LEFT" image and display value.
+                telemetry.addData("VuMark is", "Left");
+                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_LEFT, robot.WRIST_LEFT, 1000, 2000);
+                //robot.shoulder.setTargetPosition(0);
+                returnValue = 1;
+            }else if(vuMark == RelicRecoveryVuMark.RIGHT){ // Test to see if Image is the "RIGHT" image and display values.
+                telemetry.addData("VuMark is", "Right");
+                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_RIGHT, robot.WRIST_RIGHT, 1000, 2000);
+                //robot.shoulder.setTargetPosition(0);
+                returnValue = 2;
+            }else if(vuMark == RelicRecoveryVuMark.CENTER){ // Test to see if Image is the "CENTER" image and display values.
+                telemetry.addData("VuMark is", "Center");
+                //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+                //robot.shoulder.setTargetPosition(0);
+                returnValue = 3;
+            }
+        }
+        else{
+            telemetry.addData("VuMark", "not visible");
+            //robot.moveMultipleServo(robot.elbow, robot.wrist, robot.ELBOW_CENTER, robot.WRIST_CENTER, 1000, 2000);
+            //robot.shoulder.setTargetPosition(0);
+            returnValue = 4;
+        }
+        telemetry.update();
+        return(returnValue);
+    }
     public void knockOffBall(int selection){
 
         if (selection == 0) {
