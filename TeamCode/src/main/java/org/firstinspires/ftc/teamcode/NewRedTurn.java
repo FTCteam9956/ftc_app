@@ -41,7 +41,6 @@ public class NewRedTurn extends LinearOpMode{
         robot.setRunMode("RUN_USING_ENCODER");
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rotateArm.setPosition(0.2);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -88,15 +87,37 @@ public class NewRedTurn extends LinearOpMode{
                     telemetry.addData("Status", "Confirmed Blue Ball!");
                     loopBreak = 1;
                 } else {
-                    telemetry.addData("Status", "Cannot determine color!");
-                    loopBreak = 1;
+                    telemetry.addData("Status", "Cannot determine color! Double Checking!");
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+                    sleep(500);
+                    robot.rotateArm.setPosition(0.15);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
+                    sleep(500);
+                    if (robot.jewelArm.red() > 52){
+                        robot.rotateArm.setPosition(0.5);
+                        telemetry.addData("Status", "Confirmed Red Ball!");
+                        loopBreak = 1;
+                    }
+                    else if (robot.jewelArm.red() <= 52) {
+                        if (robot.jewelArm.blue() > 27) {
+                            knockOffBall(1);
+                            telemetry.addData("Status", "Confirmed Blue Ball!");
+                            loopBreak = 1;
+                        }
+                        else {
+                            telemetry.addData("Status", "Cannot determine color! You screwed up!");
+                            loopBreak = 1;
+                        }
+                    }
+
+
                 }
             }
-            telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
-            telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
-            telemetry.addData("CPosition:", robot.rotateArm.getPosition());
-            telemetry.update();
-            sleep(5000);
+            sleep(1000);
+            robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+            sleep(500);
+            robot.rotateArm.setPosition(0.6);
+            sleep(500);
         }
 //        sleep(500);
 //

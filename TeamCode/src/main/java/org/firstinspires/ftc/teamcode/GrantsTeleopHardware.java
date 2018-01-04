@@ -63,10 +63,11 @@ public class GrantsTeleopHardware {
 
     //JEWEL ARM CONSTANTS
     public final static double JEWEL_ARM_UP = 0.85;
-    public final static double JEWEL_ARM_DOWN = 0.25;
+    public final static double JEWEL_ARM_DOWN = 0.27;
+    public final static double ROTATE_DOUBLECHECK = 0.15;
     public final static double ROTATE_RIGHT = 0.6;
-    public final static double ROTATE_MID = 0.5;
-    public final static double ROTATE_LEFT = 0.4;
+    public final static double ROTATE_MID = 0.16;
+    public final static double ROTATE_LEFT = 0.05;
 
     public GrantsTeleopHardware() {
         System.out.println("Created new RRHardwarePresets Object!");

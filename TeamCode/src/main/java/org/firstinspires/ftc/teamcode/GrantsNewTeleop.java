@@ -26,7 +26,7 @@ public class GrantsNewTeleop extends LinearOpMode{
     public static int slidermode = 0;
     public static int shoulderPos = 0;
     public static int endGameMode = 0;
-    public static int sliderTwsitMode = 0;
+    public static int sliderTwistMode = 0;
 
     public float rightPower;
     public float leftPower;
@@ -183,13 +183,13 @@ public class GrantsNewTeleop extends LinearOpMode{
                     slidermode = 0;
                 }
                 //Slider Twisting Controls
-                if (gamepad2.y && sliderTwsitMode == 0) {
+                if (gamepad2.y && sliderTwistMode == 0) {
                     robot.relicTwist.setPosition(robot.RELIC_TWIST_UP);
-                    sliderTwsitMode++;
+                    sliderTwistMode++;
                 }
-                if (gamepad2.y && sliderTwsitMode == 1) {
+                if (gamepad2.y && sliderTwistMode == 1) {
                     robot.relicTwist.setPosition(robot.RELIC_TWIST_DOWN);
-                    sliderTwsitMode--;
+                    sliderTwistMode--;
                 }
             }
             telemetry.addData("Winch Position", robot.winch.getTargetPosition());
