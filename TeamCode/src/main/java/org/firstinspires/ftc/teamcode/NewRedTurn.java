@@ -27,18 +27,18 @@ public class NewRedTurn extends LinearOpMode{
 
     public final static int SHOULDER_POS1 = 80;
     public final static int SHOULDER_POS2 = 76;
-    public final static int SHOULDER_POS3 = 72;
+    public final static int SHOULDER_POS3 = -420;
 
-    public final static int TURN1 = 1200;
-    public final static int TURN2 = 1100;
-    public final static int TURN3 = 1000;
+    public final static int TURN1 = 560;
+    public final static int TURN2 = 640;
+    public final static int TURN3 = 600;
 
-    public void runOpMode(){
+    public void runOpMode() {
         robot.init(hardwareMap);//Robot moves during init().
         robot.setRunMode("STOP_AND_RESET_ENCODER");
+        robot.setRunMode("RUN_USING_ENCODER");
         robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setRunMode("RUN_USING_ENCODER");
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -113,15 +113,16 @@ public class NewRedTurn extends LinearOpMode{
                 }
             }
         }
-            telemetry.update();
-            sleep(500);
-            robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
-            sleep(500);
-            robot.rotateArm.setPosition(0.6);
-            sleep(500);
+        telemetry.update();
+        sleep(500);
+        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+        sleep(500);
+        robot.rotateArm.setPosition(0.6);
+        sleep(500);
 
         robot.driveForwardSetDistance(-0.2, FIRST_DISTANCE);
         sleep(500);
+
         robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -149,42 +150,69 @@ public class NewRedTurn extends LinearOpMode{
         robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.driveForwardSetDistance(0.2, -200);
+        robot.driveForwardSetDistance(0.2, -160);
         sleep(1000);
 
-        robot.turnDirection(0.2, 600, "CW");
+       // robot.turnDirection(0.2, 600, "CW");
 
+        //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
         if (targetPosition == 1) {
-            robot.shoulder.setTargetPosition(SHOULDER_POS1);
+            robot.turnDirection(0.2, TURN3, "CW");
             sleep(1000);
-        }
-        if (targetPosition == 2) {
-            robot.shoulder.setTargetPosition(SHOULDER_POS2);
+            robot.left1.setTargetPosition(600);
+            robot.left2.setTargetPosition(600);
+            robot.left1.setPower(0.2);
+            robot.left2.setPower(0.2);
             sleep(1000);
+            robot.shoulder.setTargetPosition(150);
+            robot.shoulder.setPower(0.2);
+            robot.winch.setTargetPosition(100);
+            robot.winch.setPower(0.1);
+            sleep(500);
+        }else if (targetPosition == 2) {
+            robot.turnDirection(0.2, TURN3, "CW");
+            sleep(1000);
+            robot.left1.setTargetPosition(600);
+            robot.left2.setTargetPosition(600);
+            robot.left1.setPower(0.2);
+            robot.left2.setPower(0.2);
+            sleep(1000);
+            robot.shoulder.setTargetPosition(150);
+            robot.shoulder.setPower(0.2);
+            robot.winch.setTargetPosition(100);
+            robot.winch.setPower(0.1);
+            sleep(500);
+        } else if (targetPosition == 3) {
+            robot.turnDirection(0.2, TURN3, "CW");
+            sleep(1000);
+            robot.winch.setTargetPosition(200);
+            robot.winch.setPower(0.1);
+            sleep(500);
+            robot.shoulder.setTargetPosition(SHOULDER_POS3);
+            robot.shoulder.setPower(0.2);
+            sleep(500);
+            robot.winch.setTargetPosition(-200);
+            robot.winch.setPower(0.1);
+            sleep(500);
+            robot.driveForwardSetDistance(0.2, 75);
         }
-         else if (targetPosition == 3) {
-        robot.shoulder.setTargetPosition(SHOULDER_POS3);
-        sleep(1000);
-    }
-    else {
-
-        }
-//
-//        } else if (targetPosition == 4) {
+//        else if (targetPosition == 4) {
+//            robot.turnDirection(0.2, TURN3, "CW");
 //            robot.shoulder.setTargetPosition(SHOULDER_POS3);
 //            sleep(5000);
 //            robot.turnDirection(0.2, TURN3, "CCW");
 //            sleep(5000);
-        }
+//        }
+
 //
 //        robot.driveForwardSetDistance(0.3, SECOND_DISTANCE);
 //        sleep(5000);
-//        robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-//        robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-//        sleep(5000);
+        robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
+        robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
+        sleep(5000);
 //        robot.driveForwardSetDistance(0.3, BACKUP);
 //        sleep(500);
-//    }
+    }
 //
     public int lookForVuMark(VuforiaTrackable rTemplate){
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);

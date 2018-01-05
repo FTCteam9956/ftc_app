@@ -84,11 +84,11 @@ public class GrantsNewTeleop extends LinearOpMode{
                 }
                 //SHOULDER CONTROLS
                 if (gamepad1.dpad_left) {
-                    shoulderPos = shoulderPos + 1;
+                    shoulderPos = shoulderPos + 15;
                     robot.shoulder.setTargetPosition(shoulderPos);
                     robot.shoulder.setPower(0.2);
                 } else if (gamepad1.dpad_right) {
-                    shoulderPos = shoulderPos - 1;
+                    shoulderPos = shoulderPos - 15;
                     robot.shoulder.setTargetPosition(shoulderPos);
                     robot.shoulder.setPower(0.2);
                 } else {
@@ -124,10 +124,10 @@ public class GrantsNewTeleop extends LinearOpMode{
                 leftPower = (gamepad2.left_stick_y + gamepad2.left_stick_x) /2;
                 rightPower = (gamepad2.left_stick_y - gamepad2.left_stick_x) /2;
 
-                robot.left1.setPower(leftPower);
-                robot.left2.setPower(leftPower);
-                robot.right1.setPower(rightPower);
-                robot.right2.setPower(rightPower);
+                robot.left1.setPower(-leftPower);
+                robot.left2.setPower(-leftPower);
+                robot.right1.setPower(-rightPower);
+                robot.right2.setPower(-rightPower);
 
                 //Claw Controls
                 //WINCH CONTROLS

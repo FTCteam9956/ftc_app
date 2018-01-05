@@ -50,9 +50,9 @@ public class GrantsTeleopHardware {
 
     //BLOCK CLAW CONSTANTS
     public final static double BLOCK_CLAW_OPEN_TOP = 0.6;
-    public final static double BLOCK_CLAW_CLOSED_TOP = 0.3;
+    public final static double BLOCK_CLAW_CLOSED_TOP = 0.25;
     public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.35;
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.1;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.05;
 
     //RELIC CLAW CONSTANTS
     public final static double RELIC_CLAW_OPENED = 0.4;
@@ -105,6 +105,7 @@ public class GrantsTeleopHardware {
         right2.setDirection(DcMotorSimple.Direction.REVERSE);
         winch.setDirection(DcMotorSimple.Direction.REVERSE);
         slider.setDirection(DcMotorSimple.Direction.FORWARD);
+        shoulder.setDirection(DcMotorSimple.Direction.FORWARD);
 
         left1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -112,6 +113,7 @@ public class GrantsTeleopHardware {
         right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Sensor LED control.
         jewelArm.enableLed(false);
@@ -165,10 +167,10 @@ public class GrantsTeleopHardware {
         //Sets power for DC Motors.
         setMotorPower(power);
         //Waits while driving to position.
-        //while (anyMotorsBusy() ) {
-            //Spinning.
-            //Waiting for robot to arrive at destination.
-        //}
+        while (anyMotorsBusy() ) {
+           // Spinning.
+           // Waiting for robot to arrive at destination.
+        }
         //Stops driving by setting power to 0.0.
         setMotorPower(0.0);
         //Sets back to RUN_USING_ENCODER mode.
@@ -182,8 +184,6 @@ public class GrantsTeleopHardware {
             this.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         if (input.equals("RUN_WITHOUT_ENCODER")) {
