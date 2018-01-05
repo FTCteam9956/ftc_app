@@ -52,18 +52,18 @@ public class GrantsNewTeleop extends LinearOpMode{
             if (opModeIsActive() && endGameMode == 0) {
 
                 //Drive Motor
-                robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /2));
-                robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /2));
-                robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /2));
-                robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /2));
+                robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /1.01));
+                robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /1.01));
+                robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /1.01));
+                robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /1.01));
 
                 //Claw Controls
                 //WINCH CONTROLS
                 if(gamepad1.dpad_up){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 15);
+                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 30);
                     robot.winch.setPower(0.20);
                 }else if(gamepad1.dpad_down){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 15);
+                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 30);
                     robot.winch.setPower(0.20);
                 }else{
                     robot.winch.setTargetPosition(robot.winch.getTargetPosition());
@@ -74,12 +74,12 @@ public class GrantsNewTeleop extends LinearOpMode{
                 if (gamepad1.right_bumper && clawmode == 0) {
                     robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
                     robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                    sleep(1000);
+                    sleep(750);
                     clawmode++;
                 } else if (gamepad1.right_bumper && clawmode == 1) {   //TODO test to make sure constants are correct
                     robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
                     robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-                    sleep(1000);
+                    sleep(750);
                     clawmode--;
                 }
                 //SHOULDER CONTROLS
@@ -100,73 +100,52 @@ public class GrantsNewTeleop extends LinearOpMode{
             }
             if (endGameMode == 1) {
                 //Drive Motors
-//            if(gamepad2.left_stick_y  < 0.05 && gamepad2.left_stick_y != 0){
-//                robot.left1.setPower(speedAdjust(0.5));
-//                robot.left2.setPower(speedAdjust(0.5));
-//                robot.right1.setPower(speedAdjust(0.5));
-//                robot.right2.setPower(speedAdjust(0.5));
-//            } else if(gamepad2.left_stick_y > -0.05){
-//                robot.left1.setPower(speedAdjust(-0.5));
-//                robot.left2.setPower(speedAdjust(-0.5));
-//                robot.right1.setPower(speedAdjust(-0.5));
-//                robot.right2.setPower(speedAdjust(-0.5));
-//            }else if (gamepad2.left_stick_x < 0.05){
-//                robot.left1.setPower(speedAdjust(0.5));
-//                robot.left2.setPower(speedAdjust(0.5));
-//                robot.right1.setPower(speedAdjust(-0.5));
-//                robot.right2.setPower(speedAdjust(-0.5));
-//            }else if (gamepad2.left_stick_x > -0.05){
-//                robot.left1.setPower(speedAdjust(-0.5));
-//                robot.left2.setPower(speedAdjust(-0.5));
-//                robot.right1.setPower(speedAdjust(0.5));
-//                robot.right2.setPower(speedAdjust(0.5));
-//            }
-                leftPower = (gamepad2.left_stick_y + gamepad2.left_stick_x) /2;
-                rightPower = (gamepad2.left_stick_y - gamepad2.left_stick_x) /2;
+                leftPower = (gamepad2.left_stick_y + gamepad2.left_stick_x);
+                rightPower = (gamepad2.left_stick_y - gamepad2.left_stick_x);
 
                 robot.left1.setPower(-leftPower);
                 robot.left2.setPower(-leftPower);
                 robot.right1.setPower(-rightPower);
                 robot.right2.setPower(-rightPower);
 
-                //Claw Controls
-                //WINCH CONTROLS
-                if(gamepad1.dpad_up){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 15);
-                    robot.winch.setPower(0.20);
-                }else if(gamepad1.dpad_down){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 15);
-                    robot.winch.setPower(0.20);
-                }else{
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition());
-                    robot.winch.setPower(0.20);
-                }
-
-                //CLAW SERVO CONTROLS
-                if (gamepad1.right_bumper && clawmode == 0) {
-                    robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                    sleep(1000);
-                    clawmode++;
-                } else if (gamepad1.right_bumper && clawmode == 1) {   //TODO test to make sure constants are correct
-                    robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-                    sleep(1000);
-                    clawmode--;
-                }
-
-                //SHOULDER CONTROLS
-                if (gamepad1.dpad_left) {
-                    shoulderPos = shoulderPos + 5;
-                    robot.shoulder.setTargetPosition(shoulderPos);
-                    robot.shoulder.setPower(0.2);
-                } else if (gamepad1.dpad_right) {
-                    shoulderPos = shoulderPos - 5;
-                    robot.shoulder.setTargetPosition(shoulderPos);
-                    robot.shoulder.setPower(0.2);
-                } else {
-                    robot.shoulder.setTargetPosition(shoulderPos);
-                }
+//                //Claw Controls
+//                //WINCH CONTROLS
+//                if(gamepad2.dpad_up){
+//                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 30);
+//                    robot.winch.setPower(0.20);
+//                }else if(gamepad2.dpad_down){
+//                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 30);
+//                    robot.winch.setPower(0.20);
+//                }else{
+//                    robot.winch.setTargetPosition(robot.winch.getTargetPosition());
+//                    robot.winch.setPower(0.20);
+//                }
+//
+//                //CLAW SERVO CONTROLS
+//                if (gamepad2.right_bumper && clawmode == 0) {
+//                    robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+//                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+//                    sleep(750);
+//                    clawmode++;
+//                } else if (gamepad1.right_bumper && clawmode == 1) {
+//                    robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
+//                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
+//                    sleep(750);
+//                    clawmode--;
+//                }
+//
+//                //SHOULDER CONTROLS
+//                if (gamepad1.dpad_left) {
+//                    shoulderPos = shoulderPos + 15;
+//                    robot.shoulder.setTargetPosition(shoulderPos);
+//                    robot.shoulder.setPower(0.2);
+//                } else if (gamepad1.dpad_right) {
+//                    shoulderPos = shoulderPos - 15;
+//                    robot.shoulder.setTargetPosition(shoulderPos);
+//                    robot.shoulder.setPower(0.2);
+//                } else {
+//                    robot.shoulder.setTargetPosition(shoulderPos);
+//                }
 
                 //Slider controls
                 //Slider Motor Controls
