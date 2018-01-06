@@ -176,14 +176,14 @@ public class NewRedTurn extends LinearOpMode{
             sleep(1500);
 
         }else if (targetPosition == 2) {
-            robot.turnDirection(0.2, TURN3, "CW");
+            robot.turnDirection(0.2, 800, "CW");
             sleep(1000);
-            robot.left1.setTargetPosition(600);
-            robot.left2.setTargetPosition(600);
-            robot.left1.setPower(0.2);
-            robot.left2.setPower(0.2);
-            sleep(1000);
-            robot.shoulder.setTargetPosition(150);
+//            robot.left1.setTargetPosition(600);
+//            robot.left2.setTargetPosition(600);
+//            robot.left1.setPower(0.2);
+//            robot.left2.setPower(0.2);
+//            sleep(1000);
+            robot.shoulder.setTargetPosition(-450);
             robot.shoulder.setPower(0.2);
             robot.winch.setTargetPosition(100);
             robot.winch.setPower(0.1);

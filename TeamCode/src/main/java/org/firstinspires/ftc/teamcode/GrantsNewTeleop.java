@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "State Teleop", group = "Teleop")
+
 //@Disabled
 
 //-----Teleop Controls ------
@@ -32,6 +33,9 @@ public class GrantsNewTeleop extends LinearOpMode{
     public float rightPower;
     public float leftPower;
 
+//    public int limit (int shoulderPos){
+//        return Math.max(500, Math.min(shoulderPos ,0));
+//    }
     public void runOpMode() {
 
         robot.init(hardwareMap);
@@ -43,8 +47,15 @@ public class GrantsNewTeleop extends LinearOpMode{
         waitForStart();
 
         robot.relicClaw.setPosition(robot.RELIC_CLAW_OPENED);
+        //Set jewel arm teleop position
+        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+        robot.rotateArm.setPosition(0.6);
+//
+
+
 
         while (opModeIsActive()) {
+
             //Allows us to switch modes to have more control
             if (gamepad1.start) {
                 endGameMode = 1;
@@ -98,9 +109,11 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.shoulder.setPower(0.2);
                 } else {
                     robot.shoulder.setTargetPosition(shoulderPos);
+                    robot.shoulder.setPower(0.5);
                 }
-                if(shoulderPos >= 420 && shoulderPos <= 0){
-                    robot.shoulder.setPower(0.0);
+                if(shoulderPos <= -581){
+                    robot.shoulder.setTargetPosition(-580);
+                    shoulderPos = -580;
                 }
                 telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
                 telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
@@ -144,7 +157,8 @@ public class GrantsNewTeleop extends LinearOpMode{
             telemetry.addData("Winch Power", robot.winch.getPower());
             telemetry.addData("Endgame Mode", endGameMode);
             telemetry.addData("RELIC CLAW POS", robot.relicClaw.getPosition());
-            telemetry.addData("SHOULDER POS", robot.shoulder.getCurrentPosition());
+            telemetry.addData("SHOULDER POS", shoulderPos);
+            telemetry.addData("Shoulder Encoder", robot.shoulder.getCurrentPosition());
         }
     }
     public static int controllerToPosition(float stickValue){

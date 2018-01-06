@@ -69,6 +69,9 @@ public class GrantsTeleopHardware {
     public final static double ROTATE_MID = 0.14;
     public final static double ROTATE_LEFT = 0;
 
+    //Transfer Data
+
+
     public GrantsTeleopHardware() {
         System.out.println("Created new RRHardwarePresets Object!");
     }
