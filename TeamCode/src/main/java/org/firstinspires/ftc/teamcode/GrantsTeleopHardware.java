@@ -55,11 +55,11 @@ public class GrantsTeleopHardware {
     public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.05;
 
     //RELIC CLAW CONSTANTS
-    public final static double RELIC_CLAW_OPENED = 0.4;
-    public final static double RELIC_CLAW_MIDDLE = 0.2;
-    public final static double RELIC_CLAW_CLOSED = 0.0;
-    public final static double RELIC_TWIST_DOWN = 1.0;
-    public final static double RELIC_TWIST_UP = 0.1;
+    public final static double RELIC_CLAW_OPENED = 0.7;
+    //public final static double RELIC_CLAW_MIDDLE = 0.2;
+    public final static double RELIC_CLAW_CLOSED = 0.3;
+    public final static double RELIC_TWIST_DOWN = 0.01;
+    public final static double RELIC_TWIST_UP = 0.99;
 
     //JEWEL ARM CONSTANTS
     public final static double JEWEL_ARM_UP = 0.85;
@@ -121,7 +121,7 @@ public class GrantsTeleopHardware {
 
     public void initServoPositions() {
         this.relicTwist.setPosition(RELIC_TWIST_UP);
-        this.relicClaw.setPosition(RELIC_CLAW_CLOSED);
+        this.relicClaw.setPosition(RELIC_CLAW_OPENED);
         this.clawBottom.setPosition(BLOCK_CLAW_CLOSED_BOTTOM);
         this.clawTop.setPosition(BLOCK_CLAW_CLOSED_TOP);
         this.rotateArm.setPosition(ROTATE_MID);
