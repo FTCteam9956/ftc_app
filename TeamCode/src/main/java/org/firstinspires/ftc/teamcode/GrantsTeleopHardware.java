@@ -167,9 +167,10 @@ public class GrantsTeleopHardware {
         //Sets power for DC Motors.
         setMotorPower(power);
         //Waits while driving to position.
-        while (anyMotorsBusy() ) {
+        while (left1.isBusy() & right1.isBusy()) {
            // Spinning.
            // Waiting for robot to arrive at destination.
+
         }
         //Stops driving by setting power to 0.0.
         setMotorPower(0.0);

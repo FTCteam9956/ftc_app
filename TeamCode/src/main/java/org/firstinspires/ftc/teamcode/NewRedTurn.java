@@ -23,7 +23,7 @@ public class NewRedTurn extends LinearOpMode{
 
     public final static int FIRST_DISTANCE =  -900;
     public final static int SECOND_DISTANCE = 2000;
-    //public final static int BACKUP = 530;
+    public final static int BACKUP = -150;
 
     public final static int SHOULDER_POS1 = 80;
     public final static int SHOULDER_POS2 = 76;
@@ -32,6 +32,7 @@ public class NewRedTurn extends LinearOpMode{
     public final static int TURN1 = 560;
     public final static int TURN2 = 640;
     public final static int TURN3 = 600;
+    public final static int TURN4 = 400;
 
     public void runOpMode() {
         robot.init(hardwareMap);//Robot moves during init().
@@ -75,7 +76,7 @@ public class NewRedTurn extends LinearOpMode{
 
         int loopBreak = 0;
         while (loopBreak == 0) {
-            sleep(1000);
+            sleep(500);
             if (robot.jewelArm.red() > 52) {
                 //knockOffBall(0);
                 robot.rotateArm.setPosition(0.45);
@@ -86,7 +87,7 @@ public class NewRedTurn extends LinearOpMode{
                 if (robot.jewelArm.blue() > 27) {
                     knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
-                    sleep(1000);
+                    sleep(500);
                     loopBreak = 1;
                 } else {
                     telemetry.addData("Status", "Cannot determine color! Double Checking!");
@@ -157,18 +158,23 @@ public class NewRedTurn extends LinearOpMode{
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
         if (targetPosition == 1) {
-            robot.turnDirection(0.2, TURN3, "CW");
+            robot.turnDirection(0.2, TURN4, "CW");
             sleep(1000);
-            robot.left1.setTargetPosition(600);
-            robot.left2.setTargetPosition(600);
-            robot.left1.setPower(0.2);
-            robot.left2.setPower(0.2);
+            robot.driveForwardSetDistance(0.2, 350);
             sleep(1000);
-            robot.shoulder.setTargetPosition(150);
+            robot.turnDirection(0.2, 250, "CW");
+//            robot.left1.setTargetPosition(-200);
+//            robot.left2.setTargetPosition(-200);
+//            robot.left1.setPower(0.2);
+//            robot.left2.setPower(0.2);
+//            sleep(1000);
+            robot.shoulder.setTargetPosition(-450);
             robot.shoulder.setPower(0.2);
             robot.winch.setTargetPosition(100);
             robot.winch.setPower(0.1);
-            sleep(500);
+
+            sleep(1500);
+
         }else if (targetPosition == 2) {
             robot.turnDirection(0.2, TURN3, "CW");
             sleep(1000);
@@ -209,9 +215,10 @@ public class NewRedTurn extends LinearOpMode{
 //        sleep(5000);
         robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
         robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-        sleep(5000);
-//        robot.driveForwardSetDistance(0.3, BACKUP);
-//        sleep(500);
+        sleep(1000);
+
+        robot.driveForwardSetDistance(0.3, BACKUP  );
+        sleep(500);
     }
 //
     public int lookForVuMark(VuforiaTrackable rTemplate){

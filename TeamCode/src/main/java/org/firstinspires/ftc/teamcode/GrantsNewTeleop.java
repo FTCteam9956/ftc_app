@@ -111,10 +111,10 @@ public class GrantsNewTeleop extends LinearOpMode{
                 leftPower = (gamepad2.left_stick_y + gamepad2.left_stick_x);
                 rightPower = (gamepad2.left_stick_y - gamepad2.left_stick_x);
 
-                robot.left1.setPower(-leftPower / 1.5);
-                robot.left2.setPower(-leftPower / 1.5);
-                robot.right1.setPower(-rightPower / 1.5);
-                robot.right2.setPower(-rightPower / 1.5);
+                robot.left1.setPower(-leftPower / 3);
+                robot.left2.setPower(-leftPower / 3);
+                robot.right1.setPower(-rightPower / 3);
+                robot.right2.setPower(-rightPower / 3);
 
                 //Slider controls
                 //Slider Motor Controls
