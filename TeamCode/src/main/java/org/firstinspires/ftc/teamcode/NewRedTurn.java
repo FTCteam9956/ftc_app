@@ -23,7 +23,7 @@ public class NewRedTurn extends LinearOpMode{
 
     public final static int FIRST_DISTANCE =  -900;
     public final static int SECOND_DISTANCE = 2000;
-    public final static int BACKUP = -150;
+    public final static int BACKUP = -75;
 
     public final static int SHOULDER_POS1 = 80;
     public final static int SHOULDER_POS2 = 76;
@@ -91,11 +91,11 @@ public class NewRedTurn extends LinearOpMode{
                     loopBreak = 1;
                 } else {
                     telemetry.addData("Status", "Cannot determine color! Double Checking!");
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
-                    sleep(500);
-                    robot.rotateArm.setPosition(0.17);
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
-                    sleep(500);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 300, 700);
+                    sleep(250);
+                    robot.rotateArm.setPosition(0.15);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 300, 700);
+                    sleep(250);
                     if (robot.jewelArm.red() > 52) {
                         robot.rotateArm.setPosition(0.45);
                         telemetry.addData("Status", "Confirmed Red Ball!");
@@ -119,10 +119,10 @@ public class NewRedTurn extends LinearOpMode{
         robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
         sleep(500);
         robot.rotateArm.setPosition(0.6);
-        sleep(500);
+        sleep(200);
 
         robot.driveForwardSetDistance(-0.2, FIRST_DISTANCE);
-        sleep(500);
+        sleep(250);
 
         robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -174,20 +174,24 @@ public class NewRedTurn extends LinearOpMode{
             robot.winch.setPower(0.1);
 
             sleep(1500);
-
+            // This is right \/ \/
         }else if (targetPosition == 2) {
-            robot.turnDirection(0.2, 800, "CW");
+            robot.turnDirection(0.2, 740, "CW");
             sleep(1000);
 //            robot.left1.setTargetPosition(600);
 //            robot.left2.setTargetPosition(600);
 //            robot.left1.setPower(0.2);
 //            robot.left2.setPower(0.2);
 //            sleep(1000);
-            robot.shoulder.setTargetPosition(-450);
+            robot.shoulder.setTargetPosition(-270);
             robot.shoulder.setPower(0.2);
-            robot.winch.setTargetPosition(100);
-            robot.winch.setPower(0.1);
             sleep(500);
+            robot.winch.setTargetPosition(-100);
+            robot.winch.setPower(0.1);
+            sleep(2000);
+            robot.driveForwardSetDistance(0.2, 50);
+            sleep(1000);
+
         } else if (targetPosition == 3) {
             robot.turnDirection(0.2, TURN3, "CW");
             sleep(1000);
@@ -215,7 +219,7 @@ public class NewRedTurn extends LinearOpMode{
 //        sleep(5000);
         robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
         robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-        sleep(1000);
+        sleep(500);
 
         robot.driveForwardSetDistance(0.3, BACKUP  );
         sleep(500);
