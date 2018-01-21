@@ -1,11 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.util.Locale;
 
 @TeleOp(name = "State Teleop", group = "Teleop")
 
@@ -29,13 +40,11 @@ public class GrantsNewTeleop extends LinearOpMode{
     public static int shoulderPos = 0;
     public static int endGameMode = 0;
     public static int sliderTwistMode = 0;
+    public static int mecanumMode = 0;
 
     public float rightPower;
     public float leftPower;
 
-//    public int limit (int shoulderPos){
-//        return Math.max(500, Math.min(shoulderPos ,0));
-//    }
     public void runOpMode() {
 
         robot.init(hardwareMap);
@@ -50,9 +59,6 @@ public class GrantsNewTeleop extends LinearOpMode{
         //Set jewel arm teleop position
         robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
         robot.rotateArm.setPosition(0.6);
-//
-
-
 
         while (opModeIsActive()) {
 
@@ -74,14 +80,14 @@ public class GrantsNewTeleop extends LinearOpMode{
                 //Claw Controls
                 //WINCH CONTROLS
                 if(gamepad1.dpad_up){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 30);
-                    robot.winch.setPower(0.40);
+                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 75);
+                    robot.winch.setPower(1.0);
                 }else if(gamepad1.dpad_down){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 30);
-                    robot.winch.setPower(0.40);
+                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 75);
+                    robot.winch.setPower(1.0);
                 }else{
                     robot.winch.setTargetPosition(robot.winch.getTargetPosition());
-                    robot.winch.setPower(0.20);
+                    robot.winch.setPower(0.50);
                 }
 
                 //CLAW SERVO CONTROLS
@@ -96,6 +102,27 @@ public class GrantsNewTeleop extends LinearOpMode{
                 }
                 if(gamepad1.left_trigger > 0.5){
                     robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                }
+
+                if(gamepad1.a && mecanumMode == 0){
+                    robot.bottomRight.setPower(-0.5);
+                    robot.topRight.setPower(0.5);
+                    robot.bottomLeft.setPower(0.5);
+                    robot.topLeft.setPower(-0.5);
+                    mecanumMode++;
+                }else if(gamepad1.a && mecanumMode == 1){
+                    robot.bottomRight.setPower(0.0);
+                    robot.topRight.setPower(0.0);
+                    robot.bottomLeft.setPower(0.0);
+                    robot.topLeft.setPower(0.0);
+                    mecanumMode--;
+                }
+                else if (gamepad1.b) {
+                    robot.bottomRight.setPower(0.1);
+                    robot.topRight.setPower(0.1);
+                    robot.bottomLeft.setPower(-0.1);
+                    robot.topLeft.setPower(-0.1);
+                    mecanumMode = 1;
                 }
 
                 //SHOULDER CONTROLS
@@ -153,12 +180,17 @@ public class GrantsNewTeleop extends LinearOpMode{
                     sliderTwistMode--;
                 }
             }
-            telemetry.addData("Winch Position", robot.winch.getTargetPosition());
-            telemetry.addData("Winch Power", robot.winch.getPower());
-            telemetry.addData("Endgame Mode", endGameMode);
-            telemetry.addData("RELIC CLAW POS", robot.relicClaw.getPosition());
-            telemetry.addData("SHOULDER POS", shoulderPos);
-            telemetry.addData("Shoulder Encoder", robot.shoulder.getCurrentPosition());
+//            telemetry.addData("Winch Position", robot.winch.getTargetPosition());
+//            telemetry.addData("Winch Power", robot.winch.getPower());
+//            telemetry.addData("Endgame Mode", endGameMode);
+//            telemetry.addData("RELIC CLAW POS", robot.relicClaw.getPosition());
+//            telemetry.addData("SHOULDER POS", shoulderPos);
+//            telemetry.addData("Shoulder Encoder", robot.shoulder.getCurrentPosition());
+//            telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
+//            telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
+            telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
+            telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
+            telemetry.update();
         }
     }
     public static int controllerToPosition(float stickValue){

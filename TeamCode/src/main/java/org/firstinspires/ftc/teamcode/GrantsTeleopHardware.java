@@ -1,13 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+
+import java.util.Locale;
 
 public class GrantsTeleopHardware {
 
@@ -30,11 +40,20 @@ public class GrantsTeleopHardware {
     public DcMotor shoulder; //2-2
     public Servo clawBottom; //2-3
     public Servo clawTop; //2-4
+    public CRServo topLeft;
+    public CRServo topRight;
+    public CRServo bottomLeft;
+    public CRServo bottomRight;
 
     //Jewel Arm Components
     public Servo rotateArm; //2-0
     public Servo lowerArm; //2-1
     public ColorSensor jewelArm;
+
+    BNO055IMU imu;
+
+    Orientation angles;
+    Acceleration gravity;
 
     //Vuforia Information
     public VuforiaLocalizer vuforia;
@@ -49,10 +68,10 @@ public class GrantsTeleopHardware {
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     //BLOCK CLAW CONSTANTS
-    public final static double BLOCK_CLAW_OPEN_TOP = 0.6;
-    public final static double BLOCK_CLAW_CLOSED_TOP = 0.25;
-    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.35;
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.05;
+    public final static double BLOCK_CLAW_OPEN_TOP = 0.4;
+    public final static double BLOCK_CLAW_CLOSED_TOP = 0.35;
+    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.4;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.35;
 
     //RELIC CLAW CONSTANTS
     public final static double RELIC_CLAW_OPENED = 0.7;
@@ -63,13 +82,13 @@ public class GrantsTeleopHardware {
 
     //JEWEL ARM CONSTANTS
     public final static double JEWEL_ARM_UP = 0.85;
+    public final static double JEWEL_ARM_TEST = 0.63;
     public final static double JEWEL_ARM_DOWN = 0.25;
     public final static double ROTATE_DOUBLECHECK = 0.15;
     public final static double ROTATE_RIGHT = 0.45;
     public final static double ROTATE_MID = 0.14;
     public final static double ROTATE_LEFT = 0;
 
-    //Transfer Data
 
 
     public GrantsTeleopHardware() {
@@ -95,11 +114,17 @@ public class GrantsTeleopHardware {
         shoulder = HwMap.dcMotor.get("shoulder");
         clawTop = HwMap.servo.get("clawTop");
         clawBottom = HwMap.servo.get("clawBottom");
+        topLeft = HwMap.crservo.get("topLeft");
+        topRight = HwMap.crservo.get("topRight");
+        bottomLeft = HwMap.crservo.get("bottomLeft");
+        bottomRight = HwMap.crservo.get("bottomRight");
 
         //Jewel Smacker
         rotateArm = HwMap.servo.get("rotateArm");
         lowerArm = HwMap.servo.get("lowerArm");
         jewelArm = HwMap.colorSensor.get("jewelArm");
+
+        imu = HwMap.get(BNO055IMU.class, "imu");
 
         //DC Motor directions.
         left1.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -171,8 +196,8 @@ public class GrantsTeleopHardware {
         setMotorPower(power);
         //Waits while driving to position.
         while (left1.isBusy() & right1.isBusy()) {
-           // Spinning.
-           // Waiting for robot to arrive at destination.
+            // Spinning.
+            // Waiting for robot to arrive at destination.
 
         }
         //Stops driving by setting power to 0.0.
@@ -215,11 +240,10 @@ public class GrantsTeleopHardware {
 
     //Returns TRUE if any drive motors are busy and FALSE if not.
     public boolean anyMotorsBusy() {
-        if(this.left1.isBusy() || this.left2.isBusy() || this.right1.isBusy() || this.right2.isBusy()){
-                return (true);
-            }
-            else{
-                return (false);
+        if (this.left1.isBusy() || this.left2.isBusy() || this.right1.isBusy() || this.right2.isBusy()) {
+            return (true);
+        } else {
+            return (false);
         }
     }
 
@@ -238,30 +262,38 @@ public class GrantsTeleopHardware {
         right1.setTargetPosition(distance);
         right2.setTargetPosition(distance);
     }
-        public void moveServo (Servo targetServo, double targetPosition, int steps, long timeInMilli)
-        {
-            //Total distance to travel.
-            double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
-            //Unit conversion to nanoseconds.
-            long time = timeInMilli * 1000000;
-            //Per Step values.
-            //double distanceToTravelPerStep = (distanceToTravel / steps);
-            long timePerStep = time / steps;
-            //Loops number of steps.
-            double distanceToTravelPerStep;
-            if (targetPosition - targetServo.getPosition() >= 0) {
-                distanceToTravelPerStep = (distanceToTravel / steps);
-            } else {
-                distanceToTravelPerStep = (distanceToTravel / steps) * -1;
-            }
-            for (int counter = 0; counter < steps; counter++) {
-                double initialTime = System.nanoTime();
-                double currentPosition = targetServo.getPosition(); //Gets current arm position.
-                //if(movementFlag == 0) {
-                targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
-                while ((System.nanoTime() - initialTime) < timePerStep) {
-                    //Wait.
-                }
+
+    public void moveServo(Servo targetServo, double targetPosition, int steps, long timeInMilli) {
+        //Total distance to travel.
+        double distanceToTravel = Math.abs(targetServo.getPosition() - targetPosition);
+        //Unit conversion to nanoseconds.
+        long time = timeInMilli * 1000000;
+        //Per Step values.
+        //double distanceToTravelPerStep = (distanceToTravel / steps);
+        long timePerStep = time / steps;
+        //Loops number of steps.
+        double distanceToTravelPerStep;
+        if (targetPosition - targetServo.getPosition() >= 0) {
+            distanceToTravelPerStep = (distanceToTravel / steps);
+        } else {
+            distanceToTravelPerStep = (distanceToTravel / steps) * -1;
+        }
+        for (int counter = 0; counter < steps; counter++) {
+            double initialTime = System.nanoTime();
+            double currentPosition = targetServo.getPosition(); //Gets current arm position.
+            //if(movementFlag == 0) {
+            targetServo.setPosition(currentPosition + distanceToTravelPerStep);//Moves the arm.
+            while ((System.nanoTime() - initialTime) < timePerStep) {
+                //Wait.
             }
         }
     }
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees) {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+}

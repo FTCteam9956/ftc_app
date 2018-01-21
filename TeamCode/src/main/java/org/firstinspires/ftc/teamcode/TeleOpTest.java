@@ -44,9 +44,6 @@ public class TeleOpTest extends LinearOpMode{
     public static int wristAngle = 90;
     public static int wristVar = 0;
 
-//    public int shoulderPosition (int value) {
-//        return Math.max(1000, Math.min(value, 0));
-//    }
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);

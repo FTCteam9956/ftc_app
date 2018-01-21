@@ -77,13 +77,13 @@ public class NewRedTurn extends LinearOpMode{
         int loopBreak = 0;
         while (loopBreak == 0) {
             sleep(500);
-            if (robot.jewelArm.red() > 52) {
+            if (robot.jewelArm.red() > robot.jewelArm.blue()) {
                 //knockOffBall(0);
                 robot.rotateArm.setPosition(0.45);
                 telemetry.addData("Status", "Confirmed Red Ball!");
 
                 loopBreak = 1;
-            } else if (robot.jewelArm.red() <= 52) {
+            } else if (robot.jewelArm.red() < robot.jewelArm.blue()) {
                 if (robot.jewelArm.blue() > 27) {
                     knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
@@ -91,16 +91,16 @@ public class NewRedTurn extends LinearOpMode{
                     loopBreak = 1;
                 } else {
                     telemetry.addData("Status", "Cannot determine color! Double Checking!");
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 300, 700);
-                    sleep(250);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+                    sleep(500);
                     robot.rotateArm.setPosition(0.15);
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 300, 700);
-                    sleep(250);
-                    if (robot.jewelArm.red() > 52) {
-                        robot.rotateArm.setPosition(0.45);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
+                    sleep(500);
+                    if (robot.jewelArm.red() > robot.jewelArm.blue()) {
+                        robot.rotateArm.setPosition(0.40);
                         telemetry.addData("Status", "Confirmed Red Ball!");
                         loopBreak = 1;
-                    } else if (robot.jewelArm.red() <= 52) {
+                    } else if (robot.jewelArm.red() < robot.jewelArm.blue()) {
                         if (robot.jewelArm.blue() > 27) {
                             knockOffBall(1);
                             telemetry.addData("Status", "Confirmed Blue Ball!");
@@ -154,7 +154,7 @@ public class NewRedTurn extends LinearOpMode{
         robot.driveForwardSetDistance(0.2, -160);
         sleep(1000);
 
-       // robot.turnDirection(0.2, 600, "CW");
+        // robot.turnDirection(0.2, 600, "CW");
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
         if (targetPosition == 1) {
@@ -175,7 +175,7 @@ public class NewRedTurn extends LinearOpMode{
 
             sleep(1500);
             // This is right \/ \/
-        }else if (targetPosition == 2) {
+        } else if (targetPosition == 2) {
             robot.turnDirection(0.2, 740, "CW");
             sleep(1000);
 //            robot.left1.setTargetPosition(600);
@@ -205,7 +205,21 @@ public class NewRedTurn extends LinearOpMode{
             robot.winch.setPower(0.1);
             sleep(500);
             robot.driveForwardSetDistance(0.2, 75);
-        }
+
+            // This is undetected Vumark
+        } else if (targetPosition == 4) {
+            robot.turnDirection(0.2, TURN3, "CW");
+            sleep(1000);
+            robot.winch.setTargetPosition(200);
+            robot.winch.setPower(0.1);
+            sleep(500);
+            robot.shoulder.setTargetPosition(SHOULDER_POS3);
+            robot.shoulder.setPower(0.2);
+            sleep(500);
+            robot.winch.setTargetPosition(-200);
+            robot.winch.setPower(0.1);
+            sleep(500);
+            robot.driveForwardSetDistance(0.2, 75);
 //        else if (targetPosition == 4) {
 //            robot.turnDirection(0.2, TURN3, "CW");
 //            robot.shoulder.setTargetPosition(SHOULDER_POS3);
@@ -213,16 +227,17 @@ public class NewRedTurn extends LinearOpMode{
 //            robot.turnDirection(0.2, TURN3, "CCW");
 //            sleep(5000);
 //        }
-
+        }
 //
 //        robot.driveForwardSetDistance(0.3, SECOND_DISTANCE);
 //        sleep(5000);
-        robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-        robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-        sleep(500);
+            robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
+            robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
+            sleep(500);
 
-        robot.driveForwardSetDistance(0.3, BACKUP  );
-        sleep(500);
+            robot.driveForwardSetDistance(0.3, BACKUP);
+            sleep(500);
+
     }
 //
     public int lookForVuMark(VuforiaTrackable rTemplate){
