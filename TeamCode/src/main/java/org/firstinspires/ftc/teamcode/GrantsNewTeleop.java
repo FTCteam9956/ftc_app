@@ -90,39 +90,34 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.winch.setPower(0.50);
                 }
 
-                //CLAW SERVO CONTROLS
-                if(gamepad1.right_bumper){
-                    robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-                }
-                if(gamepad1.right_trigger > 0.5){
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-                }
-                if(gamepad1.left_bumper){
-                    robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
-                }
-                if(gamepad1.left_trigger > 0.5){
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                }
-
+                //MECANUM CLAW CONTROLS
                 if(gamepad1.a && mecanumMode == 0){
                     robot.bottomRight.setPower(-0.5);
                     robot.topRight.setPower(0.5);
                     robot.bottomLeft.setPower(0.5);
                     robot.topLeft.setPower(-0.5);
+                    sleep(250);
                     mecanumMode++;
                 }else if(gamepad1.a && mecanumMode == 1){
                     robot.bottomRight.setPower(0.0);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.0);
                     robot.topLeft.setPower(0.0);
+                    sleep(250);
                     mecanumMode--;
                 }
-                else if (gamepad1.b) {
-                    robot.bottomRight.setPower(0.1);
-                    robot.topRight.setPower(0.1);
-                    robot.bottomLeft.setPower(-0.1);
-                    robot.topLeft.setPower(-0.1);
-                    mecanumMode = 1;
+                if(gamepad1.right_bumper){
+                    robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
+                }if(gamepad1.left_bumper){
+                    robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+                } if(gamepad1.right_trigger > 0.5){
+                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                } if(gamepad1.left_trigger > 0.5){
+                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
+                }if(robot.glyphSensor.alpha() > 520){//TODO MINOR BUG WITH INTAKE
+                    robot.clawTop.setPosition(0.8);
+                    sleep(200);
+                    robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
                 }
 
                 //SHOULDER CONTROLS

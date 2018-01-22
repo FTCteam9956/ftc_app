@@ -44,6 +44,7 @@ public class GrantsTeleopHardware {
     public CRServo topRight;
     public CRServo bottomLeft;
     public CRServo bottomRight;
+    public ColorSensor glyphSensor;
 
     //Jewel Arm Components
     public Servo rotateArm; //2-0
@@ -68,10 +69,10 @@ public class GrantsTeleopHardware {
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     //BLOCK CLAW CONSTANTS
-    public final static double BLOCK_CLAW_OPEN_TOP = 0.4;
-    public final static double BLOCK_CLAW_CLOSED_TOP = 0.35;
-    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.4;
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.35;
+    public final static double BLOCK_CLAW_OPEN_TOP = 0.7;
+    public final static double BLOCK_CLAW_CLOSED_TOP = 0.9;
+    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.5;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.255;
 
     //RELIC CLAW CONSTANTS
     public final static double RELIC_CLAW_OPENED = 0.7;
@@ -118,6 +119,7 @@ public class GrantsTeleopHardware {
         topRight = HwMap.crservo.get("topRight");
         bottomLeft = HwMap.crservo.get("bottomLeft");
         bottomRight = HwMap.crservo.get("bottomRight");
+        glyphSensor = HwMap.colorSensor.get("glyphSensor");
 
         //Jewel Smacker
         rotateArm = HwMap.servo.get("rotateArm");
@@ -145,6 +147,7 @@ public class GrantsTeleopHardware {
 
         //Sensor LED control.
         jewelArm.enableLed(false);
+        glyphSensor.enableLed(true);
     }
 
     public void initServoPositions() {

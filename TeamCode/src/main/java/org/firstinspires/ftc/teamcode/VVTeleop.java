@@ -27,7 +27,7 @@ Controls: TODO Finalize these with drivers
 */
 
 @TeleOp(name = "VVTeleOp", group = "TeleOp")
-//@Disabled
+@Disabled
 public class VVTeleop extends LinearOpMode {
     private VVNewHardware robot = new VVNewHardware();
     private ElapsedTime runtime = new ElapsedTime();
