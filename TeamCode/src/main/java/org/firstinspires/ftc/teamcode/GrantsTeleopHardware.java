@@ -6,9 +6,11 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -52,6 +54,8 @@ public class GrantsTeleopHardware {
     public ColorSensor jewelArm;
 
     BNO055IMU imu;
+
+    DigitalChannel topLimit;
 
     Orientation angles;
     Acceleration gravity;
@@ -127,6 +131,11 @@ public class GrantsTeleopHardware {
         jewelArm = HwMap.colorSensor.get("jewelArm");
 
         imu = HwMap.get(BNO055IMU.class, "imu");
+        topLimit = HwMap.get(DigitalChannel.class, "topLimit");
+
+        // set the digital channel to input.
+        topLimit.setMode(DigitalChannel.Mode.INPUT);
+
 
         //DC Motor directions.
         left1.setDirection(DcMotorSimple.Direction.FORWARD);

@@ -114,10 +114,18 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
                 } if(gamepad1.left_trigger > 0.5){
                     robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-                }if(robot.glyphSensor.alpha() > 520){//TODO MINOR BUG WITH INTAKE
-                    robot.clawTop.setPosition(0.8);
-                    sleep(200);
-                    robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+                }
+
+                if(robot.topLimit.getState() == true) {
+                    if (robot.glyphSensor.alpha() > 520) {
+                        robot.clawTop.setPosition(0.8);
+                        sleep(500);
+                        robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
+                        sleep(1000);
+                    }
+                }else{
+                    robot.topRight.setPower(0.0);
+                    robot.topLeft.setPower(0.0);
                 }
 
                 //SHOULDER CONTROLS
@@ -185,6 +193,11 @@ public class GrantsNewTeleop extends LinearOpMode{
 //            telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
             telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
             telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
+            if (robot.topLimit.getState() == true) {
+                telemetry.addData("Digital Touch", "Is Not Pressed");
+            } else {
+                telemetry.addData("Digital Touch", "Is Pressed");
+            }
             telemetry.update();
         }
     }
