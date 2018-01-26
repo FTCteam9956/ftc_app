@@ -75,136 +75,144 @@ public class GrantsNewTeleop extends LinearOpMode{
             if (opModeIsActive() && endGameMode == 0) {
 
                 //Drive Motor
-                robot.left1.setPower(speedAdjust(gamepad1.left_stick_y /1.5));
-                robot.left2.setPower(speedAdjust(gamepad1.left_stick_y /1.5));
-                robot.right1.setPower(speedAdjust(gamepad1.right_stick_y /1.5));
-                robot.right2.setPower(speedAdjust(gamepad1.right_stick_y /1.5));
+                robot.left1.setPower(speedAdjust(gamepad1.left_stick_y / 1.5));
+                robot.left2.setPower(speedAdjust(gamepad1.left_stick_y / 1.5));
+                robot.right1.setPower(speedAdjust(gamepad1.right_stick_y / 1.5));
+                robot.right2.setPower(speedAdjust(gamepad1.right_stick_y / 1.5));
 
                 //Claw Controls
                 //WINCH CONTROLS
-                    if(gamepad1.dpad_up){
-                        robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 75);
-                        robot.winch.setPower(1.0);
+                if (gamepad1.dpad_up) {
+                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 75);
+                    robot.winch.setPower(1.0);
 
-                    }if(robot.winchLimit.getState() == true) {
-                        if(gamepad1.dpad_down) {
-                            robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 75);
-                            robot.winch.setPower(1.0);
-                        }
-                    }else{
-                        robot.winch.setTargetPosition(robot.winch.getTargetPosition());
-                        robot.winch.setPower(0.50);
+                }
+                if (robot.winchLimit.getState() == true) {
+                    if (gamepad1.dpad_down) {
+                        robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 75);
+                        robot.winch.setPower(1.0);
                     }
+                } else {
+                    robot.winch.setTargetPosition(robot.winch.getTargetPosition());
+                    robot.winch.setPower(0.50);
+                }
 
                 //MECANUM CLAW CONTROLS
-                if(gamepad1.a && mecanumMode == 0){
+                if (gamepad1.a && mecanumMode == 0) {
                     robot.bottomRight.setPower(-0.5);
                     robot.topRight.setPower(0.5);
                     robot.bottomLeft.setPower(0.5);
                     robot.topLeft.setPower(-0.5);
                     sleep(250);
                     mecanumMode++;
-                }else if(gamepad1.a && mecanumMode == 1) {
-                        robot.bottomRight.setPower(0.0);
-                        robot.topRight.setPower(0.0);
-                        robot.bottomLeft.setPower(0.0);
-                        robot.topLeft.setPower(0.0);
-                        sleep(250);
-                    mecanumMode--;
-                } if(gamepad1.y && mecanumMode1 == 0){
-                    robot.bottomRight.setPower(0.5);
-                    robot.topRight.setPower(-0.5);
-                    robot.bottomLeft.setPower(-0.5);
-                    robot.topLeft.setPower(0.5);
-                    sleep(250);
-                    mecanumMode++;
-                }else if(gamepad1.y && mecanumMode1 == 1) {
+                } else if (gamepad1.a && mecanumMode == 1) {
                     robot.bottomRight.setPower(0.0);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.0);
                     robot.topLeft.setPower(0.0);
                     sleep(250);
                     mecanumMode--;
-                }if (gamepad1.right_bumper) {
-                    robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-                }if (gamepad1.left_bumper) {
-                    robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
                 }
-                if(robot.clawLimit.getState() == true) {
-                if(gamepad1.right_trigger > 0.5){
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                } if(gamepad1.left_trigger > 0.5) {
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-                }else{
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                    }
-                }if(robot.topLimit.getState() == true) {
-                    if (robot.glyphSensor.alpha() > 540) {
-                        robot.clawTop.setPosition(0.8);
-                        sleep(500);
+//                 if(gamepad1.y && mecanumMode1 == 0){
+//                    robot.bottomRight.setPower(0.5);
+//                    robot.topRight.setPower(-0.5);
+//                    robot.bottomLeft.setPower(-0.5);
+//                    robot.topLeft.setPower(0.5);
+//                    sleep(250);
+//                    mecanumMode++;
+//                }else if(gamepad1.y && mecanumMode1 == 1) {
+//                    robot.bottomRight.setPower(0.0);
+//                    robot.topRight.setPower(0.0);
+//                    robot.bottomLeft.setPower(0.0);
+//                    robot.topLeft.setPower(0.0);
+//                    sleep(250);
+//                    mecanumMode--;
+//                }
+                    if (gamepad1.right_bumper) {
                         robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-                        sleep(1000);
                     }
-                }else{
-                    robot.topRight.setPower(0.0);
-                    robot.topLeft.setPower(0.0);
-                }
+                    if (gamepad1.left_bumper) {
+                        robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+                    }
+                    if (robot.clawLimit.getState() == true) {
+                        if (gamepad1.right_trigger > 0.5) {
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                        }
+                        if (gamepad1.left_trigger > 0.5) {
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
+                        } else {
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                        }
+                    }
+                    if (robot.topLimit.getState() == true) {
+                        if (robot.glyphSensor.alpha() > 540) {
+                            robot.clawTop.setPosition(0.8);
+                            sleep(500);
+                            robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
+                            sleep(1000);
+                        }
+                    }
+                    //else {
+                    //    robot.topRight.setPower(0.0);
+                    //    robot.topLeft.setPower(0.0);
+                    //}
 
-                //SHOULDER CONTROLS
-                if (gamepad1.dpad_left) {
-                    shoulderPos = shoulderPos + 15;
-                    robot.shoulder.setTargetPosition(shoulderPos);
-                    robot.shoulder.setPower(0.2);
-                } else if (gamepad1.dpad_right) {
-                    shoulderPos = shoulderPos - 15;
-                    robot.shoulder.setTargetPosition(shoulderPos);
-                    robot.shoulder.setPower(0.2);
-                } else {
-                    robot.shoulder.setTargetPosition(shoulderPos);
-                    robot.shoulder.setPower(0.5);
+                    //SHOULDER CONTROLS
+                    if (gamepad1.dpad_left) {
+                        shoulderPos = shoulderPos + 15;
+                        robot.shoulder.setTargetPosition(shoulderPos);
+                        robot.shoulder.setPower(0.2);
+                    } else if (gamepad1.dpad_right) {
+                        shoulderPos = shoulderPos - 15;
+                        robot.shoulder.setTargetPosition(shoulderPos);
+                        robot.shoulder.setPower(0.2);
+                    } else {
+                        robot.shoulder.setTargetPosition(shoulderPos);
+                        robot.shoulder.setPower(0.5);
+                    }
+                    if (shoulderPos <= -581) {
+                        robot.shoulder.setTargetPosition(-580);
+                        shoulderPos = -580;
+                    }
+                    telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
+                    telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
+                    telemetry.addData("Mode", mecanumMode);
+                    telemetry.update();
                 }
-                if(shoulderPos <= -581){
-                    robot.shoulder.setTargetPosition(-580);
-                    shoulderPos = -580;
-                }
-                telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
-                telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
-                telemetry.update();
-            }
-            if (endGameMode == 1) {
-                //Drive Motors
-                leftPower = (gamepad2.left_stick_y + gamepad2.left_stick_x);
-                rightPower = (gamepad2.left_stick_y - gamepad2.left_stick_x);
+                if (endGameMode == 1) {
+                    //Drive Motors
+                    leftPower = (gamepad2.left_stick_y + gamepad2.left_stick_x);
+                    rightPower = (gamepad2.left_stick_y - gamepad2.left_stick_x);
 
-                robot.left1.setPower(-leftPower / 3);
-                robot.left2.setPower(-leftPower / 3);
-                robot.right1.setPower(-rightPower / 3);
-                robot.right2.setPower(-rightPower / 3);
+                    robot.left1.setPower(-leftPower / 3);
+                    robot.left2.setPower(-leftPower / 3);
+                    robot.right1.setPower(-rightPower / 3);
+                    robot.right2.setPower(-rightPower / 3);
 
-                //Slider controls
-                //Slider Motor Controls
-                robot.slider.setPower(speedAdjust(gamepad2.right_stick_y));
-                //Slider Grabbing Controls
-                if(gamepad2.left_bumper && sliderClawmode == 0){
-                    robot.relicClaw.setPosition(robot.RELIC_CLAW_CLOSED);
-                    sleep(500);
-                    sliderClawmode++;
-                }else if(gamepad2.left_bumper && sliderClawmode == 1){
-                    robot.relicClaw.setPosition(robot.RELIC_CLAW_OPENED);
-                    sleep(500);
-                    sliderClawmode--;
+                    //Slider controls
+                    //Slider Motor Controls
+                    robot.slider.setPower(speedAdjust(gamepad2.right_stick_y));
+                    //Slider Grabbing Controls
+                    if (gamepad2.left_bumper && sliderClawmode == 0) {
+                        robot.relicClaw.setPosition(robot.RELIC_CLAW_CLOSED);
+                        sleep(500);
+                        sliderClawmode++;
+                    } else if (gamepad2.left_bumper && sliderClawmode == 1) {
+                        robot.relicClaw.setPosition(robot.RELIC_CLAW_OPENED);
+                        sleep(500);
+                        sliderClawmode--;
+                    }
+                    //Slider Twisting Controls
+                    if (gamepad2.right_bumper && sliderTwistMode == 0) {
+                        robot.relicTwist.setPosition(robot.RELIC_TWIST_UP);
+                        sleep(500);
+                        sliderTwistMode++;
+                    } else if (gamepad2.right_bumper && sliderTwistMode == 1) {
+                        robot.relicTwist.setPosition(robot.RELIC_TWIST_DOWN);
+                        sleep(500);
+                        sliderTwistMode--;
+                    }
                 }
-                //Slider Twisting Controls
-                if(gamepad2.right_bumper && sliderTwistMode == 0){
-                    robot.relicTwist.setPosition(robot.RELIC_TWIST_UP);
-                    sleep(500);
-                    sliderTwistMode++;
-                }else if(gamepad2.right_bumper && sliderTwistMode == 1) {
-                    robot.relicTwist.setPosition(robot.RELIC_TWIST_DOWN);
-                    sleep(500);
-                    sliderTwistMode--;
-                }
-            }
 //            telemetry.addData("Winch Position", robot.winch.getTargetPosition());
 //            telemetry.addData("Winch Power", robot.winch.getPower());
 //            telemetry.addData("Endgame Mode", endGameMode);
@@ -213,22 +221,23 @@ public class GrantsNewTeleop extends LinearOpMode{
 //            telemetry.addData("Shoulder Encoder", robot.shoulder.getCurrentPosition());
 //            telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
 //            telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
-            telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
-            telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
-            if(robot.topLimit.getState() == true) {
-                telemetry.addData("Digital Touch", "Is Not Pressed");
-            } else {
-                telemetry.addData("Digital Touch","Is Pressed");
+                telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
+                telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
+                if (robot.topLimit.getState() == true) {
+                    telemetry.addData("Digital Touch", "Is Not Pressed");
+                } else {
+                    telemetry.addData("Digital Touch", "Is Pressed");
+                }
+                if (robot.clawLimit.getState() == true) {
+                    telemetry.addData("Digital Claw Touch", "Is Not Pressed");
+                } else {
+                    telemetry.addData("Digital Claw Touch", "Is Pressed");
+                }
+                telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
+                telemetry.update();
             }
-            if(robot.clawLimit.getState() == true) {
-                telemetry.addData("Digital Claw Touch", "Is Not Pressed");
-            } else {
-                telemetry.addData("Digital Claw Touch", "Is Pressed");
-            }
-            telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
-            telemetry.update();
         }
-    }
+
     public static int controllerToPosition(float stickValue){
         float returnValue = 0;
         if(stickValue > 0){
