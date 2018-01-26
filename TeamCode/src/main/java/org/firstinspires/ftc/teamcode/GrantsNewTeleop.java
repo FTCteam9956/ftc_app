@@ -41,6 +41,7 @@ public class GrantsNewTeleop extends LinearOpMode{
     public static int endGameMode = 0;
     public static int sliderTwistMode = 0;
     public static int mecanumMode = 0;
+    public static int mecanumMode1 = 0;
 
     public float rightPower;
     public float leftPower;
@@ -52,6 +53,8 @@ public class GrantsNewTeleop extends LinearOpMode{
         robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.winch.setTargetPosition(0);
+        robot.winch.setPower(0.1);
 
         waitForStart();
 
@@ -79,16 +82,19 @@ public class GrantsNewTeleop extends LinearOpMode{
 
                 //Claw Controls
                 //WINCH CONTROLS
-                if(gamepad1.dpad_up){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 75);
-                    robot.winch.setPower(1.0);
-                }else if(gamepad1.dpad_down){
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 75);
-                    robot.winch.setPower(1.0);
-                }else{
-                    robot.winch.setTargetPosition(robot.winch.getTargetPosition());
-                    robot.winch.setPower(0.50);
-                }
+                    if(gamepad1.dpad_up){
+                        robot.winch.setTargetPosition(robot.winch.getTargetPosition() + 75);
+                        robot.winch.setPower(1.0);
+
+                    }if(robot.winchLimit.getState() == true) {
+                        if(gamepad1.dpad_down) {
+                            robot.winch.setTargetPosition(robot.winch.getTargetPosition() - 75);
+                            robot.winch.setPower(1.0);
+                        }
+                    }else{
+                        robot.winch.setTargetPosition(robot.winch.getTargetPosition());
+                        robot.winch.setPower(0.50);
+                    }
 
                 //MECANUM CLAW CONTROLS
                 if(gamepad1.a && mecanumMode == 0){
@@ -98,26 +104,42 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.topLeft.setPower(-0.5);
                     sleep(250);
                     mecanumMode++;
-                }else if(gamepad1.a && mecanumMode == 1){
+                }else if(gamepad1.a && mecanumMode == 1) {
+                        robot.bottomRight.setPower(0.0);
+                        robot.topRight.setPower(0.0);
+                        robot.bottomLeft.setPower(0.0);
+                        robot.topLeft.setPower(0.0);
+                        sleep(250);
+                    mecanumMode--;
+                } if(gamepad1.y && mecanumMode1 == 0){
+                    robot.bottomRight.setPower(0.5);
+                    robot.topRight.setPower(-0.5);
+                    robot.bottomLeft.setPower(-0.5);
+                    robot.topLeft.setPower(0.5);
+                    sleep(250);
+                    mecanumMode++;
+                }else if(gamepad1.y && mecanumMode1 == 1) {
                     robot.bottomRight.setPower(0.0);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.0);
                     robot.topLeft.setPower(0.0);
                     sleep(250);
                     mecanumMode--;
-                }
-                if(gamepad1.right_bumper){
+                }if (gamepad1.right_bumper) {
                     robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-                }if(gamepad1.left_bumper){
+                }if (gamepad1.left_bumper) {
                     robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
-                } if(gamepad1.right_trigger > 0.5){
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                } if(gamepad1.left_trigger > 0.5){
-                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
                 }
-
-                if(robot.topLimit.getState() == true) {
-                    if (robot.glyphSensor.alpha() > 520) {
+                if(robot.clawLimit.getState() == true) {
+                if(gamepad1.right_trigger > 0.5){
+                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                } if(gamepad1.left_trigger > 0.5) {
+                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
+                }else{
+                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                    }
+                }if(robot.topLimit.getState() == true) {
+                    if (robot.glyphSensor.alpha() > 540) {
                         robot.clawTop.setPosition(0.8);
                         sleep(500);
                         robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
@@ -193,11 +215,17 @@ public class GrantsNewTeleop extends LinearOpMode{
 //            telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
             telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
             telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
-            if (robot.topLimit.getState() == true) {
+            if(robot.topLimit.getState() == true) {
                 telemetry.addData("Digital Touch", "Is Not Pressed");
             } else {
-                telemetry.addData("Digital Touch", "Is Pressed");
+                telemetry.addData("Digital Touch","Is Pressed");
             }
+            if(robot.clawLimit.getState() == true) {
+                telemetry.addData("Digital Claw Touch", "Is Not Pressed");
+            } else {
+                telemetry.addData("Digital Claw Touch", "Is Pressed");
+            }
+            telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
             telemetry.update();
         }
     }

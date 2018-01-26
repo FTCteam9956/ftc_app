@@ -56,6 +56,10 @@ public class GrantsTeleopHardware {
     BNO055IMU imu;
 
     DigitalChannel topLimit;
+    DigitalChannel secondLimit;
+    DigitalChannel thirdLimit;
+    DigitalChannel winchLimit;
+    DigitalChannel clawLimit;
 
     Orientation angles;
     Acceleration gravity;
@@ -132,6 +136,8 @@ public class GrantsTeleopHardware {
 
         imu = HwMap.get(BNO055IMU.class, "imu");
         topLimit = HwMap.get(DigitalChannel.class, "topLimit");
+        winchLimit = HwMap.get(DigitalChannel.class, "winchLimit");
+        clawLimit = HwMap.get(DigitalChannel.class, "clawLimit");
 
         // set the digital channel to input.
         topLimit.setMode(DigitalChannel.Mode.INPUT);
@@ -142,7 +148,7 @@ public class GrantsTeleopHardware {
         left2.setDirection(DcMotorSimple.Direction.FORWARD);
         right1.setDirection(DcMotorSimple.Direction.REVERSE);
         right2.setDirection(DcMotorSimple.Direction.REVERSE);
-        winch.setDirection(DcMotorSimple.Direction.REVERSE);
+        winch.setDirection(DcMotorSimple.Direction.FORWARD);
         slider.setDirection(DcMotorSimple.Direction.FORWARD);
         shoulder.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -162,8 +168,8 @@ public class GrantsTeleopHardware {
     public void initServoPositions() {
         this.relicTwist.setPosition(RELIC_TWIST_UP);
         this.relicClaw.setPosition(RELIC_CLAW_OPENED);
-        this.clawBottom.setPosition(BLOCK_CLAW_CLOSED_BOTTOM);
-        this.clawTop.setPosition(BLOCK_CLAW_CLOSED_TOP);
+        this.clawBottom.setPosition(BLOCK_CLAW_OPEN_BOTTOM);
+        this.clawTop.setPosition(BLOCK_CLAW_OPEN_TOP);
         this.rotateArm.setPosition(ROTATE_MID);
         this.lowerArm.setPosition(JEWEL_ARM_UP);
     }

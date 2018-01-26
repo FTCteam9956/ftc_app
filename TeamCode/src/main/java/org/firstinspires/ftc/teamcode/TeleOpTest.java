@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "TeleOpTest", group = "Teleop")
-//@Disabled
+@Disabled
 
 //---TeleOp Controls---
 
