@@ -133,25 +133,26 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.topRight.setPower(0.5);
                     robot.bottomLeft.setPower(0.5);
                     robot.topLeft.setPower(-0.5);
-                    //robot.blockRotate.setPower(1);
+                    robot.blockRotate.setPower(1);
                     sleep(250);
                     mecanumMode++;
-                } else if (gamepad1.a && mecanumMode == 1) {
+                } if (gamepad1.a && mecanumMode == 1) {
                     robot.bottomRight.setPower(0.0);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.0);
                     robot.topLeft.setPower(0.0);
                     sleep(250);
-                    //robot.blockRotate.setPower(0.0);
+                    robot.blockRotate.setPower(0.0);
                     mecanumMode--;
                 }
-//                 if(gamepad1.y && mecanumMode1 == 0){
-//                    robot.bottomRight.setPower(0.5);
-//                    robot.topRight.setPower(-0.5);
-//                    robot.bottomLeft.setPower(-0.5);
-//                    robot.topLeft.setPower(0.5);
-//                    sleep(250);
-//                    mecanumMode++;
+                 if(gamepad1.y && mecanumMode1 == 0) {
+                     robot.bottomRight.setPower(0.5);
+                     robot.topRight.setPower(-0.5);
+                     robot.bottomLeft.setPower(-0.5);
+                     robot.topLeft.setPower(0.5);
+                     sleep(250);
+                     mecanumMode++;
+                 }
 //                }else if(gamepad1.y && mecanumMode1 == 1) {
 //                    robot.bottomRight.setPower(0.0);
 //                    robot.topRight.setPower(0.0);
@@ -190,10 +191,11 @@ public class GrantsNewTeleop extends LinearOpMode{
                             sleep(1000);
                         }
                     }
-                    //else {
-                    //    robot.topRight.setPower(0.0);
-                    //    robot.topLeft.setPower(0.0);
-                    //}
+                    if (robot.topLimit.getState() == false) {
+                        robot.topRight.setPower(0.0);
+                        robot.topLeft.setPower(0.0);
+                        sleep(250);
+                    }
 
                     //SHOULDER CONTROLS
                     if (gamepad1.dpad_left) {
