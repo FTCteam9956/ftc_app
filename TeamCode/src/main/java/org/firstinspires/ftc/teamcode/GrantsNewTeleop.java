@@ -82,21 +82,50 @@ public class GrantsNewTeleop extends LinearOpMode{
 
                 //Claw Controls
                 //WINCH CONTROLS
-                if (robot.liftlimita.getState() == true || robot.liftlimitb.getState() == true) {
-                    if (gamepad1.right_trigger > 0.5) {
-                        robot.winch.setPower(0.1);
+                // Left trigger is go down, right is go up
+                if (robot.liftlimita.getState() == false && robot.liftlimitb.getState() == false){//AT Top
+                    if (gamepad1.left_trigger < 0.01){ // if not pressing down trigger
+                        robot.winch.setPower(0.0);
                     }
-                    else if (robot.winchLimit.getState() == true) {
-                        if (gamepad1.left_trigger > 0.5) {
-                            robot.winch.setPower(-0.2);
-                        }
+                    else { // if pressing down trigger
+                        robot.winch.setPower(-0.9);
+                    }
+                }
+                else if (robot.winchLimit.getState() == false){// At bot
+                    if (gamepad1.right_trigger < 0.01){ // if not pressing up trigger
+                        robot.winch.setPower(0.0);
+                    }
+                    else { //if pressing up trigger
+                        robot.winch.setPower(0.9);
+                    }
+                }
+                else{ //mid area
+                    if (gamepad1.right_trigger > 0.5){
+                        robot.winch.setPower(0.9);
+                    }
+                    else if (gamepad1.left_trigger > 0.5) {
+                        robot.winch.setPower(-0.9);
                     }
                     else {
-                        robot.winch.setPower(0.001);
+                        robot.winch.setPower(0.0);
                     }
-                } else {
-                    robot.winch.setPower(0.001);
                 }
+
+
+
+
+//
+//                if (gamepad1.left_trigger > 0.5 || gamepad1.right_trigger > 0.5) {
+//                    if ((robot.liftlimita.getState() == true || robot.liftlimitb.getState() == true) && gamepad1.right_trigger > 0.5) {
+//                        robot.winch.setPower(0.3);
+//                    }
+//                    if (robot.winchLimit.getState() == true && gamepad1.left_trigger > 0.5) {
+//                        robot.winch.setPower(-0.3);
+//                    }
+//                }
+//                else {
+//                    robot.winch.setPower(0.0);
+//                }
 
                 //MECANUM CLAW CONTROLS
                 if (gamepad1.a && mecanumMode == 0) {
@@ -245,6 +274,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                 telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
                 telemetry.update();
             }
+
         }
 
     public static int controllerToPosition(float stickValue){

@@ -40,13 +40,13 @@ public class GrantsTeleopHardware {
     //Claw Compenentsnbn
     public DcMotor winch; //2-1
     public DcMotor shoulder; //2-2
+    public DcMotor blockRotate;
     public Servo clawBottom; //2-3
     public Servo clawTop; //2-4
     public CRServo topLeft;
     public CRServo topRight;
     public CRServo bottomLeft;
     public CRServo bottomRight;
-    public CRServo blockRotate;
     public ColorSensor glyphSensor;
 
     //Jewel Arm Components
@@ -124,13 +124,13 @@ public class GrantsTeleopHardware {
         //Claw
         winch = HwMap.dcMotor.get("winch");
         shoulder = HwMap.dcMotor.get("shoulder");
+        blockRotate = HwMap.dcMotor.get("blockRotate");
         clawTop = HwMap.servo.get("clawTop");
         clawBottom = HwMap.servo.get("clawBottom");
         topLeft = HwMap.crservo.get("topLeft");
         topRight = HwMap.crservo.get("topRight");
         bottomLeft = HwMap.crservo.get("bottomLeft");
         bottomRight = HwMap.crservo.get("bottomRight");
-        blockRotate = HwMap.crservo.get("blockRotate");
         glyphSensor = HwMap.colorSensor.get("glyphSensor");
 
         //Jewel Smacker
