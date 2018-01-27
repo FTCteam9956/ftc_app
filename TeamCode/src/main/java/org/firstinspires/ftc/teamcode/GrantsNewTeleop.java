@@ -62,6 +62,7 @@ public class GrantsNewTeleop extends LinearOpMode{
         robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
         robot.rotateArm.setPosition(0.6);
 
+
         while (opModeIsActive()) {
 
             //Allows us to switch modes to have more control
@@ -81,14 +82,14 @@ public class GrantsNewTeleop extends LinearOpMode{
 
                 //Claw Controls
                 //WINCH CONTROLS
-                if (robot.liftlimit.getState() == true) {
+                if (robot.liftlimita.getState() == true || robot.liftlimitb.getState() == true) {
                     if (gamepad1.right_trigger > 0.5) {
                         robot.winch.setPower(0.1);
                     }
-                }
-                else if (robot.winchLimit.getState() == true) {
-                    if (gamepad1.left_trigger > 0.5) {
-                        robot.winch.setPower(-0.1);
+                    else if (robot.winchLimit.getState() == true) {
+                        if (gamepad1.left_trigger > 0.5) {
+                            robot.winch.setPower(-0.2);
+                        }
                     }
                     else {
                         robot.winch.setPower(0.001);
@@ -103,6 +104,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.topRight.setPower(0.5);
                     robot.bottomLeft.setPower(0.5);
                     robot.topLeft.setPower(-0.5);
+                    //robot.blockRotate.setPower(1);
                     sleep(250);
                     mecanumMode++;
                 } else if (gamepad1.a && mecanumMode == 1) {
@@ -111,6 +113,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.bottomLeft.setPower(0.0);
                     robot.topLeft.setPower(0.0);
                     sleep(250);
+                    //robot.blockRotate.setPower(0.0);
                     mecanumMode--;
                 }
 //                 if(gamepad1.y && mecanumMode1 == 0){

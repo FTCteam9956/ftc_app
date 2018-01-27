@@ -46,6 +46,7 @@ public class GrantsTeleopHardware {
     public CRServo topRight;
     public CRServo bottomLeft;
     public CRServo bottomRight;
+    public CRServo blockRotate;
     public ColorSensor glyphSensor;
 
     //Jewel Arm Components
@@ -60,8 +61,8 @@ public class GrantsTeleopHardware {
     DigitalChannel thirdLimit;
     DigitalChannel winchLimit;
     DigitalChannel clawLimit;
-    DigitalChannel liftlimit;
-
+    DigitalChannel liftlimita;
+    DigitalChannel liftlimitb;
     Orientation angles;
     Acceleration gravity;
 
@@ -129,6 +130,7 @@ public class GrantsTeleopHardware {
         topRight = HwMap.crservo.get("topRight");
         bottomLeft = HwMap.crservo.get("bottomLeft");
         bottomRight = HwMap.crservo.get("bottomRight");
+        blockRotate = HwMap.crservo.get("blockRotate");
         glyphSensor = HwMap.colorSensor.get("glyphSensor");
 
         //Jewel Smacker
@@ -140,7 +142,8 @@ public class GrantsTeleopHardware {
         topLimit = HwMap.get(DigitalChannel.class, "topLimit");
         winchLimit = HwMap.get(DigitalChannel.class, "winchLimit");
         clawLimit = HwMap.get(DigitalChannel.class, "clawLimit");
-        liftlimit = HwMap.get(DigitalChannel.class, "liftlimit");
+        liftlimita = HwMap.get(DigitalChannel.class, "liftlimita");
+        liftlimitb = HwMap.get(DigitalChannel.class, "liftlimitb");
         // set the digital channel to input.
         topLimit.setMode(DigitalChannel.Mode.INPUT);
 
