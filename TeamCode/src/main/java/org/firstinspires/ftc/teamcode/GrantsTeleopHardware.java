@@ -60,6 +60,7 @@ public class GrantsTeleopHardware {
     DigitalChannel thirdLimit;
     DigitalChannel winchLimit;
     DigitalChannel clawLimit;
+    DigitalChannel liftlimit;
 
     Orientation angles;
     Acceleration gravity;
@@ -80,7 +81,7 @@ public class GrantsTeleopHardware {
     public final static double BLOCK_CLAW_OPEN_TOP = 0.77;
     public final static double BLOCK_CLAW_CLOSED_TOP = 0.89;
     public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.5;
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.27;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.265;
     public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.3;
 
     //RELIC CLAW CONSTANTS
@@ -139,7 +140,7 @@ public class GrantsTeleopHardware {
         topLimit = HwMap.get(DigitalChannel.class, "topLimit");
         winchLimit = HwMap.get(DigitalChannel.class, "winchLimit");
         clawLimit = HwMap.get(DigitalChannel.class, "clawLimit");
-
+        liftlimit = HwMap.get(DigitalChannel.class, "liftlimit");
         // set the digital channel to input.
         topLimit.setMode(DigitalChannel.Mode.INPUT);
 
