@@ -140,10 +140,16 @@ public class GrantsNewTeleop extends LinearOpMode{
                         }
                         if (gamepad1.left_trigger > 0.5) {
                             robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-                        } else {
-                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
                         }
-                    }
+                        } else {
+                            if (gamepad1.right_trigger > 0.5) {
+                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                            }
+                            if (gamepad1.left_trigger > 0.5) {
+                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
+                            }
+                        }
+
                     if (robot.topLimit.getState() == true) {
                         if (robot.glyphSensor.alpha() > 540) {
                             robot.clawTop.setPosition(0.8);

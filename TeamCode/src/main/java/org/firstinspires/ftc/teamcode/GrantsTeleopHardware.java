@@ -77,10 +77,11 @@ public class GrantsTeleopHardware {
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     //BLOCK CLAW CONSTANTS
-    public final static double BLOCK_CLAW_OPEN_TOP = 0.7;
-    public final static double BLOCK_CLAW_CLOSED_TOP = 0.9;
+    public final static double BLOCK_CLAW_OPEN_TOP = 0.77;
+    public final static double BLOCK_CLAW_CLOSED_TOP = 0.89;
     public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.5;
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.255;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.27;
+    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.3;
 
     //RELIC CLAW CONSTANTS
     public final static double RELIC_CLAW_OPENED = 0.7;
