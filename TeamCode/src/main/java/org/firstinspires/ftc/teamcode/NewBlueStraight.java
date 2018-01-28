@@ -17,9 +17,7 @@ public class NewBlueStraight extends LinearOpMode{
         robot.init(hardwareMap);//Robot moves during init().
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
-        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();

@@ -39,7 +39,6 @@ public class GrantsTeleopHardware {
 
     //Claw Compenentsnbn
     public DcMotor winch; //2-1
-    public DcMotor shoulder; //2-2
     public DcMotor blockRotate;
     public Servo clawBottom; //2-3
     public Servo clawTop; //2-4
@@ -57,12 +56,11 @@ public class GrantsTeleopHardware {
     BNO055IMU imu;
 
     DigitalChannel topLimit;
-    DigitalChannel secondLimit;
-    DigitalChannel thirdLimit;
     DigitalChannel winchLimit;
     DigitalChannel clawLimit;
     DigitalChannel liftlimita;
     DigitalChannel liftlimitb;
+
     Orientation angles;
     Acceleration gravity;
 
@@ -79,10 +77,10 @@ public class GrantsTeleopHardware {
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     //BLOCK CLAW CONSTANTS
-    public final static double BLOCK_CLAW_OPEN_TOP = 0.77;
-    public final static double BLOCK_CLAW_CLOSED_TOP = 0.89;
-    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.5;
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.265;
+    public final static double BLOCK_CLAW_OPEN_TOP = 0.75; //0.75
+    public final static double BLOCK_CLAW_CLOSED_TOP = 0.89; //0.89
+    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.42; //.42
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.22; //.265
     public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.3;
 
     //RELIC CLAW CONSTANTS
@@ -123,7 +121,6 @@ public class GrantsTeleopHardware {
 
         //Claw
         winch = HwMap.dcMotor.get("winch");
-        shoulder = HwMap.dcMotor.get("shoulder");
         blockRotate = HwMap.dcMotor.get("blockRotate");
         clawTop = HwMap.servo.get("clawTop");
         clawBottom = HwMap.servo.get("clawBottom");
@@ -155,7 +152,6 @@ public class GrantsTeleopHardware {
         right2.setDirection(DcMotorSimple.Direction.REVERSE);
         winch.setDirection(DcMotorSimple.Direction.FORWARD);
         slider.setDirection(DcMotorSimple.Direction.FORWARD);
-        shoulder.setDirection(DcMotorSimple.Direction.FORWARD);
 
         left1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -163,7 +159,6 @@ public class GrantsTeleopHardware {
         right2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Sensor LED control.
         jewelArm.enableLed(false);
@@ -221,7 +216,6 @@ public class GrantsTeleopHardware {
         while (left1.isBusy() & right1.isBusy()) {
             // Spinning.
             // Waiting for robot to arrive at destination.
-
         }
         //Stops driving by setting power to 0.0.
         setMotorPower(0.0);

@@ -33,9 +33,7 @@ public class NewBlueTurn extends LinearOpMode{
         robot.init(hardwareMap);//Robot moves during init().
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
-        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -151,8 +149,6 @@ public class NewBlueTurn extends LinearOpMode{
 
         //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
         if (targetPosition == 1){
-            robot.shoulder.setTargetPosition(-400);
-            robot.shoulder.setPower(0.2);
             sleep(2000);
             robot.driveForwardSetDistance(0.2, 10);
             sleep(2000);
@@ -166,8 +162,6 @@ public class NewBlueTurn extends LinearOpMode{
             sleep(1500);
             robot.turnDirection(0.2, TURN2, "CW");
             sleep(1000);
-            robot.shoulder.setTargetPosition(-370);
-            robot.shoulder.setPower(0.2);
             sleep(500);
             robot.winch.setTargetPosition(-200);
             robot.winch.setPower(0.1);
@@ -180,8 +174,6 @@ public class NewBlueTurn extends LinearOpMode{
             sleep(5000);
 
         } else if (targetPosition == 3) {
-            robot.shoulder.setTargetPosition(-580);
-            robot.shoulder.setPower(0.2);
             sleep(1000);
             robot.driveForwardSetDistance(0.2, 50);
             sleep(1000);
@@ -198,8 +190,6 @@ public class NewBlueTurn extends LinearOpMode{
         }
 
         else if (targetPosition == 4) {
-            robot.shoulder.setTargetPosition(-580);
-            robot.shoulder.setPower(0.2);
             sleep(1000);
             robot.driveForwardSetDistance(0.2, 50);
             sleep(1000);

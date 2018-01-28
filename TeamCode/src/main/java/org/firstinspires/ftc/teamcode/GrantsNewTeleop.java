@@ -34,133 +34,110 @@ public class GrantsNewTeleop extends LinearOpMode{
     public GrantsTeleopHardware robot =  new GrantsTeleopHardware();
 
     //These are constants that are used to change the position of a servo or switch modes
-    public static int Rclawmode = 1;
-    public static int Lclawmode = 1;
     public static int sliderClawmode = 0;
     public static int shoulderPos = 0;
     public static int endGameMode = 0;
     public static int sliderTwistMode = 0;
-    public static int mecanumMode = 0;
-    public static int mecanumMode1 = 0;
-
+    public static int mecanumMode = 3;
+    //public static int mecanumMode1 = 0;
     public float rightPower;
     public float leftPower;
 
     public void runOpMode() {
 
+        //Initializing Hardware
         robot.init(hardwareMap);
-        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
         waitForStart();
 
+        //Set jewelarm and Relic Claw position
         robot.relicClaw.setPosition(robot.RELIC_CLAW_OPENED);
-        //Set jewel arm teleop position
-        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+        robot.lowerArm.setPosition(robot.JEWEL_ARM_UP);
         robot.rotateArm.setPosition(0.6);
+        //TODO put the glyph block in
 
-
-        while (opModeIsActive()) {
+        while(opModeIsActive()){
 
             //Allows us to switch modes to have more control
-            if (gamepad1.start) {
+            if(gamepad1.start){
                 endGameMode = 1;
-            } else if (gamepad2.start) {
+            }else if(gamepad2.start){
                 endGameMode = 0;
             }
 
-            if (opModeIsActive() && endGameMode == 0) {
+            if(endGameMode == 0){
 
-                //Drive Motor
+                //TANK DRIVE
                 robot.left1.setPower(speedAdjust(gamepad1.left_stick_y / 1.5));
                 robot.left2.setPower(speedAdjust(gamepad1.left_stick_y / 1.5));
                 robot.right1.setPower(speedAdjust(gamepad1.right_stick_y / 1.5));
                 robot.right2.setPower(speedAdjust(gamepad1.right_stick_y / 1.5));
 
-                //Claw Controls
                 //WINCH CONTROLS
-                // Left trigger is go down, right is go up
-                if (robot.liftlimita.getState() == false && robot.liftlimitb.getState() == false){//AT Top
-                    if (gamepad1.left_trigger < 0.01){ // if not pressing down trigger
+                if(robot.liftlimita.getState() == false && robot.liftlimitb.getState() == false){//AT Top
+                    if(gamepad1.left_trigger < 0.01){ // if not pressing down trigger
                         robot.winch.setPower(0.0);
-                    }
-                    else { // if pressing down trigger
+                    }else{ // if pressing down trigger
                         robot.winch.setPower(-0.9);
                     }
                 }
-                else if (robot.winchLimit.getState() == false){// At bot
-                    if (gamepad1.right_trigger < 0.01){ // if not pressing up trigger
+                else if(robot.winchLimit.getState() == false){// At bot
+                    if(gamepad1.right_trigger < 0.01){ // if not pressing up trigger
                         robot.winch.setPower(0.0);
-                    }
-                    else { //if pressing up trigger
+                    }else{ //if pressing up trigger
                         robot.winch.setPower(0.9);
                     }
                 }
                 else{ //mid area
-                    if (gamepad1.right_trigger > 0.5){
+                    if(gamepad1.right_trigger > 0.5){
                         robot.winch.setPower(0.9);
                     }
-                    else if (gamepad1.left_trigger > 0.5) {
+                    else if(gamepad1.left_trigger > 0.5) {
                         robot.winch.setPower(-0.9);
-                    }
-                    else {
+                    }else{
                         robot.winch.setPower(0.0);
                     }
                 }
 
-
-
-
-//
-//                if (gamepad1.left_trigger > 0.5 || gamepad1.right_trigger > 0.5) {
-//                    if ((robot.liftlimita.getState() == true || robot.liftlimitb.getState() == true) && gamepad1.right_trigger > 0.5) {
-//                        robot.winch.setPower(0.3);
-//                    }
-//                    if (robot.winchLimit.getState() == true && gamepad1.left_trigger > 0.5) {
-//                        robot.winch.setPower(-0.3);
-//                    }
-//                }
-//                else {
-//                    robot.winch.setPower(0.0);
-//                }
-
                 //MECANUM CLAW CONTROLS
-                if (gamepad1.a && mecanumMode == 0) {
+                if(gamepad1.a){
+                    mecanumMode = 0;
+                }
+                if(gamepad1.b){
+                    mecanumMode = 1;
+                }
+                if(gamepad1.y){
+                    mecanumMode = 2;
+                }
+                if(mecanumMode == 0){ //FORWARD
                     robot.bottomRight.setPower(-0.5);
                     robot.topRight.setPower(0.5);
                     robot.bottomLeft.setPower(0.5);
                     robot.topLeft.setPower(-0.5);
-                    robot.blockRotate.setPower(1);
-                    sleep(250);
-                    mecanumMode++;
-                } if (gamepad1.a && mecanumMode == 1) {
+                    robot.blockRotate.setPower(0.53);
+                }
+                else if(mecanumMode == 1){ //STOP
                     robot.bottomRight.setPower(0.0);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.0);
                     robot.topLeft.setPower(0.0);
-                    sleep(250);
                     robot.blockRotate.setPower(0.0);
-                    mecanumMode--;
                 }
-                 if(gamepad1.y && mecanumMode1 == 0) {
-                     robot.bottomRight.setPower(0.5);
-                     robot.topRight.setPower(-0.5);
-                     robot.bottomLeft.setPower(-0.5);
-                     robot.topLeft.setPower(0.5);
-                     sleep(250);
-                     mecanumMode++;
-                 }
-//                }else if(gamepad1.y && mecanumMode1 == 1) {
-//                    robot.bottomRight.setPower(0.0);
-//                    robot.topRight.setPower(0.0);
-//                    robot.bottomLeft.setPower(0.0);
-//                    robot.topLeft.setPower(0.0);
-//                    sleep(250);
-//                    mecanumMode--;
-//                }
+                else if(mecanumMode == 2){ //BACKWARDS
+                    robot.bottomRight.setPower(0.5);
+                    robot.topRight.setPower(-0.5);
+                    robot.bottomLeft.setPower(-0.5);
+                    robot.topLeft.setPower(0.5);
+                    robot.blockRotate.setPower(0.53);
+                }else{
+                    robot.bottomRight.setPower(0.0);
+                    robot.topRight.setPower(0.0);
+                    robot.bottomLeft.setPower(0.0);
+                    robot.topLeft.setPower(0.0);
+                    robot.blockRotate.setPower(0.0);
+                }
                     if (gamepad1.left_bumper) {
                         robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
                     }
@@ -178,7 +155,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                             if (gamepad1.left_bumper) {
                                 robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
                             }
-                            if (gamepad1.right_bumper) {
+                            if (gamepad1.right_bumper){
                                 robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
                             }
                         }
@@ -197,23 +174,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                         sleep(250);
                     }
 
-                    //SHOULDER CONTROLS
-                    if (gamepad1.dpad_left) {
-                        shoulderPos = shoulderPos + 15;
-                        robot.shoulder.setTargetPosition(shoulderPos);
-                        robot.shoulder.setPower(0.2);
-                    } else if (gamepad1.dpad_right) {
-                        shoulderPos = shoulderPos - 15;
-                        robot.shoulder.setTargetPosition(shoulderPos);
-                        robot.shoulder.setPower(0.2);
-                    } else {
-                        robot.shoulder.setTargetPosition(shoulderPos);
-                        robot.shoulder.setPower(0.5);
-                    }
-                    if (shoulderPos <= -581) {
-                        robot.shoulder.setTargetPosition(-580);
-                        shoulderPos = -580;
-                    }
+
                     telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
                     telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
                     telemetry.addData("Mode", mecanumMode);

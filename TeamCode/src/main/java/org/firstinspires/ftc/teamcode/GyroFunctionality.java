@@ -17,11 +17,10 @@ import java.util.Locale;
 
 
 @TeleOp(name = "gyro", group = "Teleop")
-@Disabled
+//@Disabled
 public class GyroFunctionality extends LinearOpMode{
-
+GrantsTeleopHardware robot = new GrantsTeleopHardware();
     // The IMU sensor object
-    BNO055IMU imu;
 
     // State used for updating telemetry
     Orientation angles;
@@ -37,15 +36,14 @@ public class GyroFunctionality extends LinearOpMode{
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
+        robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        robot.imu.initialize(parameters);
 
         composeTelemetry();
 
         waitForStart();
 
-        imu.startAccelerationIntegration(new org.firstinspires.ftc.robotcore.external.navigation.Position(), new Velocity(), 1000);
+        robot.imu.startAccelerationIntegration(new org.firstinspires.ftc.robotcore.external.navigation.Position(), new Velocity(), 1000);
 
         while (opModeIsActive()) {
             telemetry.update();
@@ -55,20 +53,20 @@ public class GyroFunctionality extends LinearOpMode{
 
         telemetry.addAction(new Runnable() { @Override public void run()
         {
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            gravity  = imu.getGravity();
+            angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = robot.imu.getGravity();
         }
         });
 
         telemetry.addLine()
                 .addData("status", new Func<String>() {
                     @Override public String value() {
-                        return imu.getSystemStatus().toShortString();
+                        return robot.imu.getSystemStatus().toShortString();
                     }
                 })
                 .addData("calib", new Func<String>() {
                     @Override public String value() {
-                        return imu.getCalibrationStatus().toString();
+                        return robot.imu.getCalibrationStatus().toString();
                     }
                 });
 

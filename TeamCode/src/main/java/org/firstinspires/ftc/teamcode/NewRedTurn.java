@@ -38,9 +38,7 @@ public class NewRedTurn extends LinearOpMode{
         robot.init(hardwareMap);//Robot moves during init().
         robot.setRunMode("STOP_AND_RESET_ENCODER");
         robot.setRunMode("RUN_USING_ENCODER");
-        robot.shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -168,8 +166,7 @@ public class NewRedTurn extends LinearOpMode{
 //            robot.left1.setPower(0.2);
 //            robot.left2.setPower(0.2);
 //            sleep(1000);
-            robot.shoulder.setTargetPosition(-450);
-            robot.shoulder.setPower(0.2);
+
             robot.winch.setTargetPosition(100);
             robot.winch.setPower(0.1);
 
@@ -183,8 +180,6 @@ public class NewRedTurn extends LinearOpMode{
 //            robot.left1.setPower(0.2);
 //            robot.left2.setPower(0.2);
 //            sleep(1000);
-            robot.shoulder.setTargetPosition(-270);
-            robot.shoulder.setPower(0.2);
             sleep(500);
             robot.winch.setTargetPosition(-100);
             robot.winch.setPower(0.1);
@@ -198,8 +193,6 @@ public class NewRedTurn extends LinearOpMode{
             robot.winch.setTargetPosition(200);
             robot.winch.setPower(0.1);
             sleep(500);
-            robot.shoulder.setTargetPosition(SHOULDER_POS3);
-            robot.shoulder.setPower(0.2);
             sleep(500);
             robot.winch.setTargetPosition(-200);
             robot.winch.setPower(0.1);
@@ -213,8 +206,6 @@ public class NewRedTurn extends LinearOpMode{
             robot.winch.setTargetPosition(200);
             robot.winch.setPower(0.1);
             sleep(500);
-            robot.shoulder.setTargetPosition(SHOULDER_POS3);
-            robot.shoulder.setPower(0.2);
             sleep(500);
             robot.winch.setTargetPosition(-200);
             robot.winch.setPower(0.1);
