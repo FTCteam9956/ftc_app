@@ -72,7 +72,7 @@ public class gyrossuck extends LinearOpMode{
         robot.setMotorPower(-0.1);
         while (robot.left1.isBusy() & robot.right1.isBusy()) {
             //double firstAngle = Math.abs(robot.angles.firstAngle);
-            //double POWER = -1.03;
+            //double POWER = -.03 * firstAngle;
             telemetry.update();
             if (robot.angles.firstAngle < 0.000001) {
                 robot.left1.setPower(-0.1);

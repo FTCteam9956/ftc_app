@@ -70,12 +70,35 @@ public class gyroTurn extends LinearOpMode {
 
         while(opModeIsActive()){
             telemetry.update();
-        if (robot.angles.firstAngle < 83) {
+//            double chuck = Math.abs(robot.angles.firstAngle);
+//            double targetAngle1 = 90;
+//            double deviationAngle = targetAngle1 - chuck ;
+//            double adjFactor = (deviationAngle * deviationAngle) / 100;
+//            double POWER = adjFactor - 0.8;
+//            if(deviationAngle < 10){
+//                robot.left1.setPower(adjFactor);
+//                robot.left2.setPower(adjFactor);
+//                robot.right1.setPower(-adjFactor);
+//                robot.right2.setPower(-adjFactor);
+//            }else if(deviationAngle > -1){
+//                robot.left1.setPower(-adjFactor);
+//                robot.left2.setPower(-adjFactor);
+//                robot.right1.setPower(adjFactor);
+//                robot.right2.setPower(adjFactor);
+//            }
+//            else{
+//                robot.left1.setPower(0);
+//                robot.left2.setPower(0);
+//                robot.right1.setPower(0);
+//                robot.right2.setPower(0);
+//            }
+        if (robot.angles.firstAngle < 84) {
             robot.left1.setPower(0.05);
             robot.left2.setPower(0.05);
             robot.right1.setPower(-0.05);
             robot.right2.setPower(-0.05);
         }
+
         else if(robot.angles.firstAngle > 96){
             robot.left1.setPower(-0.05);
             robot.left2.setPower(-0.05);

@@ -92,7 +92,7 @@ public class GrantsTeleopHardware {
 
     //JEWEL ARM CONSTANTS
     public final static double JEWEL_ARM_UP = 0.85;
-    public final static double JEWEL_ARM_TEST = 0.63;
+    public final static double JEWEL_ARM_SLANTED = 0.63;
     public final static double JEWEL_ARM_DOWN = 0.25;
     public final static double ROTATE_DOUBLECHECK = 0.15;
     public final static double ROTATE_RIGHT = 0.45;

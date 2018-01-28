@@ -1,15 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import java.util.Locale;
 
 @Autonomous(name = "NewBlueTurn", group = "Autonomous")
 
@@ -20,14 +28,18 @@ public class NewBlueTurn extends LinearOpMode{
 
     public final static int FIRST_DISTANCE =  -900;
     public final static int SECOND_DISTANCE = 2000;
-    public final static int BACKUP = 100;
+    public final static int BACKUP = -75;
 
     public final static int SHOULDER_POS1 = 80;
     public final static int SHOULDER_POS2 = 76;
     public final static int SHOULDER_POS3 = -420;
 
-    public final static int TURN2 = 180;
-    public final static int TURN3 = 50;
+    public final static int TURN1 = 560;
+    public final static int TURN2 = 640;
+    public final static int TURN3 = 600;
+    public final static int TURN4 = 400;
+
+    public static final double POWER = 1.15;
 
     public void runOpMode() {
         robot.init(hardwareMap);//Robot moves during init().
@@ -46,11 +58,49 @@ public class NewBlueTurn extends LinearOpMode{
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
+        //Initialize Gyro
+        BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
+        parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters1.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters1.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters1.loggingEnabled = true;
+        parameters1.loggingTag = "IMU";
+        parameters1.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        robot.imu.initialize(parameters1);
+
+        composeTelemetry();
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.formatAngle(robot.angles.angleUnit, robot.angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
+                    }
+                });
+        while(!opModeIsActive()){
+            telemetry.update();
+        }
+
         waitForStart();
 
         robot.initServoPositions();
         relicTrackables.activate();// Activate Vuforia
 
+        sleep(5000);
         int targetPosition = 0;
         long initTime = (System.nanoTime() / 1000000); //Converting Nanoseconds to Milliseconds.
         long timeOutTime = 3000; //In Milliseconds.
@@ -63,6 +113,17 @@ public class NewBlueTurn extends LinearOpMode{
             }
         }
 
+        //Pick up block
+        robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
+        robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+        sleep(250);
+        robot.winch.setTargetPosition(-400);
+        robot.winch.setPower(0.1);
+        robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+        robot.winch.setTargetPosition(0);
+        robot.winch.setPower(0.1);
+        sleep(500);
+
         robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
 
         sleep(1000);
@@ -70,32 +131,32 @@ public class NewBlueTurn extends LinearOpMode{
         int loopBreak = 0;
         while (loopBreak == 0) {
             sleep(500);
-            if (robot.jewelArm.red() > robot.jewelArm.blue()) {
-                //knockOffBall(1);
-                robot.rotateArm.setPosition(0);
+            if (robot.jewelArm.red() < robot.jewelArm.blue()) {
+                //knockOffBall(0);
+                robot.rotateArm.setPosition(0.45);
                 telemetry.addData("Status", "Confirmed Red Ball!");
 
                 loopBreak = 1;
-            } else if (robot.jewelArm.red() < robot.jewelArm.blue()) {
+            } else if (robot.jewelArm.red() > robot.jewelArm.blue()) {
                 if (robot.jewelArm.blue() > 27) {
-                    knockOffBall(0);
+                    knockOffBall(1);
                     telemetry.addData("Status", "Confirmed Blue Ball!");
                     sleep(500);
                     loopBreak = 1;
                 } else {
                     telemetry.addData("Status", "Cannot determine color! Double Checking!");
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 300, 700);
-                    sleep(250);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
+                    sleep(500);
                     robot.rotateArm.setPosition(0.15);
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 300, 700);
-                    sleep(250);
-                    if (robot.jewelArm.red() > robot.jewelArm.blue()) {
-                        robot.rotateArm.setPosition(0);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
+                    sleep(500);
+                    if (robot.jewelArm.red() < robot.jewelArm.blue()) {
+                        robot.rotateArm.setPosition(0.40);
                         telemetry.addData("Status", "Confirmed Red Ball!");
                         loopBreak = 1;
-                    } else if (robot.jewelArm.red() < robot.jewelArm.blue()) {
+                    } else if (robot.jewelArm.red() > robot.jewelArm.blue()) {
                         if (robot.jewelArm.blue() > 27) {
-                            knockOffBall(0);
+                            knockOffBall(1);
                             telemetry.addData("Status", "Confirmed Blue Ball!");
                             sleep(500);
                             loopBreak = 1;
@@ -114,107 +175,125 @@ public class NewBlueTurn extends LinearOpMode{
         robot.rotateArm.setPosition(0.6);
         sleep(500);
 
-        robot.driveForwardSetDistance(-0.2, -FIRST_DISTANCE);
+        robot.driveForwardSetDistance(0.2, -FIRST_DISTANCE);
+        while (robot.left1.isBusy() & robot.right1.isBusy()) {
+            //double firstAngle = Math.abs(robot.angles.firstAngle);
+            //double POWER = -1.03;
+            telemetry.update();
+            if (robot.angles.firstAngle < 0.000001) {
+                robot.left1.setPower(0.2);
+                robot.left2.setPower(0.2);
+                robot.right1.setPower(0.2 * POWER);
+                robot.right2.setPower(0.2 * POWER);
+            }
+            else if(robot.angles.firstAngle > 0.000001){
+                robot.left1.setPower(0.2 * POWER);
+                robot.left2.setPower(0.2 * POWER);
+                robot.right1.setPower(0.2);
+                robot.right2.setPower(0.2);
+            }
+            else{
+                robot.left1.setPower(0.2);
+                robot.left2.setPower(0.2);
+                robot.right1.setPower(0.2);
+                robot.right2.setPower(0.2);
+            }
+        }
+
+        while(robot.angles.firstAngle < -50 || robot.angles.firstAngle > -40){
+            telemetry.update();
+            if (robot.angles.firstAngle > -40) {
+                robot.left1.setPower(0.05);
+                robot.left2.setPower(0.05);
+                robot.right1.setPower(-0.05);
+                robot.right2.setPower(-0.05);
+            }
+
+            else if(robot.angles.firstAngle < -50){
+                robot.left1.setPower(-0.05);
+                robot.left2.setPower(-0.05);
+                robot.right1.setPower(0.05);
+                robot.right2.setPower(0.05);
+            }
+            else {
+                robot.left1.setPower(0);
+                robot.left2.setPower(0);
+                robot.right1.setPower(0);
+                robot.right2.setPower(0);
+            }
+        }
+        sleep(500);
+
+        robot.driveForwardSetDistance(0.1, 1000);
+        sleep(500);
+        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
         sleep(500);
 
         robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sleep(100);
+        robot.left1.setPower(-0.1);
+        robot.left2.setPower(-0.1);
+        robot.right1.setPower(-0.1);
+        robot.right2.setPower(-0.1);
 
-        robot.left1.setPower(0.2);
-        robot.left2.setPower(0.2);
-        robot.right1.setPower(0.2);
-        robot.right2.setPower(0.2);
-        sleep(2000);
+        while(robot.left1.isBusy() & robot.right1.isBusy()) {
+            if (robot.jewelArm.alpha() > 500) {
+                robot.left1.setPower(0.0);
+                robot.left2.setPower(0.0);
+                robot.right1.setPower(0.0);
+                robot.right2.setPower(0.0);
+            }
+        }
+        sleep(500);
 
-        robot.left1.setPower(0);
-        robot.left2.setPower(0);
-        robot.right1.setPower(0);
-        robot.right2.setPower(0);
-        sleep(250);
 
-        robot.left1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.left2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.right1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.right2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.left2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.right1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        sleep(250);
-
-        // robot.turnDirection(0.2, 600, "CW");
-
-        //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-        if (targetPosition == 1){
-            sleep(2000);
-            robot.driveForwardSetDistance(0.2, 10);
-            sleep(2000);
-            robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-            sleep(500);
-            robot.driveForwardSetDistance(0.2, -140);
-            sleep(5000);
 //
-        }else if (targetPosition == 2) {
-            robot.driveForwardSetDistance(0.2, 160);
-            sleep(1500);
-            robot.turnDirection(0.2, TURN2, "CW");
-            sleep(1000);
-            sleep(500);
-            robot.winch.setTargetPosition(-200);
-            robot.winch.setPower(0.1);
-            sleep(500);
-            robot.driveForwardSetDistance(0.2, 250);
-            sleep(500);
-            robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-            sleep(500);
-            robot.driveForwardSetDistance(0.2, -140);
-            sleep(5000);
-
+//        //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
+        if (targetPosition == 1) {
+            robot.driveForwardSetDistance(-0.1, 300);
+            // This is right \/ \/
+        } else if (targetPosition == 2) {
+            robot.driveForwardSetDistance(-0.1, 100);
+//
         } else if (targetPosition == 3) {
-            sleep(1000);
-            robot.driveForwardSetDistance(0.2, 50);
-            sleep(1000);
-            robot.turnDirection(0.2, TURN3, "CW");
-//            sleep(1000);
-            robot.driveForwardSetDistance(0.2, 200);
-            sleep(1000);
-            robot.winch.setTargetPosition(-600);
-            robot.winch.setPower(0.2);
-            sleep(500);
-            robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-            sleep(500);
-            robot.driveForwardSetDistance(0.2, -140);
-        }
+            robot.driveForwardSetDistance(-0.1, 200);
 
-        else if (targetPosition == 4) {
-            sleep(1000);
-            robot.driveForwardSetDistance(0.2, 50);
-            sleep(1000);
-            robot.turnDirection(0.2, TURN3, "CW");
-//            sleep(1000);
-            robot.driveForwardSetDistance(0.2, 200);
-            sleep(1000);
-            robot.winch.setTargetPosition(-600);
-            robot.winch.setPower(0.2);
-            sleep(500);
-            robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-            sleep(500);
-            robot.driveForwardSetDistance(0.2, -140);
+            // This is undetected Vumark
+        } else if (targetPosition == 4) {
+            robot.driveForwardSetDistance(-0.1, 100);
         }
-
-//
-//        robot.driveForwardSetDistance(0.3, SECOND_DISTANCE);
-//        sleep(5000);
-        robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
-        robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
-        sleep(5000);
-        robot.driveForwardSetDistance(0.3, BACKUP);
-//        sleep(500);
+        while(robot.angles.firstAngle < 5 || robot.angles.firstAngle > -5) {
+            telemetry.update();
+            if (robot.angles.firstAngle < 5) {
+                robot.left1.setPower(0.05);
+                robot.left2.setPower(0.05);
+                robot.right1.setPower(-0.05);
+                robot.right2.setPower(-0.05);
+            } else if (robot.angles.firstAngle > -5) {
+                robot.left1.setPower(-0.05);
+                robot.left2.setPower(-0.05);
+                robot.right1.setPower(0.05);
+                robot.right2.setPower(0.05);
+            } else {
+                robot.left1.setPower(0);
+                robot.left2.setPower(0);
+                robot.right1.setPower(0);
+                robot.right2.setPower(0);
+            }
+        }
+        robot.driveForwardSetDistance(0.1, 400);
+        sleep(500);
+        robot.bottomLeft.setPower(-0.5);
+        robot.bottomRight.setPower(0.5);
+        sleep(1000);
+        robot.bottomLeft.setPower(0);
+        robot.bottomRight.setPower(0);
+        sleep(500);
+        robot.driveForwardSetDistance(0.1, 400);
     }
-    //
+    ////
     public int lookForVuMark(VuforiaTrackable rTemplate){
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(rTemplate);
         int returnValue = 0;
@@ -256,7 +335,73 @@ public class NewBlueTurn extends LinearOpMode{
         sleep(100);
         robot.rotateArm.setPosition(robot.ROTATE_MID);
     }
-//    String format(OpenGLMatrix transformationMatrix){
+    //    String format(OpenGLMatrix transformationMatrix){
 //        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
 //    }
+    void composeTelemetry() {
+
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                robot.gravity = robot.imu.getGravity();
+            }
+        });
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.imu.getCalibrationStatus().toString();
+                    }
+                });
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.formatAngle(robot.angles.angleUnit, robot.angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(robot.gravity.xAccel * robot.gravity.xAccel
+                                        + robot.gravity.yAccel * robot.gravity.yAccel
+                                        + robot.gravity.zAccel * robot.gravity.zAccel));
+                    }
+                });
+    }
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
 }

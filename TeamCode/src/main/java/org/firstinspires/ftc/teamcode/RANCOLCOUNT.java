@@ -115,7 +115,7 @@ public class RANCOLCOUNT extends LinearOpMode {
             }
             telemetry.update();
             sleep(500);
-            robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_TEST, 500, 1000);
+            robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_SLANTED, 500, 1000);
             sleep(500);
             robot.rotateArm.setPosition(0.14);
             sleep(2000);
