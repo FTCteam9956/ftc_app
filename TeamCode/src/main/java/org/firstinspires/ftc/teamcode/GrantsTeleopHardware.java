@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -47,6 +49,7 @@ public class GrantsTeleopHardware {
     public CRServo bottomLeft;
     public CRServo bottomRight;
     public ColorSensor glyphSensor;
+    public ColorSensor blockFlat;
 
     //Jewel Arm Components
     public Servo rotateArm; //2-0
@@ -80,8 +83,8 @@ public class GrantsTeleopHardware {
     public final static double BLOCK_CLAW_OPEN_TOP = 0.75; //0.75
     public final static double BLOCK_CLAW_CLOSED_TOP = 0.89; //0.89
     public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.42; //.42
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.22; //.265
-    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.3;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.24; //.265
+    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.29;
 
     //RELIC CLAW CONSTANTS
     public final static double RELIC_CLAW_OPENED = 0.7;
@@ -129,6 +132,7 @@ public class GrantsTeleopHardware {
         bottomLeft = HwMap.crservo.get("bottomLeft");
         bottomRight = HwMap.crservo.get("bottomRight");
         glyphSensor = HwMap.colorSensor.get("glyphSensor");
+        blockFlat = HwMap.colorSensor.get("blockFlat");
 
         //Jewel Smacker
         rotateArm = HwMap.servo.get("rotateArm");

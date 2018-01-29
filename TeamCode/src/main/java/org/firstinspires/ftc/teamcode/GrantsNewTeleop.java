@@ -116,7 +116,12 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.topRight.setPower(0.5);
                     robot.bottomLeft.setPower(0.5);
                     robot.topLeft.setPower(-0.5);
-                    robot.blockRotate.setPower(0.53);
+                    if (robot.blockFlat.alpha() > 400) {
+                     robot.blockRotate.setPower(0.0);
+                    }
+                    else {
+                        robot.blockRotate.setPower(0.53);
+                    }
                 }
                 else if(mecanumMode == 1){ //STOP
                     robot.bottomRight.setPower(0.0);
@@ -161,11 +166,11 @@ public class GrantsNewTeleop extends LinearOpMode{
                         }
 
                     if (robot.topLimit.getState() == true) {
-                        if (robot.glyphSensor.alpha() > 540) {
+                        if (robot.glyphSensor.alpha() > 390 && robot.topLimit.getState() == true) { //540
                             robot.clawTop.setPosition(0.8);
-                            sleep(500);
-                            robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
                             sleep(1000);
+                            robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
+                            sleep(1500);
                         }
                     }
                     if (robot.topLimit.getState() == false) {
@@ -173,10 +178,18 @@ public class GrantsNewTeleop extends LinearOpMode{
                         robot.topLeft.setPower(0.0);
                         sleep(250);
                     }
-
-
+                    if ( robot.winchLimit.getState() == false) {
+                        if (robot.blockFlat.alpha() > 400) {
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                            robot.blockRotate.setPower(0);
+                        } else {
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
+                        }
+                    }
                     telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
                     telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
+                    telemetry.addData("Alpha Data", robot.glyphSensor.alpha());
+                    telemetry.addData("Alpha Data Bot", robot.blockFlat.alpha());
                     telemetry.addData("Mode", mecanumMode);
                     telemetry.update();
                 }
