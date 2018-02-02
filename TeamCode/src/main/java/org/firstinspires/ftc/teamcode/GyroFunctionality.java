@@ -17,7 +17,7 @@ import java.util.Locale;
 
 
 @TeleOp(name = "gyro", group = "Teleop")
-//@Disabled
+@Disabled
 public class GyroFunctionality extends LinearOpMode{
 GrantsTeleopHardware robot = new GrantsTeleopHardware();
     // The IMU sensor object

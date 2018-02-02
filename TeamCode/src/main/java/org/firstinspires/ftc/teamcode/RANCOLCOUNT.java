@@ -17,7 +17,7 @@ import java.util.Locale;
 
 
 @Autonomous(name = "Coulum count", group = "Autonomous")
-//@Disabled
+@Disabled
 
 public class RANCOLCOUNT extends LinearOpMode {
     GrantsTeleopHardware robot = new GrantsTeleopHardware();
