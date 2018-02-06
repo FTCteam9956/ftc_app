@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -48,7 +49,9 @@ public class GrantsTeleopHardware {
     public CRServo topRight;
     public CRServo bottomLeft;
     public CRServo bottomRight;
-    public ColorSensor glyphSensor;
+    //public DistanceSensor glyphSensor;
+    public ColorSensor sensorColor;
+    public DistanceSensor sensorDistance;
     public ColorSensor blockFlat;
 
     //Jewel Arm Components
@@ -133,7 +136,8 @@ public class GrantsTeleopHardware {
         topRight = HwMap.crservo.get("topRight");
         bottomLeft = HwMap.crservo.get("bottomLeft");
         bottomRight = HwMap.crservo.get("bottomRight");
-        glyphSensor = HwMap.colorSensor.get("glyphSensor");
+        //glyphSensor = HwMap.get(DistanceSensor.class, ("glyphSensor"));
+        sensorDistance = HwMap.get(DistanceSensor.class, "sensor_color_distance");
         blockFlat = HwMap.colorSensor.get("blockFlat");
 
         //Jewel Smacker
@@ -168,7 +172,7 @@ public class GrantsTeleopHardware {
 
         //Sensor LED control.
         jewelArm.enableLed(false);
-        glyphSensor.enableLed(true);
+
     }
 
     public void initServoPositions() {

@@ -14,6 +14,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
@@ -39,6 +41,7 @@ public class GrantsNewTeleop extends LinearOpMode{
     public static int endGameMode = 0;
     public static int sliderTwistMode = 0;
     public static int mecanumMode = 3;
+    public double blockTime = 0;
     //public static int mecanumMode1 = 0;
     public float rightPower;
     public float leftPower;
@@ -56,7 +59,6 @@ public class GrantsNewTeleop extends LinearOpMode{
         robot.relicClaw.setPosition(robot.RELIC_CLAW_OPENED);
         robot.lowerArm.setPosition(robot.JEWEL_ARM_UP);
         robot.rotateArm.setPosition(0.6);
-        //TODO put the glyph block in
 
         while(opModeIsActive()){
 
@@ -113,10 +115,10 @@ public class GrantsNewTeleop extends LinearOpMode{
                 }
 
                 if(mecanumMode == 0){ //FORWARD
-                    robot.bottomRight.setPower(-0.5);
-                    robot.topRight.setPower(0.5);
-                    robot.bottomLeft.setPower(0.5);
-                    robot.topLeft.setPower(-0.5);
+                    robot.bottomRight.setPower(-0.9);
+                    robot.topRight.setPower(0.9);
+                    robot.bottomLeft.setPower(0.9);
+                    robot.topLeft.setPower(-0.9);
 //                    if (robot.blockFlat.alpha() > 400) {
 //                     robot.blockRotate.setPower(0.0);
 //                    }
@@ -132,15 +134,15 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.blockRotate.setPower(0.0);
                 }
                 else if(mecanumMode == 2){ //BACKWARDS
-                    robot.bottomRight.setPower(0.5);
-                    robot.topRight.setPower(-0.5);
-                    robot.bottomLeft.setPower(-0.5);
-                    robot.topLeft.setPower(0.5);
+                    robot.bottomRight.setPower(0.9);
+                    robot.topRight.setPower(-0.9);
+                    robot.bottomLeft.setPower(-0.9);
+                    robot.topLeft.setPower(0.9);
                     robot.blockRotate.setPower(0.53);
                 } else if (mecanumMode == 3){
-                    robot.bottomRight.setPower(-0.5);
+                    robot.bottomRight.setPower(-0.9);
                     robot.topRight.setPower(0.0);
-                    robot.bottomLeft.setPower(0.5);
+                    robot.bottomLeft.setPower(0.9);
                     robot.topLeft.setPower(0.0);
                 } else{
                     robot.bottomRight.setPower(0.0);
@@ -181,11 +183,11 @@ public class GrantsNewTeleop extends LinearOpMode{
                     }
 
 //                    if (robot.topLimit.getState() == true) {
-                        if (robot.glyphSensor.alpha() > 175) { //540
+                        if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5) { //540
                             robot.clawTop.setPosition(0.6);
                             sleep(1000);
                             robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
-                            sleep(1500);
+                            sleep(3000);
                         }
 //                    }
 //                    else if (robot.topLimit.getState() == false) {
@@ -202,11 +204,13 @@ public class GrantsNewTeleop extends LinearOpMode{
 //                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
 //                        }
 //                    }
-                    telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
-                    telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
-                    telemetry.addData("Alpha Data", robot.glyphSensor.alpha());
-                    //telemetry.addData("Alpha Data Bot", robot.blockFlat.alpha());
-                    telemetry.addData("Mode", mecanumMode);
+//                    telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
+//                    telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
+//                    telemetry.addData("Alpha Data", robot.glyphSensor.alpha());
+//                    //telemetry.addData("Alpha Data Bot", robot.blockFlat.alpha());
+//                    telemetry.addData("Mode", mecanumMode);
+                    telemetry.addData("Distance (cm)",
+                        String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
                     telemetry.update();
                 }
                 if (endGameMode == 1) {
@@ -263,7 +267,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                 } else {
                     telemetry.addData("Digital Claw Touch", "Is Pressed");
                 }
-                telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
+                //telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
                 telemetry.update();
             }
 
