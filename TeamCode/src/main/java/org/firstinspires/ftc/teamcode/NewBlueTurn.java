@@ -229,7 +229,7 @@ public class NewBlueTurn extends LinearOpMode{
                 sleep(500);
                 robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
                 sleep(500);
-                robot.driveForwardSetDistance(0.1, 50);
+                robot.driveForwardSetDistance(0.1,50);
                 sleep(500);
                 robot.driveForwardSetDistance(-0.1, -150);
                 sleep(30000);

@@ -82,9 +82,11 @@ public class GrantsTeleopHardware {
     //BLOCK CLAW CONSTANTS
     public final static double BLOCK_CLAW_OPEN_TOP = 0.7; //0.75
     public final static double BLOCK_CLAW_CLOSED_TOP = 0.52; //0.89
-    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.38; //CLOSED TODO these are named wrongly
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.6; //OPEN
-    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.41; //Halfway
+    public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.38; //Open TODO these are named wrongly
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.587;//Closed
+    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.38;
+    public final static double BLOCK_CLAW_LIMITO_BOTTOM = 0.42;
+    //Halfway
 
     //RELIC CLAW CONSTANTS
     public final static double RELIC_CLAW_OPENED = 0.7;
@@ -96,11 +98,11 @@ public class GrantsTeleopHardware {
     //JEWEL ARM CONSTANTS
     public final static double JEWEL_ARM_UP = 0.85;
     public final static double JEWEL_ARM_SLANTED = 0.59;
-    public final static double JEWEL_ARM_DOWN = 0.235;
+    public final static double JEWEL_ARM_DOWN = 0.235; //0.235
     public final static double ROTATE_DOUBLECHECK = 0.15;
-    public final static double ROTATE_RIGHT = 0.45;
-    public final static double ROTATE_MID = 0.14;
-    public final static double ROTATE_LEFT = 0;
+    public final static double ROTATE_RIGHT = 0.5;
+    public final static double ROTATE_MID = 0.3;
+    public final static double ROTATE_LEFT = 0.1;
 
 
 

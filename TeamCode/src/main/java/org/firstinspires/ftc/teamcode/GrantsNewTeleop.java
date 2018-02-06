@@ -67,7 +67,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                 endGameMode = 0;
             }
 
-            if(endGameMode == 0){
+            if(endGameMode == 0) {
 
                 //TANK DRIVE
                 robot.left1.setPower(speedAdjust(gamepad1.left_stick_y / 1.5));
@@ -76,41 +76,42 @@ public class GrantsNewTeleop extends LinearOpMode{
                 robot.right2.setPower(speedAdjust(gamepad1.right_stick_y / 1.5));
 
                 //WINCH CONTROLS
-                if(robot.liftlimita.getState() == false && robot.liftlimitb.getState() == false){//AT Top
-                    if(gamepad1.left_trigger < 0.01){ // if not pressing down trigger
+                if (robot.liftlimita.getState() == false && robot.liftlimitb.getState() == false) {//AT Top
+                    if (gamepad1.left_trigger < 0.01) { // if not pressing down trigger
                         robot.winch.setPower(0.0);
-                    }else{ // if pressing down trigger
+                    } else { // if pressing down trigger
                         robot.winch.setPower(-0.9);
                     }
-                }
-                else if(robot.winchLimit.getState() == false){// At bot
-                    if(gamepad1.right_trigger < 0.01){ // if not pressing up trigger
+                } else if (robot.winchLimit.getState() == false) {// At bot
+                    if (gamepad1.right_trigger < 0.01) { // if not pressing up trigger
                         robot.winch.setPower(0.0);
-                    }else{ //if pressing up trigger
+                    } else { //if pressing up trigger
                         robot.winch.setPower(0.9);
                     }
-                }
-                else{ //mid area
-                    if(gamepad1.right_trigger > 0.5){
+                } else { //mid area
+                    if (gamepad1.right_trigger > 0.5) {
                         robot.winch.setPower(0.9);
-                    }
-                    else if(gamepad1.left_trigger > 0.5) {
+                    } else if (gamepad1.left_trigger > 0.5) {
                         robot.winch.setPower(-0.9);
-                    }else{
+                    } else {
                         robot.winch.setPower(0.0);
                     }
                 }
 
                 //MECANUM CLAW CONTROLS
-                if(gamepad1.a){
+                if (gamepad1.a) {
                     mecanumMode = 0;
                 }
-                if(gamepad1.b){
+                if (gamepad1.b) {
                     mecanumMode = 1;
                 }
-                if(gamepad1.y){
+                if (gamepad1.y) {
                     mecanumMode = 2;
                 }
+                if (gamepad1.x){
+                    mecanumMode =3;
+                }
+
                 if(mecanumMode == 0){ //FORWARD
                     robot.bottomRight.setPower(-0.5);
                     robot.topRight.setPower(0.5);
@@ -136,7 +137,12 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.bottomLeft.setPower(-0.5);
                     robot.topLeft.setPower(0.5);
                     robot.blockRotate.setPower(0.53);
-                }else{
+                } else if (mecanumMode == 3){
+                    robot.bottomRight.setPower(-0.5);
+                    robot.topRight.setPower(0.0);
+                    robot.bottomLeft.setPower(0.5);
+                    robot.topLeft.setPower(0.0);
+                } else{
                     robot.bottomRight.setPower(0.0);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.0);
@@ -156,28 +162,37 @@ public class GrantsNewTeleop extends LinearOpMode{
                         if (gamepad1.right_bumper) {
                             robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
                         }
-                        } else {
-                            if (gamepad1.left_bumper) {
-                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                            }
-                            if (gamepad1.right_bumper){
-                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
-                            }
+                    }
+//                    else {
+//                            if (gamepad1.left_bumper) {
+//                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+//                            }
+//                            if (gamepad1.right_bumper){
+//                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
+//                            }
+//                        }
+                    if (robot.clawLimit.getState() == false){
+                        if (gamepad1.left_bumper) {
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMITO_BOTTOM);
                         }
+                        if (gamepad1.right_bumper){
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
+                        }
+                    }
 
-                    if (robot.topLimit.getState() == true) {
-                        if (robot.glyphSensor.alpha() > 190 && robot.topLimit.getState() == true) { //540
+//                    if (robot.topLimit.getState() == true) {
+                        if (robot.glyphSensor.alpha() > 175) { //540
                             robot.clawTop.setPosition(0.6);
-                            sleep(800);
+                            sleep(1000);
                             robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
                             sleep(1500);
                         }
-                    }
-                    else if (robot.topLimit.getState() == false) {
-                        robot.topRight.setPower(0.0);
-                        robot.topLeft.setPower(0.0);
-                        sleep(250);
-                    }
+//                    }
+//                    else if (robot.topLimit.getState() == false) {
+//                        robot.topRight.setPower(0.0);
+//                        robot.topLeft.setPower(0.0);
+//                        sleep(250);
+//                    }
 
 //                    if ( robot.winchLimit.getState() == false) {
 //                        if (robot.blockFlat.alpha() > 400) {
@@ -238,11 +253,11 @@ public class GrantsNewTeleop extends LinearOpMode{
 //            telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
                 telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
                 telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
-                if (robot.topLimit.getState() == true) {
-                    telemetry.addData("Digital Touch", "Is Not Pressed");
-                } else {
-                    telemetry.addData("Digital Touch", "Is Pressed");
-                }
+//                if (robot.topLimit.getState() == true) {
+//                    telemetry.addData("Digital Touch", "Is Not Pressed");
+//                } else {
+//                    telemetry.addData("Digital Touch", "Is Pressed");
+//                }
                 if (robot.clawLimit.getState() == true) {
                     telemetry.addData("Digital Claw Touch", "Is Not Pressed");
                 } else {
