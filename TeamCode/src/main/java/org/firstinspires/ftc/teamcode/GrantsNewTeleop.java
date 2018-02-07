@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import  com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.ElapsedTime.Resolution;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -19,6 +21,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
+import java.util.TimerTask;
 
 @TeleOp(name = "State Teleop", group = "Teleop")
 
@@ -41,7 +44,10 @@ public class GrantsNewTeleop extends LinearOpMode{
     public static int endGameMode = 0;
     public static int sliderTwistMode = 0;
     public static int mecanumMode = 3;
+    double timeOutLimit = 3000000;
+    boolean timeOutFlag = true;
     public double blockTime = 0;
+    public double nanoInit = 0;
     //public static int mecanumMode1 = 0;
     public float rightPower;
     public float leftPower;
@@ -52,6 +58,8 @@ public class GrantsNewTeleop extends LinearOpMode{
         robot.init(hardwareMap);
         robot.winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mRunTime.reset();
+        nanoInit = System.nanoTime();
 
         waitForStart();
 
@@ -183,12 +191,20 @@ public class GrantsNewTeleop extends LinearOpMode{
                     }
 
 //                    if (robot.topLimit.getState() == true) {
-                        if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5) { //540
-                            robot.clawTop.setPosition(0.6);
-                            sleep(1000);
-                            robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
-                            sleep(3000);
+
+                        if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5) {
+//                            if ((System.nanoTime() - nanoInit) > timeOutLimit){
+//                                timeOutFlag = false;
+//                            }
+                            if ((System.nanoTime() - nanoInit) > 3000000) {
+                                robot.clawTop.setPosition(0.6);
+                                nanoInit = System.nanoTime();
+                            }
+                            else if ((System.nanoTime() - nanoInit) > 1000000) {
+                                robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                            }
                         }
+
 //                    }
 //                    else if (robot.topLimit.getState() == false) {
 //                        robot.topRight.setPower(0.0);
@@ -269,8 +285,41 @@ public class GrantsNewTeleop extends LinearOpMode{
                 }
                 //telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
                 telemetry.update();
-            }
 
+                //Sams Attempt
+                //initTime = System.nanoTime() //AT TOP OUT OF WHILE
+                //cooldown boolean = false;
+
+
+                //if you see a block
+                    //if(system.nanoTime() - initTime) > 3)
+                        //init = System.nanoTime()
+                    //else
+                        //open for 1 second then close
+
+
+                //if Top Limit isnt pushed in.
+                    //if cooldown boolean = false;
+                        //if we see a block AND ((System.nanoTime() - initTime) < 3 seconds)
+                            //open claw
+                            //initTime = System.nanoTime()
+                        //else //After 3 seconds
+                            //close claw
+                            //cooldownBoolean = true
+
+
+                //if clawState == 1 //Claw is open
+
+                //if clawState == 0 //Claw is closed
+
+
+
+
+
+
+
+
+            }
         }
 
     public static int controllerToPosition(float stickValue){
@@ -295,4 +344,8 @@ public class GrantsNewTeleop extends LinearOpMode{
         }
         return(returnValue);
     }
+
+   public ElapsedTime mRunTime = new ElapsedTime();
+    enum State {delay}
+    State currentState;
 }

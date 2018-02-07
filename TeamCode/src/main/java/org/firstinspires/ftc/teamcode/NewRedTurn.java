@@ -29,19 +29,6 @@ public class NewRedTurn extends LinearOpMode{
 
     VuforiaLocalizer vuforia;
 
-    public final static int FIRST_DISTANCE =  -900;
-    public final static int SECOND_DISTANCE = 2000;
-    public final static int BACKUP = -75;
-
-    public final static int SHOULDER_POS1 = 80;
-    public final static int SHOULDER_POS2 = 76;
-    public final static int SHOULDER_POS3 = -420;
-
-    public final static int TURN1 = 560;
-    public final static int TURN2 = 640;
-    public final static int TURN3 = 600;
-    public final static int TURN4 = 400;
-
     public static final double POWER = 1.15;
 
     public void runOpMode() {
@@ -100,30 +87,31 @@ public class NewRedTurn extends LinearOpMode{
 
         waitForStart();
 
+        // robot.imu.startAccelerationIntegration(new org.firstinspires.ftc.robotcore.external.navigation.Position(), new Velocity(), 1000);
+
         robot.initServoPositions();
         relicTrackables.activate();// Activate Vuforia
 
         //Pick up Block
         robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
-        robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
         sleep(1500);
         while (robot.winchLimit.getState() == true) {
             robot.winch.setPower(-0.4);
         }
         robot.winch.setPower(0);
-        sleep(500);
+        sleep(300);
         robot.clawBottom.setPosition(0.36);
         sleep(500);
         while (robot.clawLimit.getState() == false) {
-            robot.winch.setPower(0.4);
+            robot.winch.setPower(0.7);
         }
         robot.winch.setPower(0);
         sleep(500);
 
         int targetPosition = 0;
         long initTime = (System.nanoTime() / 1000000); //Converting Nanoseconds to Milliseconds.
-        long timeOutTime = 3000; //In Milliseconds.
-        while (targetPosition == 0) {
+        long timeOutTime = 2000; //In Milliseconds.
+        while(targetPosition == 0){
             sleep(500);
             targetPosition = lookForVuMark(relicTemplate);//1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
             sleep(500);
@@ -132,39 +120,39 @@ public class NewRedTurn extends LinearOpMode{
             }
         }
 
-        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
+        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 200, 300);
 
-        sleep(1000);
+        sleep(100);
 
         int loopBreak = 0;
         while (loopBreak == 0) {
-            sleep(500);
+            sleep(300);
             if (robot.jewelArm.red() > robot.jewelArm.blue()) {
-                //knockOffBall(0);
-                robot.rotateArm.setPosition(0.45);
+                knockOffBall(0); //go right
                 telemetry.addData("Status", "Confirmed Red Ball!");
-
+                sleep(500);
                 loopBreak = 1;
             } else if (robot.jewelArm.red() < robot.jewelArm.blue()) {
                 if (robot.jewelArm.blue() > 27) {
-                    knockOffBall(1);
+                    knockOffBall(1); //go left
                     telemetry.addData("Status", "Confirmed Blue Ball!");
                     sleep(500);
                     loopBreak = 1;
                 } else {
                     telemetry.addData("Status", "Cannot determine color! Double Checking!");
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
-                    sleep(500);
-                    robot.rotateArm.setPosition(0.15);
-                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
-                    sleep(500);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 200, 300);
+                    sleep(300);
+                    robot.rotateArm.setPosition(0.32);
+                    robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 200, 300);
+                    sleep(300);
                     if (robot.jewelArm.red() > robot.jewelArm.blue()) {
-                        robot.rotateArm.setPosition(0.40);
+                        knockOffBall(0); //Go right
                         telemetry.addData("Status", "Confirmed Red Ball!");
+                        sleep(500);
                         loopBreak = 1;
                     } else if (robot.jewelArm.red() < robot.jewelArm.blue()) {
                         if (robot.jewelArm.blue() > 27) {
-                            knockOffBall(1);
+                            knockOffBall(1); //go left
                             telemetry.addData("Status", "Confirmed Blue Ball!");
                             sleep(500);
                             loopBreak = 1;
@@ -177,10 +165,10 @@ public class NewRedTurn extends LinearOpMode{
             }
         }
         telemetry.update();
-        sleep(500);
-        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 500, 1000);
-        sleep(500);
-        robot.rotateArm.setPosition(0.6);
+        sleep(300);
+        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_UP, 200, 300);
+        sleep(300);
+        robot.rotateArm.setPosition(robot.ROTATE_MID);
         sleep(500);
 
         robot.driveForwardSetDistance(-0.2, -850);
@@ -244,7 +232,7 @@ public class NewRedTurn extends LinearOpMode{
 
 //        //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
         if (targetPosition == 1) {
-            robot.driveForwardSetDistance(-0.2, -560);
+            robot.driveForwardSetDistance(-0.2, -760);
             while (robot.left1.isBusy() & robot.right1.isBusy()) {
                 telemetry.update();
                 if (robot.angles.firstAngle < 0.000001) {
@@ -297,7 +285,7 @@ public class NewRedTurn extends LinearOpMode{
             }
             // This is right \/ \/
         } else if (targetPosition == 2){
-            robot.driveForwardSetDistance(-0.2, -560);
+            robot.driveForwardSetDistance(-0.2, -200);
             while (robot.left1.isBusy() & robot.right1.isBusy()) {
                 telemetry.update();
                 if (robot.angles.firstAngle < 0.000001) {
@@ -338,11 +326,11 @@ public class NewRedTurn extends LinearOpMode{
                     robot.right2.setPower(0);
                     telemetry.update();
                     sleep(500);
-                    robot.driveForwardSetDistance(-0.1, 175); //200
+                    robot.driveForwardSetDistance(-0.1, 100); //200
                     sleep(500);
                     robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
                     sleep(500);
-                    robot.driveForwardSetDistance(-0.1, 75); //100
+                    robot.driveForwardSetDistance(-0.1, 50); //100
                     sleep(500);
                     robot.driveForwardSetDistance(0.1, -150);//-300
                     sleep(30000);
