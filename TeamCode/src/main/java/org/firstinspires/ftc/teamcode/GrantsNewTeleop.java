@@ -52,6 +52,16 @@ public class GrantsNewTeleop extends LinearOpMode{
     public float rightPower;
     public float leftPower;
 
+    //Code for Claw Logic
+    boolean blockHasBeenSeen = false; //Used to tell if we are looking a Block edge.
+    boolean onCoolDown = false; //Tells us to trigger a cooldown period.
+    boolean clawActionFlag = false; //Tells us to triger a claw action.
+    double initTime1 = System.nanoTime()/1000; //Used for claw action
+    double initTime2 = System.nanoTime()/1000; //Used for cooldown ation
+    double clawActionTime = 500000; //1 second
+    double coolDownTime = 4300000; //3 seconds
+
+
     public void runOpMode() {
 
         //Initializing Hardware
@@ -123,16 +133,24 @@ public class GrantsNewTeleop extends LinearOpMode{
                 }
 
                 if(mecanumMode == 0){ //FORWARD
-                    robot.bottomRight.setPower(-0.9);
-                    robot.topRight.setPower(0.9);
-                    robot.bottomLeft.setPower(0.9);
-                    robot.topLeft.setPower(-0.9);
+                    if (robot.topLimit.getState() == false) {
+                        robot.bottomRight.setPower(-0.9);
+                        robot.topRight.setPower(0.0);
+                        robot.bottomLeft.setPower(0.9);
+                        robot.topLeft.setPower(-0.0);
+                    }
+                    else {
+                        robot.bottomRight.setPower(-0.9);
+                        robot.topRight.setPower(0.9);
+                        robot.bottomLeft.setPower(0.9);
+                        robot.topLeft.setPower(-0.9);
 //                    if (robot.blockFlat.alpha() > 400) {
 //                     robot.blockRotate.setPower(0.0);
 //                    }
 //                    else {
                         robot.blockRotate.setPower(0.53);
-//                    }
+//                    }}
+                    }
                 }
                 else if(mecanumMode == 1){ //STOP
                     robot.bottomRight.setPower(0.0);
@@ -192,19 +210,91 @@ public class GrantsNewTeleop extends LinearOpMode{
 
 //                    if (robot.topLimit.getState() == true) {
 
-                        if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5) {
-//                            if ((System.nanoTime() - nanoInit) > timeOutLimit){
-//                                timeOutFlag = false;
+//                        if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5) {
+////                            if ((System.nanoTime() - nanoInit) > timeOutLimit){
+////                                timeOutFlag = false;
+////                            }
+//                            if ((System.nanoTime() - nanoInit) > 3000000) {
+//                                robot.clawTop.setPosition(0.6);
+//                                nanoInit = System.nanoTime();
 //                            }
-                            if ((System.nanoTime() - nanoInit) > 3000000) {
-                                robot.clawTop.setPosition(0.6);
-                                nanoInit = System.nanoTime();
-                            }
-                            else if ((System.nanoTime() - nanoInit) > 1000000) {
-                                robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-                            }
+//                            else if ((System.nanoTime() - nanoInit) > 1000000) {
+//                                robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+//                            }
+//                        }
+
+                boolean tripWire = false;
+
+                if(robot.topLimit.getState() == true){ //If top buton not pressed
+
+                    if(onCoolDown == false){ //If Claw not on cooldown
+
+                        if(robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5){ //If block is seen.
+
+                            //if(blockHasBeenSeen == false){ //If block hasn't been seen in the past.
+
+                                clawActionFlag = true; //Seeing Top of Block, Activate Claw
+                                onCoolDown = true;
+
+                            //}
+
+                            blockHasBeenSeen = true; //Tells future runs we have seen a block in the past.
+
+                        }
+//                        else{ //If block is not seen.
+//
+//                            if(blockHasBeenSeen){ //If block has been seen in the past.
+//
+//                                //onCoolDown = true; //Seeing Bottom of Block, Put on Cooldown
+//
+//                            }
+//
+//                            blockHasBeenSeen = false; //Tells future runs we have not seen a block in the past.
+//
+//                        }
+
+                    }else{ //Claw is on cooldown
+
+                        if(((System.nanoTime()/1000) - initTime2) > coolDownTime){ //If 3 seconds have passed.
+
+                            //Reseting timer and onCoolDown flag.
+
+                            initTime2 = (System.nanoTime()/1000);
+
+                            onCoolDown = false;
+
                         }
 
+                    }
+
+                }
+
+                //Seperate Tree to perform claw actions.
+
+                if(clawActionFlag){
+
+                    tripWire = true;
+
+                    if(((System.nanoTime()/1000) - initTime1) > clawActionTime){ //1 second has passed.
+
+
+                        robot.clawTop.setPosition(0.52);
+
+                        //Reseting timer and clawActionFlag
+
+                        initTime1 = (System.nanoTime()/1000);
+
+                        clawActionFlag = false;
+
+                    }else{ //1 second has not passed.
+
+
+                        robot.clawTop.setPosition(0.6);
+
+
+                    }
+
+                }
 //                    }
 //                    else if (robot.topLimit.getState() == false) {
 //                        robot.topRight.setPower(0.0);
@@ -225,7 +315,17 @@ public class GrantsNewTeleop extends LinearOpMode{
 //                    telemetry.addData("Alpha Data", robot.glyphSensor.alpha());
 //                    //telemetry.addData("Alpha Data Bot", robot.blockFlat.alpha());
 //                    telemetry.addData("Mode", mecanumMode);
-                    telemetry.addData("Distance (cm)",
+                    telemetry.addData("Time Difference 1", ((System.nanoTime()/1000) - initTime1));
+                    telemetry.addData("Tripwire", tripWire);
+                    telemetry.addData("Time Difference 2", ((System.nanoTime()/1000) - initTime2));
+                    telemetry.addData("Time Countdown 1", ((System.nanoTime()/1000) - initTime1) - clawActionTime);
+                    telemetry.addData("Time Cooldown 2", ((System.nanoTime()/1000) - initTime2) - coolDownTime);
+                    telemetry.addData("Cooldown", onCoolDown);
+                    telemetry.addData("Block Seen", blockHasBeenSeen);
+                    //telemetry.addData("ClawTIme", clawActionTime);
+                    telemetry.addData("ClawFlag",clawActionFlag);
+
+                telemetry.addData("Distance (cm)",
                         String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
                     telemetry.update();
                 }
@@ -271,20 +371,20 @@ public class GrantsNewTeleop extends LinearOpMode{
 //            telemetry.addData("Shoulder Encoder", robot.shoulder.getCurrentPosition());
 //            telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
 //            telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
-                telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
-                telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
+//                telemetry.addData("TOP CLAW", robot.clawTop.getPosition());
+//                telemetry.addData("Bot Claw", robot.clawBottom.getPosition());
 //                if (robot.topLimit.getState() == true) {
 //                    telemetry.addData("Digital Touch", "Is Not Pressed");
 //                } else {
 //                    telemetry.addData("Digital Touch", "Is Pressed");
 //                }
-                if (robot.clawLimit.getState() == true) {
-                    telemetry.addData("Digital Claw Touch", "Is Not Pressed");
-                } else {
-                    telemetry.addData("Digital Claw Touch", "Is Pressed");
-                }
-                //telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());
-                telemetry.update();
+//                if (robot.clawLimit.getState() == true) {
+//                    telemetry.addData("Digital Claw Touch", "Is Not Pressed");
+//                } else {
+//                    telemetry.addData("Digital Claw Touch", "Is Pressed");
+//                }
+                //telemetry.addData("Glyph Sensor Alpha", robot.glyphSensor.alpha());/
+//                telemetry.update();
 
                 //Sams Attempt
                 //initTime = System.nanoTime() //AT TOP OUT OF WHILE
@@ -312,14 +412,8 @@ public class GrantsNewTeleop extends LinearOpMode{
 
                 //if clawState == 0 //Claw is closed
 
-
-
-
-
-
-
-
             }
+
         }
 
     public static int controllerToPosition(float stickValue){
@@ -348,4 +442,7 @@ public class GrantsNewTeleop extends LinearOpMode{
    public ElapsedTime mRunTime = new ElapsedTime();
     enum State {delay}
     State currentState;
+
+
+
 }
