@@ -254,13 +254,13 @@ public class NewRedTurn extends LinearOpMode{
             }
             while(opModeIsActive()){
                 telemetry.update();
-                if (robot.angles.firstAngle < 152){
+                if (robot.angles.firstAngle < 148){
                     robot.left1.setPower(0.05);
                     robot.left2.setPower(0.05);
                     robot.right1.setPower(-0.05);
                     robot.right2.setPower(-0.05);
                     telemetry.update();
-                }else if(robot.angles.firstAngle > 164){
+                }else if(robot.angles.firstAngle > 158){
                     robot.left1.setPower(-0.05);
                     robot.left2.setPower(-0.05);
                     robot.right1.setPower(0.05);
@@ -277,7 +277,7 @@ public class NewRedTurn extends LinearOpMode{
                     sleep(500);
                     robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
                     sleep(500);
-                    robot.driveForwardSetDistance(-0.1, 75); //100
+                    robot.driveForwardSetDistance(-0.1, 50); //100
                     sleep(500);
                     robot.driveForwardSetDistance(0.1, -150);//-300
                     sleep(30000);
@@ -359,13 +359,13 @@ public class NewRedTurn extends LinearOpMode{
             }
             while(opModeIsActive()){
                 telemetry.update();
-                if (robot.angles.firstAngle < 152){
+                if (robot.angles.firstAngle < 147){
                     robot.left1.setPower(0.05);
                     robot.left2.setPower(0.05);
                     robot.right1.setPower(-0.05);
                     robot.right2.setPower(-0.05);
                     telemetry.update();
-                }else if(robot.angles.firstAngle > 164){
+                }else if(robot.angles.firstAngle > 159){
                     robot.left1.setPower(-0.05);
                     robot.left2.setPower(-0.05);
                     robot.right1.setPower(0.05);

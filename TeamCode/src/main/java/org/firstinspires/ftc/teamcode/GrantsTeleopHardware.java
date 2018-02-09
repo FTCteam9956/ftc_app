@@ -66,6 +66,7 @@ public class GrantsTeleopHardware {
     DigitalChannel clawLimit;
     DigitalChannel liftlimita;
     DigitalChannel liftlimitb;
+    DigitalChannel blockCheck;
 
     Orientation angles;
     Acceleration gravity;
@@ -83,11 +84,11 @@ public class GrantsTeleopHardware {
     double rZ; //Z value extractecd from the rotational componenets of the target relative to the robot
 
     //BLOCK CLAW CONSTANTS
-    public final static double BLOCK_CLAW_OPEN_TOP = 0.7; //0.75
-    public final static double BLOCK_CLAW_CLOSED_TOP = 0.52; //0.89
+    public final static double BLOCK_CLAW_OPEN_TOP = 0.67; //0.75
+    public final static double BLOCK_CLAW_CLOSED_TOP = 0.51; //0.89
     public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.38; //Open TODO these are named wrongly
     public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.587;//Closed
-    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.38;
+    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.375;
     public final static double BLOCK_CLAW_LIMITO_BOTTOM = 0.42;
     //Halfway
 
@@ -151,6 +152,7 @@ public class GrantsTeleopHardware {
         clawLimit = HwMap.get(DigitalChannel.class, "clawLimit");
         liftlimita = HwMap.get(DigitalChannel.class, "liftlimita");
         liftlimitb = HwMap.get(DigitalChannel.class, "liftlimitb");
+        blockCheck = HwMap.get(DigitalChannel.class, "blockCheck");
         // set the digital channel to input.
         topLimit.setMode(DigitalChannel.Mode.INPUT);
 

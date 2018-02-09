@@ -48,6 +48,7 @@ public class GrantsNewTeleop extends LinearOpMode{
     boolean timeOutFlag = true;
     public double blockTime = 0;
     public double nanoInit = 0;
+    public boolean tripWire;
     //public static int mecanumMode1 = 0;
     public float rightPower;
     public float leftPower;
@@ -138,6 +139,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                         robot.topRight.setPower(0.0);
                         robot.bottomLeft.setPower(0.9);
                         robot.topLeft.setPower(-0.0);
+                        robot.clawTop.setPosition(0.505);
                     }
                     else {
                         robot.bottomRight.setPower(-0.9);
@@ -199,14 +201,27 @@ public class GrantsNewTeleop extends LinearOpMode{
 //                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
 //                            }
 //                        }
-                    if (robot.clawLimit.getState() == false){
+                    if (robot.clawLimit.getState() == false) {
                         if (gamepad1.left_bumper) {
-                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMITO_BOTTOM);
-                        }
-                        if (gamepad1.right_bumper){
-                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
-                        }
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMITO_BOTTOM);}
+                        if (gamepad1.right_bumper) {
+                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
+                            }
+
                     }
+                       if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5){
+                            if (robot.blockCheck.getState() == false){
+                                robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+                            }
+                            else {
+                                robot.clawTop.setPosition(0.6);
+                            }
+                       }
+                    if(robot.blockCheck.getState() == false) {
+                        robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+                    }
+
+
 
 //                    if (robot.topLimit.getState() == true) {
 
@@ -223,78 +238,82 @@ public class GrantsNewTeleop extends LinearOpMode{
 //                            }
 //                        }
 
-                boolean tripWire = false;
-
-                if(robot.topLimit.getState() == true){ //If top buton not pressed
-
-                    if(onCoolDown == false){ //If Claw not on cooldown
-
-                        if(robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5){ //If block is seen.
-
-                            //if(blockHasBeenSeen == false){ //If block hasn't been seen in the past.
-
-                                clawActionFlag = true; //Seeing Top of Block, Activate Claw
-                                onCoolDown = true;
-
-                            //}
-
-                            blockHasBeenSeen = true; //Tells future runs we have seen a block in the past.
-
-                        }
-//                        else{ //If block is not seen.
+//                        boolean tripWire = false;
 //
-//                            if(blockHasBeenSeen){ //If block has been seen in the past.
+//                        if(robot.topLimit.getState() == true){ //If top buton not pressed
 //
-//                                //onCoolDown = true; //Seeing Bottom of Block, Put on Cooldown
+//                            if(onCoolDown == false){ //If Claw not on cooldown
+//
+//                                if(robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5){ //If block is seen.
+//
+//                                    //if(blockHasBeenSeen == false){ //If block hasn't been seen in the past.
+//
+//                                    clawActionFlag = true; //Seeing Top of Block, Activate Claw
+//                                    onCoolDown = true;
+//
+//                                    //}
+//
+//                                    blockHasBeenSeen = true; //Tells future runs we have seen a block in the past.
+//
+//                                }
+////                        else{ //If block is not seen.
+////
+////                            if(blockHasBeenSeen){ //If block has been seen in the past.
+////
+////                                //onCoolDown = true; //Seeing Bottom of Block, Put on Cooldown
+////
+////                            }
+////
+////                            blockHasBeenSeen = false; //Tells future runs we have not seen a block in the past.
+////
+////                        }
+//
+//                            }else{ //Claw is on cooldown
+//
+//                                if(((System.nanoTime()/1000) - initTime2) > coolDownTime){ //If 3 seconds have passed.
+//
+//                                    //Reseting timer and onCoolDown flag.
+//
+//                                    initTime2 = (System.nanoTime()/1000);
+//
+//                                    onCoolDown = false;
+//
+//                                }
 //
 //                            }
 //
-//                            blockHasBeenSeen = false; //Tells future runs we have not seen a block in the past.
+//                        }
+//
+//                        //Seperate Tree to perform claw actions.
+//
+//                        if(clawActionFlag){
+//
+//                            tripWire = true;
+//
+//                            if(((System.nanoTime()/1000) - initTime1) > clawActionTime){ //1 second has passed.
+//
+//
+//                                robot.clawTop.setPosition(0.52);
+//
+//                                //Reseting timer and clawActionFlag
+//
+//                                initTime1 = (System.nanoTime()/1000);
+//
+//                                clawActionFlag = false;
+//
+//                            }else{ //1 second has not passed.
+//
+//
+//                                robot.clawTop.setPosition(0.6);
+//
+//
+//                            }
 //
 //                        }
-
-                    }else{ //Claw is on cooldown
-
-                        if(((System.nanoTime()/1000) - initTime2) > coolDownTime){ //If 3 seconds have passed.
-
-                            //Reseting timer and onCoolDown flag.
-
-                            initTime2 = (System.nanoTime()/1000);
-
-                            onCoolDown = false;
-
-                        }
-
-                    }
-
-                }
-
-                //Seperate Tree to perform claw actions.
-
-                if(clawActionFlag){
-
-                    tripWire = true;
-
-                    if(((System.nanoTime()/1000) - initTime1) > clawActionTime){ //1 second has passed.
+//                    }
 
 
-                        robot.clawTop.setPosition(0.52);
 
-                        //Reseting timer and clawActionFlag
-
-                        initTime1 = (System.nanoTime()/1000);
-
-                        clawActionFlag = false;
-
-                    }else{ //1 second has not passed.
-
-
-                        robot.clawTop.setPosition(0.6);
-
-
-                    }
-
-                }
 //                    }
 //                    else if (robot.topLimit.getState() == false) {
 //                        robot.topRight.setPower(0.0);

@@ -209,14 +209,14 @@ public class NewBlueTurn extends LinearOpMode{
         if (targetPosition == 1) {
             while(opModeIsActive()){
                 telemetry.update();
-                if (robot.angles.firstAngle > -11) {
-                    robot.left1.setPower(-0.05);
+                if (robot.angles.firstAngle > -11) { //> -20
+                    robot.left1.setPower(-0.05); //ppnn
                     robot.left2.setPower(-0.05);
                     robot.right1.setPower(0.05);
                     robot.right2.setPower(0.05);
                     telemetry.update();
-                }else if(robot.angles.firstAngle < -21){
-                    robot.left1.setPower(0.05);
+                }else if(robot.angles.firstAngle < -21){ //< -30
+                    robot.left1.setPower(0.05); //nnpp
                     robot.left2.setPower(0.05);
                     robot.right1.setPower(-0.05);
                     robot.right2.setPower(-0.05);
@@ -358,151 +358,6 @@ public class NewBlueTurn extends LinearOpMode{
         } else if (targetPosition == 4) {
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        robot.driveForwardSetDistance(0.2, -FIRST_DISTANCE);
-//        while (robot.left1.isBusy() & robot.right1.isBusy()) {
-//            //double firstAngle = Math.abs(robot.angles.firstAngle);
-//            //double POWER = -1.03;
-//            telemetry.update();
-//            if (robot.angles.firstAngle < 0.000001) {
-//                robot.left1.setPower(0.2);
-//                robot.left2.setPower(0.2);
-//                robot.right1.setPower(0.2 * POWER);
-//                robot.right2.setPower(0.2 * POWER);
-//            }
-//            else if(robot.angles.firstAngle > 0.000001){
-//                robot.left1.setPower(0.2 * POWER);
-//                robot.left2.setPower(0.2 * POWER);
-//                robot.right1.setPower(0.2);
-//                robot.right2.setPower(0.2);
-//            }
-//            else{
-//                robot.left1.setPower(0.2);
-//                robot.left2.setPower(0.2);
-//                robot.right1.setPower(0.2);
-//                robot.right2.setPower(0.2);
-//            }
-//        }
-//
-//        while(robot.angles.firstAngle < -50 || robot.angles.firstAngle > -40){
-//            telemetry.update();
-//            if (robot.angles.firstAngle > -40) {
-//                robot.left1.setPower(0.05);
-//                robot.left2.setPower(0.05);
-//                robot.right1.setPower(-0.05);
-//                robot.right2.setPower(-0.05);
-//            }
-//
-//            else if(robot.angles.firstAngle < -50){
-//                robot.left1.setPower(-0.05);
-//                robot.left2.setPower(-0.05);
-//                robot.right1.setPower(0.05);
-//                robot.right2.setPower(0.05);
-//            }
-//            else {
-//                robot.left1.setPower(0);
-//                robot.left2.setPower(0);
-//                robot.right1.setPower(0);
-//                robot.right2.setPower(0);
-//            }
-//        }
-//        sleep(500);
-//
-//        robot.driveForwardSetDistance(0.1, 1000);
-//        sleep(500);
-//        robot.moveServo(robot.lowerArm, robot.JEWEL_ARM_DOWN, 500, 1000);
-//        sleep(500);
-//
-//        robot.left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        robot.left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        robot.right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        robot.right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        robot.left1.setPower(-0.1);
-//        robot.left2.setPower(-0.1);
-//        robot.right1.setPower(-0.1);
-//        robot.right2.setPower(-0.1);
-//
-//        while(robot.left1.isBusy() & robot.right1.isBusy()) {
-//            if (robot.jewelArm.alpha() > 500) {
-//                robot.left1.setPower(0.0);
-//                robot.left2.setPower(0.0);
-//                robot.right1.setPower(0.0);
-//                robot.right2.setPower(0.0);
-//            }
-//        }
-//        sleep(500);
-//
-//
-////
-////        //1 - LEFT, 2 - RIGHT, 3 - CENTER, 0 - NOT VISIBLE, 4 - TIMEOUT
-//        if (targetPosition == 1) {
-//            robot.driveForwardSetDistance(-0.1, 300);
-//            // This is right \/ \/
-//        } else if (targetPosition == 2) {
-//            robot.driveForwardSetDistance(-0.1, 100);
-////
-//        } else if (targetPosition == 3) {
-//            robot.driveForwardSetDistance(-0.1, 200);
-//
-//            // This is undetected Vumark
-//        } else if (targetPosition == 4) {
-//            robot.driveForwardSetDistance(-0.1, 100);
-//        }
-//        while(robot.angles.firstAngle < 5 || robot.angles.firstAngle > -5) {
-//            telemetry.update();
-//            if (robot.angles.firstAngle < 5) {
-//                robot.left1.setPower(0.05);
-//                robot.left2.setPower(0.05);
-//                robot.right1.setPower(-0.05);
-//                robot.right2.setPower(-0.05);
-//            } else if (robot.angles.firstAngle > -5) {
-//                robot.left1.setPower(-0.05);
-//                robot.left2.setPower(-0.05);
-//                robot.right1.setPower(0.05);
-//                robot.right2.setPower(0.05);
-//            } else {
-//                robot.left1.setPower(0);
-//                robot.left2.setPower(0);
-//                robot.right1.setPower(0);
-//                robot.right2.setPower(0);
-//            }
-//        }
-//        robot.driveForwardSetDistance(0.1, 400);
-//        sleep(500);
-//        robot.bottomLeft.setPower(-0.5);
-//        robot.bottomRight.setPower(0.5);
-//        sleep(1000);
-//        robot.bottomLeft.setPower(0);
-//        robot.bottomRight.setPower(0);
-//        sleep(500);
-//        robot.driveForwardSetDistance(0.1, 400);
             }
     ////
     public int lookForVuMark(VuforiaTrackable rTemplate){
