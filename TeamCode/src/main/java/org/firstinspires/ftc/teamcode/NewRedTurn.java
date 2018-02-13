@@ -412,13 +412,13 @@ public class NewRedTurn extends LinearOpMode{
             }
             while(opModeIsActive()){
                 telemetry.update();
-                if (robot.angles.firstAngle < 152){
+                if (robot.angles.firstAngle < 147){
                     robot.left1.setPower(0.05);
                     robot.left2.setPower(0.05);
                     robot.right1.setPower(-0.05);
                     robot.right2.setPower(-0.05);
                     telemetry.update();
-                }else if(robot.angles.firstAngle > 164){
+                }else if(robot.angles.firstAngle > 159){
                     robot.left1.setPower(-0.05);
                     robot.left2.setPower(-0.05);
                     robot.right1.setPower(0.05);

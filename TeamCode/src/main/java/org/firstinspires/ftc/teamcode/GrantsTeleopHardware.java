@@ -52,6 +52,7 @@ public class GrantsTeleopHardware {
     //public DistanceSensor glyphSensor;
     public ColorSensor sensorColor;
     public DistanceSensor sensorDistance;
+    public DistanceSensor bottomGrab;
     public ColorSensor blockFlat;
 
     //Jewel Arm Components
@@ -87,8 +88,8 @@ public class GrantsTeleopHardware {
     public final static double BLOCK_CLAW_OPEN_TOP = 0.67; //0.75
     public final static double BLOCK_CLAW_CLOSED_TOP = 0.51; //0.89
     public final static double BLOCK_CLAW_OPEN_BOTTOM = 0.38; //Open TODO these are named wrongly
-    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.587;//Closed
-    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.375;
+    public final static double BLOCK_CLAW_CLOSED_BOTTOM = 0.7;//Closed 0.587
+    public final static double BLOCK_CLAW_LIMIT_BOTTOM = 0.37;
     public final static double BLOCK_CLAW_LIMITO_BOTTOM = 0.42;
     //Halfway
 
@@ -139,6 +140,7 @@ public class GrantsTeleopHardware {
         bottomRight = HwMap.crservo.get("bottomRight");
         //glyphSensor = HwMap.get(DistanceSensor.class, ("glyphSensor"));
         sensorDistance = HwMap.get(DistanceSensor.class, "sensor_color_distance");
+        bottomGrab = HwMap.get(DistanceSensor.class, "bottomGrab");
         blockFlat = HwMap.colorSensor.get("blockFlat");
 
         //Jewel Smacker

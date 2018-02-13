@@ -356,7 +356,39 @@ public class NewBlueTurn extends LinearOpMode{
             }
             // This is undetected Vumark
         } else if (targetPosition == 4) {
-
+            while(opModeIsActive()){
+                telemetry.update();
+                if (robot.angles.firstAngle > -24) { //> -20
+                    robot.left1.setPower(-0.05); //ppnn
+                    robot.left2.setPower(-0.05);
+                    robot.right1.setPower(0.05);
+                    robot.right2.setPower(0.05);
+                    telemetry.update();
+                }else if(robot.angles.firstAngle < -34){ //< -30
+                    robot.left1.setPower(0.05); //nnpp
+                    robot.left2.setPower(0.05);
+                    robot.right1.setPower(-0.05);
+                    robot.right2.setPower(-0.05);
+                    telemetry.update();
+                }
+                else {
+                    robot.left1.setPower(0);
+                    robot.left2.setPower(0);
+                    robot.right1.setPower(0);
+                    robot.right2.setPower(0);
+                    telemetry.update();
+                    sleep(500);
+                    telemetry.update();
+                    robot.driveForwardSetDistance(0.1, 300);
+                    sleep(500);
+                    robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
+                    sleep(500);
+                    robot.driveForwardSetDistance(0.1,50);
+                    sleep(500);
+                    robot.driveForwardSetDistance(-0.1, -150);
+                    sleep(30000);
+                }
+            }
         }
             }
     ////

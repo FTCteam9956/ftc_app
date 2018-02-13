@@ -88,7 +88,7 @@ public class GrantsNewTeleop extends LinearOpMode{
                 endGameMode = 0;
             }
 
-            if(endGameMode == 0) {
+            if(endGameMode == 0){
 
                 //TANK DRIVE
                 robot.left1.setPower(speedAdjust(gamepad1.left_stick_y / 1.5));
@@ -97,61 +97,59 @@ public class GrantsNewTeleop extends LinearOpMode{
                 robot.right2.setPower(speedAdjust(gamepad1.right_stick_y / 1.5));
 
                 //WINCH CONTROLS
-                if (robot.liftlimita.getState() == false && robot.liftlimitb.getState() == false) {//AT Top
-                    if (gamepad1.left_trigger < 0.01) { // if not pressing down trigger
+                if(robot.liftlimita.getState() == false && robot.liftlimitb.getState() == false){//AT Top
+                    if(gamepad1.left_trigger < 0.01) { // if not pressing down trigger
                         robot.winch.setPower(0.0);
-                    } else { // if pressing down trigger
+                    }
+                    else{ // if pressing down trigger
                         robot.winch.setPower(-0.9);
                     }
-                } else if (robot.winchLimit.getState() == false) {// At bot
-                    if (gamepad1.right_trigger < 0.01) { // if not pressing up trigger
+                }else if(robot.winchLimit.getState() == false) {// At bot
+                    if(gamepad1.right_trigger < 0.01){ // if not pressing up trigger
                         robot.winch.setPower(0.0);
-                    } else { //if pressing up trigger
+                    }else{ //if pressing up trigger
                         robot.winch.setPower(0.9);
                     }
-                } else { //mid area
-                    if (gamepad1.right_trigger > 0.5) {
+                }
+                else{ //mid area
+                    if(gamepad1.right_trigger > 0.5){
                         robot.winch.setPower(0.9);
-                    } else if (gamepad1.left_trigger > 0.5) {
+                    }else if(gamepad1.left_trigger > 0.5){
                         robot.winch.setPower(-0.9);
-                    } else {
+                    }
+                    else{//Overall Stop
                         robot.winch.setPower(0.0);
                     }
                 }
 
-                //MECANUM CLAW CONTROLS
-                if (gamepad1.a) {
+                //MECANUM CLAW CONTROLS (Setting mode)
+                if(gamepad1.a){
                     mecanumMode = 0;
                 }
-                if (gamepad1.b) {
+                if(gamepad1.b){
                     mecanumMode = 1;
                 }
-                if (gamepad1.y) {
+                if(gamepad1.y){
                     mecanumMode = 2;
                 }
-                if (gamepad1.x){
+                if(gamepad1.x){
                     mecanumMode =3;
                 }
 
                 if(mecanumMode == 0){ //FORWARD
-                    if (robot.topLimit.getState() == false) {
+                    if(robot.topLimit.getState() == false){
                         robot.bottomRight.setPower(-0.9);
                         robot.topRight.setPower(0.0);
                         robot.bottomLeft.setPower(0.9);
                         robot.topLeft.setPower(-0.0);
                         robot.clawTop.setPosition(0.505);
                     }
-                    else {
+                    else{
                         robot.bottomRight.setPower(-0.9);
                         robot.topRight.setPower(0.9);
                         robot.bottomLeft.setPower(0.9);
                         robot.topLeft.setPower(-0.9);
-//                    if (robot.blockFlat.alpha() > 400) {
-//                     robot.blockRotate.setPower(0.0);
-//                    }
-//                    else {
-                        robot.blockRotate.setPower(0.53);
-//                    }}
+                        robot.blockRotate.setPower(0.75);
                     }
                 }
                 else if(mecanumMode == 1){ //STOP
@@ -166,183 +164,68 @@ public class GrantsNewTeleop extends LinearOpMode{
                     robot.topRight.setPower(-0.9);
                     robot.bottomLeft.setPower(-0.9);
                     robot.topLeft.setPower(0.9);
-                    robot.blockRotate.setPower(0.53);
-                } else if (mecanumMode == 3){
+                    robot.blockRotate.setPower(0.75);
+                }else if (mecanumMode == 3){
                     robot.bottomRight.setPower(-0.9);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.9);
                     robot.topLeft.setPower(0.0);
-                } else{
+                }
+                else{
                     robot.bottomRight.setPower(0.0);
                     robot.topRight.setPower(0.0);
                     robot.bottomLeft.setPower(0.0);
                     robot.topLeft.setPower(0.0);
                     robot.blockRotate.setPower(0.0);
                 }
-                    if (gamepad1.left_bumper) {
+                    if(gamepad1.left_bumper) {
                         robot.clawTop.setPosition(robot.BLOCK_CLAW_OPEN_TOP);
                     }
-                    if (gamepad1.right_bumper) {
+                    if(gamepad1.right_bumper) {
                         robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
                     }
-                    if (robot.clawLimit.getState() == true) {
-                        if (gamepad1.left_bumper) {
+                    if(robot.clawLimit.getState() == true) {
+                        if(gamepad1.left_bumper){
                             robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
                         }
-                        if (gamepad1.right_bumper) {
+                        if(gamepad1.right_bumper){
                             robot.clawBottom.setPosition(robot.BLOCK_CLAW_OPEN_BOTTOM);
                         }
                     }
-//                    else {
-//                            if (gamepad1.left_bumper) {
-//                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-//                            }
-//                            if (gamepad1.right_bumper){
-//                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
-//                            }
-//                        }
-                    if (robot.clawLimit.getState() == false) {
-                        if (gamepad1.left_bumper) {
-                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMITO_BOTTOM);}
-                        if (gamepad1.right_bumper) {
-                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
-                            }
 
+                    if(robot.clawLimit.getState() == false){
+                        if(gamepad1.left_bumper){
+                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMITO_BOTTOM);
+                        }
+                        if(gamepad1.right_bumper){
+                                robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
+                        }
                     }
-                       if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5){
-                            if (robot.blockCheck.getState() == false){
-                                robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
-                            }
-                            else {
-                                robot.clawTop.setPosition(0.6);
-                            }
-                       }
+
+                    if(robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5){
+                        if(robot.blockCheck.getState() == false){
+                            robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
+                        }
+                        else{
+                            robot.clawTop.setPosition(0.6);
+                        }
+                    }
+
                     if(robot.blockCheck.getState() == false) {
                         robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_TOP);
                     }
 
+                    tripWire = false;
+                    if(robot.bottomGrab.getDistance(DistanceUnit.CM) < 6.5){
+                        robot.clawBottom.setPosition(0.36);//0.38
+                    }
+                    else{
+                        robot.clawBottom.setPosition(0.42);//0.37
+                    }
 
-
-//                    if (robot.topLimit.getState() == true) {
-
-//                        if (robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5) {
-////                            if ((System.nanoTime() - nanoInit) > timeOutLimit){
-////                                timeOutFlag = false;
-////                            }
-//                            if ((System.nanoTime() - nanoInit) > 3000000) {
-//                                robot.clawTop.setPosition(0.6);
-//                                nanoInit = System.nanoTime();
-//                            }
-//                            else if ((System.nanoTime() - nanoInit) > 1000000) {
-//                                robot.clawTop.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-//                            }
-//                        }
-
-//                        boolean tripWire = false;
-//
-//                        if(robot.topLimit.getState() == true){ //If top buton not pressed
-//
-//                            if(onCoolDown == false){ //If Claw not on cooldown
-//
-//                                if(robot.sensorDistance.getDistance(DistanceUnit.CM) < 6.5){ //If block is seen.
-//
-//                                    //if(blockHasBeenSeen == false){ //If block hasn't been seen in the past.
-//
-//                                    clawActionFlag = true; //Seeing Top of Block, Activate Claw
-//                                    onCoolDown = true;
-//
-//                                    //}
-//
-//                                    blockHasBeenSeen = true; //Tells future runs we have seen a block in the past.
-//
-//                                }
-////                        else{ //If block is not seen.
-////
-////                            if(blockHasBeenSeen){ //If block has been seen in the past.
-////
-////                                //onCoolDown = true; //Seeing Bottom of Block, Put on Cooldown
-////
-////                            }
-////
-////                            blockHasBeenSeen = false; //Tells future runs we have not seen a block in the past.
-////
-////                        }
-//
-//                            }else{ //Claw is on cooldown
-//
-//                                if(((System.nanoTime()/1000) - initTime2) > coolDownTime){ //If 3 seconds have passed.
-//
-//                                    //Reseting timer and onCoolDown flag.
-//
-//                                    initTime2 = (System.nanoTime()/1000);
-//
-//                                    onCoolDown = false;
-//
-//                                }
-//
-//                            }
-//
-//                        }
-//
-//                        //Seperate Tree to perform claw actions.
-//
-//                        if(clawActionFlag){
-//
-//                            tripWire = true;
-//
-//                            if(((System.nanoTime()/1000) - initTime1) > clawActionTime){ //1 second has passed.
-//
-//
-//                                robot.clawTop.setPosition(0.52);
-//
-//                                //Reseting timer and clawActionFlag
-//
-//                                initTime1 = (System.nanoTime()/1000);
-//
-//                                clawActionFlag = false;
-//
-//                            }else{ //1 second has not passed.
-//
-//
-//                                robot.clawTop.setPosition(0.6);
-//
-//
-//                            }
-//
-//                        }
-//                    }
-
-
-
-//                    }
-//                    else if (robot.topLimit.getState() == false) {
-//                        robot.topRight.setPower(0.0);
-//                        robot.topLeft.setPower(0.0);
-//                        sleep(250);
-//                    }
-
-//                    if ( robot.winchLimit.getState() == false) {
-//                        if (robot.blockFlat.alpha() > 400) {
-//                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_CLOSED_BOTTOM);
-//                            robot.blockRotate.setPower(0);
-//                        } else {
-//                            robot.clawBottom.setPosition(robot.BLOCK_CLAW_LIMIT_BOTTOM);
-//                        }
-//                    }
-//                    telemetry.addData("Jewel Sensor - Red", robot.jewelArm.red());
-//                    telemetry.addData("Jewel Sensor - Blue", robot.jewelArm.blue());
-//                    telemetry.addData("Alpha Data", robot.glyphSensor.alpha());
-//                    //telemetry.addData("Alpha Data Bot", robot.blockFlat.alpha());
-//                    telemetry.addData("Mode", mecanumMode);
-                    telemetry.addData("Time Difference 1", ((System.nanoTime()/1000) - initTime1));
-                    telemetry.addData("Tripwire", tripWire);
-                    telemetry.addData("Time Difference 2", ((System.nanoTime()/1000) - initTime2));
-                    telemetry.addData("Time Countdown 1", ((System.nanoTime()/1000) - initTime1) - clawActionTime);
-                    telemetry.addData("Time Cooldown 2", ((System.nanoTime()/1000) - initTime2) - coolDownTime);
-                    telemetry.addData("Cooldown", onCoolDown);
                     telemetry.addData("Block Seen", blockHasBeenSeen);
-                    //telemetry.addData("ClawTIme", clawActionTime);
                     telemetry.addData("ClawFlag",clawActionFlag);
+                    telemetry.addData("BottomGrab Distance", robot.bottomGrab.getDistance(DistanceUnit.CM));
 
                 telemetry.addData("Distance (cm)",
                         String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
